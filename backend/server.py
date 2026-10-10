@@ -133,6 +133,9 @@ class Product(BaseDocument):
     extraction_method: str = ""
     ingredients: str = ""
     allergens: str = ""
+    origin: str = ""
+    highlights: List[str] = []
+    diet: Optional[str] = None  # veg | non-veg | None
     storage: str = ""
     delivery_info: str = ""
     returns_info: str = ""
@@ -140,7 +143,7 @@ class Product(BaseDocument):
     batch_info: str = ""
     images: List[str] = []
     pack_sizes: List[PackSize] = []
-    availability: str = "coming-soon"  # available | coming-soon | unavailable
+    availability: str = "coming-soon"  # available | coming-soon | enquire | unavailable
     live_press: bool = False
     featured: bool = False
     sort_order: int = 0
@@ -156,6 +159,9 @@ class ProductIn(BaseModel):
     extraction_method: str = ""
     ingredients: str = ""
     allergens: str = ""
+    origin: str = ""
+    highlights: List[str] = []
+    diet: Optional[str] = None
     storage: str = ""
     delivery_info: str = ""
     returns_info: str = ""
@@ -543,19 +549,96 @@ INITIAL_PRODUCTS = [
         "availability": "available", "live_press": False, "featured": True, "sort_order": 0,
     },
     {
-        "slug": "homemade-pickle", "name": "Homemade Pickle", "category": "pickles",
-        "short_description": "Small-batch homemade pickle, made the traditional way.",
-        "description": "A homemade pickle prepared in small batches. AMYA plans to use its own cooking oils in pickle preparation once those oils become available.",
-        "extraction_method": "",
-        "ingredients": "Confirmed by AMYA per batch.",
-        "allergens": "Allergen details confirmed by AMYA per recipe.",
-        "storage": "Refrigerate after opening. Use a clean, dry spoon.",
+        "slug": "guntur-sannam-chilli-powder", "name": "Guntur Sannam Chilli Powder (S4)", "category": "spices",
+        "short_description": "Premium chilli powder from carefully selected Guntur Sannam (S4) chillies.",
+        "description": "Exceptional flavour begins with exceptional chillies. AMYA Guntur Sannam Chilli Powder is made using carefully selected Guntur Sannam (S4) chillies, valued for their distinctive red colour, characteristic chilli flavour and culinary versatility.\n\nWe prepare our chilli powder in small batches, working with local village women who contribute their traditional knowledge and careful preparation techniques.\n\nOur focus is simple: carefully selected raw materials, hygienic preparation, consistent quality and authentic flavour.",
+        "origin": "Guntur, Andhra Pradesh, India",
+        "highlights": ["Carefully selected Guntur Sannam (S4) chillies", "Premium raw material selection", "Small-batch preparation", "Hygienic handling and processing", "Prepared with the support of local village women", "Suitable for traditional Indian cooking"],
+        "diet": "veg",
+        "ingredients": "Dried Guntur Sannam (S4) red chillies.",
+        "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
-        "returns_info": "As a perishable homemade food, returns are limited. Contact AMYA for any issue.",
-        "food_label_info": "Food-label details are added once finalised by AMYA.",
-        "images": ["https://images.unsplash.com/photo-1664791461482-79f5deee490f?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
-        "pack_sizes": [{"label": "250 g", "price": None, "note": "Pricing confirmed by AMYA"}],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 5,
+        "returns_info": "Contact AMYA for any issue with your order.",
+        "food_label_info": "AMYA Signature Spice. Pack sizes and pricing confirmed at launch.",
+        "images": ["https://images.unsplash.com/photo-1625921133217-8d978f7872b8?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [],
+        "availability": "enquire", "live_press": False, "featured": True, "sort_order": 6,
+    },
+    {
+        "slug": "lakadong-turmeric-powder", "name": "Lakadong Turmeric Powder", "category": "spices",
+        "short_description": "A premium turmeric made using carefully sourced Lakadong turmeric.",
+        "description": "Discover the distinctive character of Lakadong turmeric, traditionally associated with Meghalaya's Jaintia Hills. AMYA aims to bring this prized regional ingredient to your kitchen through careful sourcing and thoughtful preparation.\n\nWith its naturally rich golden colour and distinctive turmeric character, Lakadong turmeric is a beautiful addition to traditional Indian cooking.",
+        "origin": "Lakadong, Jaintia Hills, Meghalaya, India",
+        "highlights": ["Lakadong turmeric sourced from Jaintia Hills, Meghalaya", "Premium regional ingredient", "Carefully handled and hygienically processed", "Suitable for everyday cooking and traditional recipes", "Premium ingredient selection"],
+        "diet": "veg",
+        "ingredients": "Lakadong turmeric.",
+        "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
+        "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
+        "returns_info": "Contact AMYA for any issue with your order.",
+        "food_label_info": "AMYA Signature Spice. Verified curcumin content and sourcing details added once confirmed. Pack sizes and pricing confirmed at launch.",
+        "images": ["https://images.unsplash.com/photo-1615485500834-bc10199bc727?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [],
+        "availability": "enquire", "live_press": False, "featured": True, "sort_order": 7,
+    },
+    {
+        "slug": "avakai-pickle", "name": "Avakai Pickle", "category": "pickles",
+        "short_description": "Traditional Andhra-style raw mango pickle.",
+        "description": "A traditional Andhra-style raw mango pickle, prepared using carefully selected ingredients and traditional recipes. Launching soon.",
+        "diet": "veg",
+        "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
+        "images": ["https://images.unsplash.com/photo-1589135233689-d56032e9680a?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [],
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 8,
+    },
+    {
+        "slug": "maagai-pickle", "name": "Maagai Pickle", "category": "pickles",
+        "short_description": "Traditional mango preparation inspired by Andhra culinary traditions.",
+        "description": "A traditional mango pickle inspired by Andhra culinary traditions, prepared with thoughtful care. Launching soon.",
+        "diet": "veg",
+        "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
+        "images": ["https://images.unsplash.com/photo-1601702538934-efffab67ab65?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [],
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 9,
+    },
+    {
+        "slug": "allam-sweet-pickle", "name": "Allam Sweet Pickle", "category": "pickles",
+        "short_description": "A distinctive ginger-based sweet pickle combining traditional flavours.",
+        "description": "A distinctive ginger-based sweet pickle that combines traditional flavours in a comforting preparation. Launching soon.",
+        "diet": "veg",
+        "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
+        "images": ["https://images.unsplash.com/photo-1764312899300-e680811f58fb?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [],
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 10,
+    },
+    {
+        "slug": "chicken-pickle", "name": "Chicken Pickle", "category": "pickles",
+        "short_description": "A flavourful non-vegetarian pickle prepared using chicken.",
+        "description": "A flavourful non-vegetarian pickle prepared using chicken, in a traditional style. Launching soon.",
+        "diet": "non-veg",
+        "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
+        "images": ["https://images.unsplash.com/photo-1603496987351-f84a3ba5ec85?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [],
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 11,
+    },
+    {
+        "slug": "mutton-pickle", "name": "Mutton Pickle", "category": "pickles",
+        "short_description": "A rich, traditional-style mutton pickle.",
+        "description": "A rich, traditional-style mutton pickle prepared with careful attention to flavour. Launching soon.",
+        "diet": "non-veg",
+        "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
+        "images": ["https://images.unsplash.com/photo-1534939561126-855b8675edd7?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [],
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 12,
+    },
+    {
+        "slug": "prawn-pickle", "name": "Prawn Pickle", "category": "pickles",
+        "short_description": "A seafood pickle inspired by regional Indian flavours.",
+        "description": "A seafood pickle inspired by regional Indian flavours, prepared in a traditional style. Launching soon.",
+        "diet": "non-veg",
+        "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
+        "images": ["https://images.unsplash.com/photo-1683533738338-19b9a22c6405?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [],
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 13,
     },
 ]
 
@@ -584,12 +667,19 @@ async def seed():
         await db.users.update_one({"email": admin_email},
                                   {"$set": {"password_hash": hash_password(admin_password)}})
 
-    if await db.products.count_documents({}) == 0:
-        for p in INITIAL_PRODUCTS:
-            p = dict(p)
-            p["created_at"] = now_iso()
-            await db.products.insert_one(p)
-        logger.info("Seeded %d products", len(INITIAL_PRODUCTS))
+    # Upsert the canonical catalog by slug (idempotent) so every environment
+    # — preview and production — always carries the full, latest product set.
+    for p in INITIAL_PRODUCTS:
+        p = dict(p)
+        await db.products.update_one(
+            {"slug": p["slug"]},
+            {"$set": p, "$setOnInsert": {"created_at": now_iso()}},
+            upsert=True,
+        )
+    # Remove obsolete products that are no longer in the catalog.
+    valid_slugs = [p["slug"] for p in INITIAL_PRODUCTS]
+    await db.products.delete_many({"slug": {"$nin": valid_slugs}})
+    logger.info("Upserted %d products", len(INITIAL_PRODUCTS))
 
     existing_settings = await db.settings.find_one({"_id": "site"})
     if not existing_settings:

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Minus, Plus, MessageCircle, Video, Phone } from "lucide-react";
+import { ArrowLeft, Minus, Plus, MessageCircle, Video, Phone, MapPin, Check } from "lucide-react";
 import { api, waLink, telHref } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import Availability from "@/components/Availability";
+import DietMark from "@/components/DietMark";
 import Btn from "@/components/Btn";
 import { Reveal } from "@/components/Reveal";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -70,7 +71,7 @@ export default function ProductDetail() {
           <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7 }}
                       className="relative aspect-[4/3] lg:aspect-[4/5] overflow-hidden bg-ivory-warm rounded-xl">
             {product.images?.[activeImg] ? (
-              <img src={product.images[activeImg]} alt={product.name} className="h-full w-full object-contain" />
+              <img src={product.images[activeImg]} alt={product.name} className={`h-full w-full ${["spices", "pickles"].includes(product.category) ? "object-cover" : "object-contain"}`} />
             ) : (
               <div className="h-full w-full flex items-center justify-center font-serif text-7xl text-terracotta/25">AMYA</div>
             )}
@@ -91,10 +92,26 @@ export default function ProductDetail() {
         {/* Info */}
         <div>
           <Reveal>
-            <span className="font-sans text-xs uppercase tracking-[0.25em] text-terracotta">{product.category.replace("-", " ")}</span>
+            <div className="flex items-center gap-2">
+              <span className="font-sans text-xs uppercase tracking-[0.25em] text-terracotta">{product.category.replace("-", " ")}</span>
+              {product.diet && <DietMark diet={product.diet} />}
+            </div>
             <h1 className="font-serif text-3xl sm:text-4xl tracking-tight mt-2 leading-tight text-ink">{product.name}</h1>
-            <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 leading-relaxed">{product.short_description}</p>
+            {product.origin && (
+              <p className="font-sans text-xs text-ink-soft mt-2 inline-flex items-center gap-1.5"><MapPin size={13} className="text-terracotta" /> {product.origin}</p>
+            )}
+            <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 leading-relaxed whitespace-pre-line">{product.short_description}</p>
           </Reveal>
+
+          {product.highlights?.length > 0 && (
+            <ul className="mt-4 grid gap-2" data-testid="pd-highlights">
+              {product.highlights.map((h, i) => (
+                <li key={i} className="flex items-start gap-2 font-sans text-sm text-ink-soft">
+                  <Check size={15} className="text-terracotta shrink-0 mt-0.5" /> {h}
+                </li>
+              ))}
+            </ul>
+          )}
 
           {/* Pack sizes */}
           {product.pack_sizes?.length > 0 && (
@@ -165,7 +182,7 @@ export default function ProductDetail() {
           {/* Primary order button */}
           <a href={waLink(wa, orderMsg)} target="_blank" rel="noreferrer" data-testid="pd-whatsapp-enquiry" data-wa-cta
              className="mt-5 w-full inline-flex items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full">
-            <MessageCircle size={18} /> {buyable ? "Order on WhatsApp" : "Enquire on WhatsApp"}
+            <MessageCircle size={18} /> {buyable ? "Order on WhatsApp" : product.availability === "coming-soon" ? "Enquire for launch updates" : "Enquire on WhatsApp"}
           </a>
 
           {/* Secondary actions */}

@@ -8,9 +8,10 @@ import { waLink, telHref } from "@/lib/api";
 
 const NAV = [
   { to: "/", label: "Home" },
+  { to: "/our-story", label: "Our Story" },
+  { to: "/shop/spices", label: "Spices" },
+  { to: "/shop/pickles", label: "Pickles" },
   { to: "/shop/cashew-brittles", label: "Cashew Brittle" },
-  { to: "/shop/oils", label: "AMYA Oils" },
-  { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];
 

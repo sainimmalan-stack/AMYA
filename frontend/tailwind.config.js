@@ -38,6 +38,9 @@ module.exports = {
         noir: {
           DEFAULT: '#B95040',
         },
+        gold: {
+          DEFAULT: '#B08D57',
+        },
         ink: {
           DEFAULT: '#42251F',
           soft: '#6B4A40',

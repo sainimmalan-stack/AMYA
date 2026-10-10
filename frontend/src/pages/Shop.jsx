@@ -6,23 +6,29 @@ import ProductCard from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
 
 const CATEGORY_META = {
+  spices: {
+    eyebrow: "AMYA Signature Spices",
+    title: ["Signature Spices."],
+    sub: "Carefully selected Guntur Sannam chillies and specialty Lakadong turmeric, prepared in small batches with hygienic handling and authentic flavour.",
+    key: "spices",
+  },
+  pickles: {
+    eyebrow: "Traditional pickles, authentic flavours",
+    title: ["Traditional Pickles."],
+    sub: "Celebrating the bold, comforting flavours of Indian kitchens through traditional recipes, carefully selected ingredients and thoughtful preparation. Launching soon.",
+    key: "pickles",
+  },
+  "cashew-brittles": {
+    eyebrow: "Artisanal foods",
+    title: ["Cashew Brittle."],
+    sub: "Premium whole roasted cashews dipped in jaggery, crafted in small batches by AMYA.",
+    key: "cashew-brittles",
+  },
   oils: {
     eyebrow: "Cold-extracted, prepared to order",
     title: ["AMYA Oils."],
     sub: "Cooking oils cold-extracted in small batches using our own setup. Request a live session to watch the actual process and ask questions before you order.",
     key: "oils",
-  },
-  pickles: {
-    eyebrow: "Homemade, small batch",
-    title: ["AMYA Pickles."],
-    sub: "Homemade pickles prepared the traditional way. AMYA plans to use its own cooking oils in pickle preparation once those oils become available.",
-    key: "pickles",
-  },
-  "cashew-brittles": {
-    eyebrow: "Crunchy, golden, homemade",
-    title: ["Cashew Brittles."],
-    sub: "A homemade cashew brittle made in small batches — crisp caramel with generous cashew pieces.",
-    key: "cashew-brittles",
   },
 };
 

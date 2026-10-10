@@ -6,8 +6,9 @@ import { api, waLink, telHref, formatPhoneIN } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { Reveal, MaskedLines } from "@/components/Reveal";
 import Btn from "@/components/Btn";
+import ProductCard from "@/components/ProductCard";
 
-const HERO_IMG = "https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/355a2d711b475e647f4a4a0607d9de6b7442e80cae73e64ea1c5e36c61d914cf.jpeg";
+const HERO_IMG = "https://images.unsplash.com/photo-1643067077447-78239a403a18?crop=entropy&cs=srgb&fm=jpg&q=85&w=1400";
 const VIDEO_MSG = "Hi AMYA, I would like to know more about your oils and request a video call.";
 
 function Hero() {
@@ -21,19 +22,22 @@ function Hero() {
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
               className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta block mb-4">
-              Handmade · small batches
+              Authentic ingredients · Traditional recipes
             </motion.span>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.0] tracking-tight text-ink">
-              <MaskedLines lines={["Small-batch food,", "made with intention."]} delay={0.15} />
+              <MaskedLines lines={["Rooted in Tradition.", "Crafted with Care."]} delay={0.15} />
             </h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
               className="font-sans text-base sm:text-lg text-ink-soft max-w-xl mt-4 leading-relaxed">
-              Discover handcrafted cashew brittle and thoughtfully prepared cooking oils from AMYA.
+              Discover the authentic flavours of India through carefully selected spices, traditional recipes and handcrafted artisanal foods. At AMYA, we believe exceptional food begins with exceptional ingredients.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
-              className="mt-7">
+              className="mt-7 flex flex-col sm:flex-row gap-3">
               <Btn to="/shop" variant="solid" data-testid="hero-shop-btn">
-                Shop our products <ArrowRight size={15} />
+                Explore Our Collection <ArrowRight size={15} />
+              </Btn>
+              <Btn to="/our-story" variant="outline" data-testid="hero-story-btn">
+                Our Story
               </Btn>
             </motion.div>
           </div>
@@ -42,7 +46,7 @@ function Hero() {
           <div className="hidden lg:block lg:col-span-5">
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.25, duration: 0.9 }}
               className="relative aspect-[4/5] overflow-hidden rounded-t-[110px] border border-ink/10 bg-ivory">
-              <motion.img src={HERO_IMG} alt="AMYA cooking oil" style={{ y }} className="h-full w-full object-contain" />
+              <motion.img src={HERO_IMG} alt="AMYA Indian spices" style={{ y }} className="h-full w-full object-cover" />
             </motion.div>
           </div>
         </div>
@@ -51,101 +55,54 @@ function Hero() {
   );
 }
 
-function CollectionCard({ product, name, desc, price, cta, to, extra, index, tone = "ivory", fit = "contain" }) {
-  const img = product?.images?.[0];
-  const badge = product?.availability === "available" ? "Available" : "Coming soon";
-  const cardBg = tone === "beige" ? "bg-ivory-warm" : "bg-ivory";
-  const imgBg = tone === "beige" ? "bg-beige" : "bg-ivory-warm";
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-      className={`flex flex-col ${cardBg} border border-ink/10 overflow-hidden rounded-xl shadow-sm`}
-      data-testid={`collection-card-${to.split("/").pop()}`}
-    >
-      <div className={`relative aspect-[4/3] ${imgBg}`}>
-        {img && (
-          <img src={img} alt={name} loading="lazy"
-               className={`h-full w-full ${fit === "cover" ? "object-cover" : "object-contain p-3"}`} />
-        )}
-        <span className="absolute top-3 left-3 bg-terracotta text-ivory px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] rounded-full">{badge}</span>
-      </div>
-      <div className="p-4 sm:p-5 flex flex-col flex-1">
-        <h3 className="font-serif text-xl sm:text-2xl text-ink leading-tight">{name}</h3>
-        <p className="font-sans text-xs sm:text-sm text-ink-soft mt-1 leading-relaxed">{desc}</p>
-        {price && <p className="font-sans text-sm text-terracotta-deep mt-2 font-medium">{price}</p>}
-        <div className="mt-auto pt-4">
-          <Link to={to} data-testid={`collection-cta-${to.split("/").pop()}`} data-wa-cta
-                className="inline-flex w-full items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors px-3 py-3 font-sans text-[11px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.18em] leading-tight text-center rounded-full">
-            <span>{cta}</span> <ArrowRight size={14} className="shrink-0" />
-          </Link>
-          {extra}
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 function OurCollection() {
-  const { config } = useConfig();
-  const wa = config?.business?.whatsapp || "919675334567";
-  const [cashew, setCashew] = useState(null);
-  const [oil, setOil] = useState(null);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    api.get("/products/cashew-brittle").then(({ data }) => setCashew(data)).catch(() => {});
-    api.get("/products?category=oils").then(({ data }) => setOil(data[0])).catch(() => {});
+    api.get("/products").then(({ data }) => setProducts(data)).catch(() => {});
   }, []);
 
-  const cashewMin = (cashew?.pack_sizes || []).map((s) => s.price).filter((x) => x != null);
-  const priceLabel = cashewMin.length ? `From ₹${Math.min(...cashewMin)}` : null;
+  const featured = products.filter((p) => p.featured).sort((a, b) => a.sort_order - b.sort_order);
+  const pickles = products.filter((p) => p.category === "pickles").sort((a, b) => a.sort_order - b.sort_order);
 
   return (
-    <section id="collection" className="bg-ivory">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-12 sm:py-14 lg:py-20">
-      <Reveal>
-        <div className="flex items-end justify-between mb-6 sm:mb-8">
-          <div>
-            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Shop</span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2">Our collection.</h2>
+    <>
+      <section id="collection" className="bg-ivory">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-12 sm:py-14 lg:py-20">
+          <Reveal>
+            <div className="flex items-end justify-between mb-6 sm:mb-8">
+              <div>
+                <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Shop by category</span>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Our collection.</h2>
+              </div>
+              <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
+                View all <ArrowRight size={14} />
+              </Link>
+            </div>
+          </Reveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {featured.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
           </div>
-          <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
-            View all <ArrowRight size={14} />
-          </Link>
         </div>
-      </Reveal>
+      </section>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
-        <CollectionCard
-          product={cashew}
-          name="AMYA Cashew Brittle"
-          desc="Premium whole roasted cashews dipped in jaggery."
-          price={priceLabel}
-          cta="Shop Cashew Brittle"
-          to="/product/cashew-brittle"
-          index={0}
-          tone="ivory"
-          fit="cover"
-        />
-        <CollectionCard
-          product={oil}
-          name="AMYA Oils"
-          desc="Thoughtfully prepared cooking oils you can watch being made."
-          price={null}
-          cta="Discover AMYA Oils"
-          to="/shop/oils"
-          index={1}
-          tone="beige"
-          extra={
-            <a href={waLink(wa, VIDEO_MSG)} target="_blank" rel="noreferrer" data-testid="collection-video-call" data-wa-cta
-               className="mt-3 inline-flex items-center justify-center gap-1.5 w-full font-sans text-[10px] uppercase tracking-[0.18em] text-terracotta-deep hover:text-terracotta">
-              <MessageCircle size={13} /> Video call enquiries
-            </a>
-          }
-        />
-      </div>
-      </div>
-    </section>
+      {pickles.length > 0 && (
+        <section className="bg-beige" data-testid="pickles-section">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-14 lg:py-20">
+            <Reveal>
+              <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Launching soon</span>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Traditional Pickles.<br className="hidden sm:block" /> Authentic Flavours.</h2>
+              <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">
+                Celebrating the bold, comforting flavours of Indian kitchens through traditional recipes, carefully selected ingredients and thoughtful preparation.
+              </p>
+            </Reveal>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 mt-8">
+              {pickles.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+            </div>
+          </div>
+        </section>
+      )}
+    </>
   );
 }
 
