@@ -60,7 +60,7 @@ function CollectionCard({ product, name, desc, price, cta, to, extra, index, ton
     <motion.div
       initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-      className={`flex flex-col ${cardBg} border border-ink/10 overflow-hidden rounded-2xl shadow-sm`}
+      className={`flex flex-col ${cardBg} border border-ink/10 overflow-hidden rounded-xl shadow-sm`}
       data-testid={`collection-card-${to.split("/").pop()}`}
     >
       <div className={`relative aspect-[5/4] sm:aspect-[4/5] ${imgBg}`}>

@@ -20,23 +20,26 @@ module.exports = {
       },
       colors: {
         terracotta: {
-          DEFAULT: '#B95040',
-          deep: '#963C2E',
+          DEFAULT: '#B94F3F',
+          deep: '#963C2D',
           soft: '#CE6B5C',
         },
         ivory: {
-          DEFAULT: '#FFF3E5',
-          warm: '#F0DFC9',
+          DEFAULT: '#FFF3E6',
+          warm: '#F0DEC5',
         },
         beige: {
-          DEFAULT: '#F0DFC9',
+          DEFAULT: '#F0DEC5',
         },
         choco: {
-          DEFAULT: '#301812',
+          DEFAULT: '#351D18',
           soft: '#46261D',
         },
+        noir: {
+          DEFAULT: '#0A0A0A',
+        },
         ink: {
-          DEFAULT: '#301812',
+          DEFAULT: '#351D18',
           soft: '#5A4039',
         },
         background: 'hsl(var(--background))',
