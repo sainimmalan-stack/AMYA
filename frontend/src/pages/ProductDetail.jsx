@@ -124,17 +124,10 @@ export default function ProductDetail() {
               <div className="grid grid-cols-2 gap-3">
                 {product.pack_sizes.map((ps, i) => {
                   const active = i === pack;
-                  const isGift = i === product.pack_sizes.length - 1 && product.pack_sizes.length > 1;
                   return (
                     <button key={i} onClick={() => setPack(i)} data-testid={`pack-${i}`}
                             aria-pressed={active}
                             className={`relative flex flex-col items-center justify-center text-center px-3 py-3.5 border transition-all duration-300 rounded-md ${active ? "border-terracotta bg-terracotta text-ivory" : "border-ink/15 bg-ivory text-ink hover:border-terracotta/60"}`}>
-                      {isGift && (
-                        <span data-testid="gifting-tag"
-                              className={`absolute -top-2.5 left-1/2 -translate-x-1/2 text-[8px] uppercase tracking-[0.14em] px-2.5 py-0.5 rounded-full whitespace-nowrap shadow-sm ${active ? "bg-ivory text-terracotta" : "bg-terracotta text-ivory"}`}>
-                          Perfect for gifting
-                        </span>
-                      )}
                       <span className="font-serif text-xl sm:text-2xl leading-none">{ps.label}</span>
                       {ps.price != null ? (
                         <span className={`font-sans text-lg sm:text-xl font-medium mt-1 whitespace-nowrap ${active ? "text-ivory" : "text-terracotta"}`}>₹{ps.price.toLocaleString("en-IN")}</span>
