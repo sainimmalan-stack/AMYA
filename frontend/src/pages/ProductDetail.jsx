@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Minus, Plus, MessageCircle, Video, Phone } from "lucide-react";
-import { api, waLink, orderMessage } from "@/lib/api";
+import { api, waLink } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import Availability from "@/components/Availability";
 import Btn from "@/components/Btn";
@@ -37,23 +37,38 @@ export default function ProductDetail() {
 
   const selected = product.pack_sizes?.[pack];
   const buyable = product.availability === "available";
+  const total = selected?.price != null ? selected.price * qty : null;
 
-  const enquiryMsg = orderMessage(product, selected?.label, selected?.price, qty);
+  const orderMsg = (() => {
+    if (!buyable || selected?.price == null) {
+      const sizeStr = selected?.label ? ` — ${selected.label}` : "";
+      return `Hello AMYA, I'd like to enquire about:\n• ${product.name}${sizeStr}\n\nPlease let me know when it's available and the price.`;
+    }
+    const pieces = selected?.note ? ` (${selected.note})` : "";
+    return (
+      `Hello AMYA, I'd like to order:\n` +
+      `• ${product.name}\n` +
+      `• Pack: ${selected.label}${pieces}\n` +
+      `• Quantity: ${qty} pack${qty > 1 ? "s" : ""}\n` +
+      `• Total: ₹${total.toLocaleString("en-IN")}\n\n` +
+      `Please confirm availability, delivery and payment.`
+    );
+  })();
 
   return (
     <div data-testid="product-detail">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-6">
         <button onClick={() => navigate(-1)} data-testid="pd-back"
                 className="inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink-soft hover:text-terracotta">
           <ArrowLeft size={14} /> Back
         </button>
       </div>
 
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 py-10 lg:py-14 grid lg:grid-cols-2 gap-12 lg:gap-16">
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 py-6 lg:py-14 grid lg:grid-cols-2 gap-6 lg:gap-16">
         {/* Gallery */}
         <div>
           <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7 }}
-                      className="relative aspect-[4/5] overflow-hidden bg-ivory-warm">
+                      className="relative aspect-[4/3] lg:aspect-[4/5] overflow-hidden bg-ivory-warm rounded-xl">
             {product.images?.[activeImg] ? (
               <img src={product.images[activeImg]} alt={product.name} className="h-full w-full object-contain" />
             ) : (
@@ -77,36 +92,35 @@ export default function ProductDetail() {
         <div>
           <Reveal>
             <span className="font-sans text-xs uppercase tracking-[0.25em] text-terracotta">{product.category.replace("-", " ")}</span>
-            <h1 className="font-serif text-4xl sm:text-5xl tracking-tight mt-3 leading-tight">{product.name}</h1>
-            <p className="font-sans text-base text-ink-soft mt-4 leading-relaxed">{product.short_description}</p>
+            <h1 className="font-serif text-3xl sm:text-4xl tracking-tight mt-2 leading-tight text-ink">{product.name}</h1>
+            <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 leading-relaxed">{product.short_description}</p>
           </Reveal>
 
           {/* Pack sizes */}
           {product.pack_sizes?.length > 0 && (
-            <div className="mt-8">
-              <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-1">Pack size</p>
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-4">
+            <div className="mt-5">
+              <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-2">Pack size</p>
+              <div className="grid grid-cols-2 gap-3">
                 {product.pack_sizes.map((ps, i) => {
                   const active = i === pack;
                   const isGift = i === product.pack_sizes.length - 1 && product.pack_sizes.length > 1;
                   return (
                     <button key={i} onClick={() => setPack(i)} data-testid={`pack-${i}`}
                             aria-pressed={active}
-                            className={`relative flex flex-col items-center justify-center text-center px-3 py-6 sm:py-7 border transition-all duration-300 ${active ? "border-terracotta bg-ivory-warm" : "border-ink/15 bg-ivory hover:border-terracotta/60"}`}>
+                            className={`relative flex flex-col items-center justify-center text-center px-3 py-3.5 border transition-all duration-300 rounded-md ${active ? "border-terracotta bg-terracotta text-ivory" : "border-ink/15 bg-ivory text-ink hover:border-terracotta/60"}`}>
                       {isGift && (
                         <span data-testid="gifting-tag"
-                              className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-terracotta text-ivory text-[8px] uppercase tracking-[0.14em] px-2.5 py-0.5 rounded-full whitespace-nowrap shadow-sm">
+                              className={`absolute -top-2.5 left-1/2 -translate-x-1/2 text-[8px] uppercase tracking-[0.14em] px-2.5 py-0.5 rounded-full whitespace-nowrap shadow-sm ${active ? "bg-ivory text-terracotta" : "bg-terracotta text-ivory"}`}>
                           Perfect for gifting
                         </span>
                       )}
-                      {active && <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-terracotta" />}
-                      <span className="font-serif text-2xl sm:text-3xl leading-none text-ink">{ps.label}</span>
+                      <span className="font-serif text-xl sm:text-2xl leading-none">{ps.label}</span>
                       {ps.price != null ? (
-                        <span className="font-sans text-xl sm:text-2xl font-medium text-terracotta mt-2 whitespace-nowrap">₹{ps.price.toLocaleString("en-IN")}</span>
+                        <span className={`font-sans text-lg sm:text-xl font-medium mt-1 whitespace-nowrap ${active ? "text-ivory" : "text-terracotta"}`}>₹{ps.price.toLocaleString("en-IN")}</span>
                       ) : (
-                        <span className="font-sans text-sm text-ink-soft mt-2">Price at launch</span>
+                        <span className="font-sans text-sm mt-1">Price at launch</span>
                       )}
-                      {ps.note && <span className="font-sans text-[10px] uppercase tracking-[0.16em] text-ink-soft mt-2">{ps.note}</span>}
+                      {ps.note && <span className={`font-sans text-[10px] uppercase tracking-[0.16em] mt-1 ${active ? "text-ivory/80" : "text-ink-soft"}`}>{ps.note}</span>}
                     </button>
                   );
                 })}
@@ -119,7 +133,7 @@ export default function ProductDetail() {
                 if (!grams) return null;
                 const perG = last.price / grams;
                 return (
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-2">
+                  <div className="grid grid-cols-2 gap-3 mt-1.5">
                     <div aria-hidden="true" />
                     <p data-testid="best-value-note" className="text-center font-sans text-[10px] tracking-[0.1em] text-terracotta-deep">
                       Best value · ₹{perG.toFixed(2)}/g
@@ -130,36 +144,32 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Quantity */}
-          <div className="mt-8">
-            <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-3">Quantity</p>
-            <div className="inline-flex items-center border border-ink/20">
-              <button onClick={() => setQty((q) => Math.max(1, q - 1))} data-testid="qty-minus" className="h-12 w-12 flex items-center justify-center hover:bg-ivory-warm"><Minus size={16} /></button>
-              <span data-testid="qty-value" className="w-12 text-center font-sans">{qty}</span>
-              <button onClick={() => setQty((q) => q + 1)} data-testid="qty-plus" className="h-12 w-12 flex items-center justify-center hover:bg-ivory-warm"><Plus size={16} /></button>
+          {/* Quantity + live total */}
+          <div className="mt-5 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft">Quantity</p>
+              <div className="inline-flex items-center border border-ink/20 rounded-md overflow-hidden">
+                <button onClick={() => setQty((q) => Math.max(1, q - 1))} data-testid="qty-minus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Minus size={15} /></button>
+                <span data-testid="qty-value" className="w-10 text-center font-sans">{qty}</span>
+                <button onClick={() => setQty((q) => q + 1)} data-testid="qty-plus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Plus size={15} /></button>
+              </div>
             </div>
-          </div>
-
-          {/* Actions */}
-          <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            {checkoutEnabled && buyable ? (
-              <Btn as="button" variant="solid" data-testid="add-to-cart">Add to cart</Btn>
-            ) : (
-              <div className="w-full">
-                <div className="border border-ink/15 bg-ivory-warm/50 px-5 py-4">
-                  <p className="font-sans text-xs uppercase tracking-[0.15em] text-ink-soft">Pre-launch</p>
-                  <p className="font-sans text-sm text-ink-soft mt-1">
-                    Online checkout opens once AMYA confirms the required food-business approvals. For now, enquire directly and we'll help you place an order.
-                  </p>
-                </div>
+            {buyable && total != null && (
+              <div className="text-right">
+                <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">Total</p>
+                <p data-testid="pd-total" className="font-serif text-2xl text-terracotta leading-none mt-0.5">₹{total.toLocaleString("en-IN")}</p>
               </div>
             )}
           </div>
 
-          <div className="mt-5 flex flex-col sm:flex-row gap-3">
-            <Btn as="a" href={waLink(wa, enquiryMsg)} target="_blank" rel="noreferrer" variant="solid" data-testid="pd-whatsapp-enquiry" data-wa-cta>
-              <MessageCircle size={15} /> {buyable ? "Order on WhatsApp" : "Enquire on WhatsApp"}
-            </Btn>
+          {/* Primary order button */}
+          <a href={waLink(wa, orderMsg)} target="_blank" rel="noreferrer" data-testid="pd-whatsapp-enquiry" data-wa-cta
+             className="mt-5 w-full inline-flex items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full">
+            <MessageCircle size={18} /> {buyable ? "Order on WhatsApp" : "Enquire on WhatsApp"}
+          </a>
+
+          {/* Secondary actions */}
+          <div className="mt-3 flex flex-col sm:flex-row gap-3">
             {product.live_press && (
               <Btn to={`/live-press?oil=${product.slug}`} variant="outline" data-testid="pd-book-livepress">
                 <Video size={15} /> Book AMYA Live Press
@@ -170,8 +180,18 @@ export default function ProductDetail() {
             </Btn>
           </div>
 
+          {/* Pre-launch notice — below the ordering section */}
+          {!checkoutEnabled && (
+            <div className="mt-5 border border-ink/15 bg-ivory-warm/50 px-4 py-3" data-testid="pd-prelaunch">
+              <p className="font-sans text-[11px] uppercase tracking-[0.15em] text-ink-soft">Pre-launch</p>
+              <p className="font-sans text-sm text-ink-soft mt-1">
+                Online checkout opens once AMYA confirms the required food-business approvals. For now, tap Order on WhatsApp and we'll help you place your order.
+              </p>
+            </div>
+          )}
+
           {/* Details accordion */}
-          <Accordion type="single" collapsible className="mt-10" defaultValue="desc">
+          <Accordion type="single" collapsible className="mt-6" defaultValue="desc">
             {product.description && (
               <AccordionItem value="desc">
                 <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Description</AccordionTrigger>

@@ -526,7 +526,7 @@ INITIAL_PRODUCTS = [
     },
     {
         "slug": "cashew-brittle", "name": "Cashew Brittle", "category": "cashew-brittles",
-        "short_description": "Premium whole roasted cashews dipped in jaggery — crafted in small batches by AMYA.",
+        "short_description": "Whole roasted cashews coated in jaggery. Small-batch handcrafted goodness.",
         "description": "Premium whole cashews, carefully roasted before being dipped in jaggery. The roasting brings out the rich, nutty flavour of the cashews, while the jaggery adds a delicious caramelised sweetness. Crafted in small batches by AMYA, this unique roasting process is the secret behind our exceptional taste and irresistible crunch.",
         "extraction_method": "",
         "ingredients": "Whole roasted cashews, jaggery.",
