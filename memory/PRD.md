@@ -255,3 +255,7 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Pack sizes: podis 250g/500g/1kg (no price), oils 500ml/1 litre (no price), pickles 250g/500g/1kg (no price) via seed category normalization. No prices invented; null price shows "Enquire for price".
 - Chilli storage tip = refrigerator wording. Podi serving texts updated per brief (highlight "Best enjoyed with very hot rice + ghee"; Nallakaram mentions dosa).
 - Small cashew-page tweaks: removed "Best value ₹/g" note; removed the big product-name H1 on the cashew detail page only (name retained in nav/cards/cart/order message/metadata) — description now flows neatly under the category label.
+
+## Changelog — 2026-10-10 (Homepage product ordering fix)
+- Fixed: Cashew Brittles was missing from "SHOP OUR PRODUCTS" — the section filtered only `availability === "available"`, excluding Cashew (which is `"ready"`), so it fell into the wrong group. Updated Home.jsx OurCollection to include BOTH "ready" and "available" in the in-stock grid (IN_STOCK set), and "Coming Soon" now shows only the remaining (coming-soon) items.
+- Explicit order enforced via AVAILABLE_ORDER: Cashew Brittle → Nuvvula Podi → Karivepaku Podi → Nallakaram Podi → Guntur Sannam Chilli → AMYA Turmeric Powder. Verified on mobile (390px) preview — Cashew first with READY FOR DELIVERY badge, active ADD TO CART, prices 500g ₹500 / 1kg ₹900 / 10kg ₹8500. No DB/image/price/cart changes. Oils + pickles stay Coming Soon (not addable).

@@ -70,15 +70,18 @@ function OurCollection() {
     "guntur-sannam-chilli-powder",
     "amya-turmeric-powder",
   ];
+  // "Shop Our Products" shows in-stock items — both ready-for-delivery and
+  // available-for-pre-order — explicitly ordered with Cashew Brittles first.
+  const IN_STOCK = new Set(["ready", "available"]);
   const available = products
-    .filter((p) => p.availability === "available")
+    .filter((p) => IN_STOCK.has(p.availability))
     .sort((a, b) => {
       const ia = AVAILABLE_ORDER.indexOf(a.slug);
       const ib = AVAILABLE_ORDER.indexOf(b.slug);
       return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
     });
   const comingSoon = products
-    .filter((p) => p.availability !== "available")
+    .filter((p) => !IN_STOCK.has(p.availability))
     .sort((a, b) => a.sort_order - b.sort_order);
 
   return (
