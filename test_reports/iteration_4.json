@@ -1,0 +1,20 @@
+{
+  "summary": "Verified AMYA pre-launch bug-fix round. Backend GET /api/products/cashew-brittle returns exactly two pack_sizes: [{label:'500 g', price:500, note:'10 pieces'}, {label:'1 kg', price:900, note:'20 pieces'}] — no 250g/₹300 anywhere. Frontend verified at viewports 375, 390, 430 (mobile), and 1920 (desktop): document.scrollWidth == clientWidth at every width => NO horizontal overflow. Homepage 'Our Collection' grid class = 'grid grid-cols-1 sm:grid-cols-2 ...' (single-column mobile, two-column >=640px). Homepage Cashew Brittle price label shows 'From ₹500' and the only ₹-price rendered on the homepage is ₹500. Homepage body contains no occurrences of '250' or '₹300'. CTA buttons collection-cta-cashew-brittle and collection-cta-oils are visible and not clipped at 390px. collection-video-call remains a wa.me link to 919675334567 (no video thumbnail/placeholder). On /product/cashew-brittle: pack-0 renders '500 g · ₹500 · 10 pieces' and is default-selected (class contains bg-terracotta); pack-1 renders '1 kg · ₹900 · 20 pieces'; pack-2 does not exist. PD prices on page: only ₹500 and ₹900. pd-whatsapp-enquiry default href points to wa.me/919675334567 with decoded message containing 'Cashew Brittle — 500 g (₹500) × 1'. After clicking pack-1, decoded message contains '1 kg (₹900)'. Product images use object-contain (verified in Home.jsx CollectionCard and ProductDetail.jsx gallery). All spec items from the review request pass.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": ["/app/backend/tests/backend_test.py"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Minor: pd-whatsapp-enquiry data-testid is reused for both Order and Enquire states (label swaps via buyable flag). Not a bug but a slightly misleading id when product is 'available'.",
+    "Minor: on narrow viewports (<=390px) the pack-size button inner text wraps acceptably but px-5 py-3 could feel cramped if labels grow — current labels fit fine.",
+    "No regressions detected relative to iteration_3."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (pack_sizes endpoint verified)", "frontend": "100% (all 9 spec items pass across 375/390/430/1920)"},
+  "test_credentials": "No auth required for these flows. Admin creds unchanged in /app/memory/test_credentials.md.",
+  "seed_data_creation": "None.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Round 4 pre-launch mobile/pack fixes fully verified. Pack sizes are strictly 500g/1kg. WhatsApp number 919675334567 used throughout. All critical data-testids present: collection-card-cashew-brittle, collection-cta-cashew-brittle, collection-cta-oils, collection-video-call, pack-0, pack-1, pd-whatsapp-enquiry.",
+  "rca of the issue": "N/A — no bugs found."
+}

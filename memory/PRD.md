@@ -39,3 +39,10 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 
 ## Next tasks
 - Await founder's real photos, bank/UPI details and food-business approvals to progress payments/checkout.
+
+## Changelog — 2026-07-10 (Mobile fixes round)
+- Removed 250g/₹300 Cashew Brittle pack everywhere (backend seed + live MongoDB). Packs now: 500g ₹500 (10 pcs), 1kg ₹900 (20 pcs). Default selected = 500g. Homepage shows "From ₹500".
+- Homepage "Our Collection" now single-column on mobile, two-column on desktop (`grid-cols-1 sm:grid-cols-2`). Fixed CTA button clipping ("SHOP CASHEW BRITTLE" / "DISCOVER AMYA OILS") with wrap-safe styles.
+- Reduced empty vertical space between hero and products on mobile.
+- Verified no horizontal overflow at 375/390/430px; images remain object-contain (uncropped). Video-call enquiry stays a text WhatsApp link. Tested via testing_agent (iteration_4.json — 100% pass).
+
