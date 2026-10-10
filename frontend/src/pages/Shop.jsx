@@ -9,7 +9,7 @@ const CATEGORY_META = {
   spices: {
     eyebrow: "AMYA Signature Spices",
     title: ["Signature Spices."],
-    sub: "Carefully selected Guntur Sannam chillies and specialty Lakadong turmeric, prepared in small batches with hygienic handling and authentic flavour.",
+    sub: "Carefully selected Guntur Sannam chillies and turmeric from Srikakulam, Andhra Pradesh, prepared in small batches with hygienic handling and authentic flavour.",
     key: "spices",
   },
   pickles: {

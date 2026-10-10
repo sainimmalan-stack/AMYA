@@ -62,78 +62,57 @@ function OurCollection() {
     api.get("/products").then(({ data }) => setProducts(data)).catch(() => {});
   }, []);
 
-  const cashew = products.filter((p) => p.category === "cashew-brittles").sort((a, b) => a.sort_order - b.sort_order);
-  const oils = products.filter((p) => p.category === "oils").sort((a, b) => a.sort_order - b.sort_order);
-  const spices = products.filter((p) => p.category === "spices").sort((a, b) => a.sort_order - b.sort_order);
-  const pickles = products.filter((p) => p.category === "pickles").sort((a, b) => a.sort_order - b.sort_order);
+  const AVAILABLE_ORDER = [
+    "cashew-brittle",
+    "amya-nuvvula-podi",
+    "amya-karivepaku-podi",
+    "amya-nallakaram",
+    "guntur-sannam-chilli-powder",
+    "amya-turmeric-powder",
+  ];
+  const available = products
+    .filter((p) => p.availability === "available")
+    .sort((a, b) => {
+      const ia = AVAILABLE_ORDER.indexOf(a.slug);
+      const ib = AVAILABLE_ORDER.indexOf(b.slug);
+      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    });
+  const comingSoon = products
+    .filter((p) => p.availability !== "available")
+    .sort((a, b) => a.sort_order - b.sort_order);
 
   return (
     <>
-      <section id="collection" className="bg-ivory">
+      <section id="collection" className="bg-ivory" data-testid="shop-products-section">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-7 pb-8 sm:py-11 lg:py-14">
           <Reveal>
             <div className="flex items-end justify-between mb-6 sm:mb-8">
               <div>
-                <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Our signature</span>
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Cashew Brittle.</h2>
+                <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Available to order</span>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Shop Our Products.</h2>
+                <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">Discover handcrafted favourites from AMYA.</p>
               </div>
               <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
                 View all <ArrowRight size={14} />
               </Link>
             </div>
           </Reveal>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {cashew.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+            {available.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
           </div>
         </div>
       </section>
 
-      {oils.length > 0 && (
-        <section className="bg-beige" data-testid="oils-section">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-11 lg:py-14">
-            <Reveal>
-              <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Cold-extracted, prepared to order</span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">AMYA Oils.</h2>
-              <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">
-                Cooking oils cold-extracted in small batches using our own setup. Request a live session to watch the actual process and ask questions before you order.
-              </p>
-            </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
-              {oils.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {spices.length > 0 && (
-        <section className="bg-ivory" data-testid="spices-section">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-11 lg:py-14">
-            <Reveal>
-              <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">AMYA Signature Spices</span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Signature Spices.</h2>
-              <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">
-                Carefully selected Guntur Sannam (S4) chillies and specialty Lakadong turmeric, prepared in small batches with hygienic handling and authentic flavour.
-              </p>
-            </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
-              {spices.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {pickles.length > 0 && (
-        <section className="bg-beige" data-testid="pickles-section">
+      {comingSoon.length > 0 && (
+        <section className="bg-beige" data-testid="coming-soon-section">
           <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-11 lg:py-14">
             <Reveal>
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Launching soon</span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Traditional Pickles.<br className="hidden sm:block" /> Authentic Flavours.</h2>
-              <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">
-                Celebrating the bold, comforting flavours of Indian kitchens through traditional recipes, carefully selected ingredients and thoughtful preparation.
-              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Coming Soon.</h2>
+              <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">More of AMYA is on its way.</p>
             </Reveal>
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
-              {pickles.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+              {comingSoon.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
           </div>
         </section>
