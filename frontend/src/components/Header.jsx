@@ -14,17 +14,6 @@ const NAV = [
   { to: "/contact", label: "Contact" },
 ];
 
-function AnnouncementBar() {
-  const { config } = useConfig();
-  const s = config?.settings;
-  if (!s?.announcement_enabled || !s?.announcement_text) return null;
-  return (
-    <div className="bg-terracotta-deep text-ivory text-center text-[11px] sm:text-xs py-2 px-4 tracking-[0.12em] uppercase" data-testid="announcement-bar">
-      {s.announcement_text}
-    </div>
-  );
-}
-
 export default function Header() {
   const [open, setOpen] = useState(false);
   const loc = useLocation();
@@ -34,7 +23,6 @@ export default function Header() {
 
   return (
     <>
-      <AnnouncementBar />
       <header className="sticky top-0 z-40 bg-terracotta border-b border-ivory/15">
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center">
           {/* Mobile / tablet: centred logo */}
