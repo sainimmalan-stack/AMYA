@@ -1,0 +1,17 @@
+{
+  "summary": "Iteration 7 frontend regression PASS. Cashew Brittle collection card image now fills a 4:3 container with object-cover (ratio 1.333, 348x261 px at 390vw) — gold gift-box photo is prominent and no beige empty bands remain. Oils card remains object-contain with full bottle. Floating WhatsApp FAB (data-testid floating-whatsapp) href = wa.me/919675334567 and auto-hides correctly: opacity=1 at homepage top & inside dark 'Why AMYA' section; opacity=0 + pointer-events:none when the collection-cta-cashew-brittle sits in the bottom-right corner (overlap predicted True → FAB hidden). Same behavior verified on /product/cashew-brittle against pd-whatsapp-enquiry (hides on overlap, visible at page top). Shop page: 6 order-wa-* buttons present, first href is correct wa.me/919675334567 with 'Cashew Brittle — 500 g (₹500)' body. Pack selector on PD only shows 500 g / 1 kg (no 250 g). Homepage copy: 'AMYA Cashew Brittle', 'From ₹500', 'SHOP CASHEW BRITTLE', 'DISCOVER AMYA OILS', 'Video call enquiries' all present. No horizontal overflow at 375, 390, 430, 1440 on both home and PD (overflow=0 across all). Header ivory rgba(255,243,230,0.9) and footer black rgb(10,10,10) regression intact.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Layout.jsx FAB overlap detection relies on 300ms transition + ~400ms initial check — works but a single rAF-driven ResizeObserver would be more robust (nice-to-have).",
+    "Pre-existing non-blocking 401 console errors remain (per iter5/6 context, ignore)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100%"},
+  "seed_data_creation": "",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Priority fixes verified: (1) cashew image enlarged via object-cover 4:3, (2) floating WhatsApp auto-hide via [data-wa-cta] overlap check in Layout.jsx. Overlap boundary used: viewport right-88 to right, bottom-88 to bottom. Wait ~800-900ms after scroll before reading computed opacity."
+}
