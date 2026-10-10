@@ -5,7 +5,7 @@ import { Phone, MessageCircle } from "lucide-react";
 import { useConfig } from "@/context/ConfigContext";
 import { waLink, telHref, formatPhoneIN } from "@/lib/api";
 
-const FOUNDER_IMG = "https://images.unsplash.com/photo-1769424052115-1631279ce8e7?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200";
+const FOUNDER_IMG = "https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/90db7f6ed02e04d8ea700c2a4186305f0e60109e98720b0ebc2e2960b147ff31.jpeg";
 
 export default function OurStory() {
   const { config } = useConfig();
@@ -21,7 +21,7 @@ export default function OurStory() {
       <section className="max-w-7xl mx-auto px-5 sm:px-8 py-20 lg:py-28 grid lg:grid-cols-2 gap-14 items-center">
         <Reveal>
           <div className="relative aspect-[4/5] overflow-hidden rounded-tl-[100px] bg-ivory-warm">
-            <img src={FOUNDER_IMG} alt="Carefully selected spices and ingredients in a rustic bowl" className="h-full w-full object-cover" />
+            <img src={FOUNDER_IMG} alt="Premium AMYA ingredients — cashews, sesame, dried red chillies, curry leaves and spice powders" className="h-full w-full object-cover" />
           </div>
         </Reveal>
         <Reveal delay={0.1}>
