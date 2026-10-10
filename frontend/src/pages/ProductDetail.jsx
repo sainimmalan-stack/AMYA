@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Minus, Plus, MessageCircle, Video, Phone, MapPin, Check, Flame } from "lucide-react";
-import { api, waLink, telHref } from "@/lib/api";
+import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, MapPin, Check, Flame } from "lucide-react";
+import { api, telHref } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
+import { useCart } from "@/context/CartContext";
 import Availability from "@/components/Availability";
 import DietMark from "@/components/DietMark";
 import PicklePackMock from "@/components/PicklePackMock";
@@ -15,16 +16,15 @@ export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { config } = useConfig();
+  const { addItem } = useCart();
   const [product, setProduct] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [pack, setPack] = useState(0);
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState(0);
 
-  const wa = config?.business?.whatsapp || "919675334567";
   const phone = config?.business?.phone || "9675334567";
   const checkoutEnabled = config?.settings?.checkout_enabled;
-
   useEffect(() => {
     api.get(`/products/${slug}`).then(({ data }) => setProduct(data)).catch(() => setNotFound(true));
   }, [slug]);
@@ -38,24 +38,8 @@ export default function ProductDetail() {
   if (!product) return <div className="py-40 text-center font-sans text-ink-soft">Loading…</div>;
 
   const selected = product.pack_sizes?.[pack];
-  const buyable = product.availability === "available";
+  const orderable = product.availability === "ready" || product.availability === "available";
   const total = selected?.price != null ? selected.price * qty : null;
-
-  const orderMsg = (() => {
-    if (!buyable || selected?.price == null) {
-      const sizeStr = selected?.label ? ` — ${selected.label}` : "";
-      return `Hello AMYA, I'd like to enquire about:\n• ${product.name}${sizeStr}\n\nPlease let me know when it's available and the price.`;
-    }
-    const pieces = selected?.note ? ` (${selected.note})` : "";
-    return (
-      `Hello AMYA, I'd like to order:\n` +
-      `• ${product.name}\n` +
-      `• Pack: ${selected.label}${pieces}\n` +
-      `• Quantity: ${qty} pack${qty > 1 ? "s" : ""}\n` +
-      `• Total: ₹${total.toLocaleString("en-IN")}\n\n` +
-      `Please confirm availability, delivery and payment.`
-    );
-  })();
 
   return (
     <div data-testid="product-detail">
@@ -145,7 +129,7 @@ export default function ProductDetail() {
                       {ps.price != null ? (
                         <span className={`font-sans text-lg sm:text-xl font-medium mt-1 whitespace-nowrap ${active ? "text-ivory" : "text-terracotta"}`}>₹{ps.price.toLocaleString("en-IN")}</span>
                       ) : (
-                        <span className="font-sans text-sm mt-1">Price at launch</span>
+                        <span className="font-sans text-sm mt-1">Enquire for price</span>
                       )}
                       {ps.note && <span className={`font-sans text-[10px] uppercase tracking-[0.16em] mt-1 ${active ? "text-ivory/80" : "text-ink-soft"}`}>{ps.note}</span>}
                     </button>
@@ -181,7 +165,7 @@ export default function ProductDetail() {
                 <button onClick={() => setQty((q) => q + 1)} data-testid="qty-plus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Plus size={15} /></button>
               </div>
             </div>
-            {buyable && total != null && (
+            {orderable && total != null && (
               <div className="text-right">
                 <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">Total</p>
                 <p data-testid="pd-total" className="font-serif text-2xl text-terracotta leading-none mt-0.5">₹{total.toLocaleString("en-IN")}</p>
@@ -189,11 +173,24 @@ export default function ProductDetail() {
             )}
           </div>
 
-          {/* Primary order button */}
-          <a href={waLink(wa, orderMsg)} target="_blank" rel="noreferrer" data-testid="pd-whatsapp-enquiry" data-wa-cta
-             className="mt-5 w-full inline-flex items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full">
-            <MessageCircle size={18} /> {buyable ? "Order on WhatsApp" : product.availability === "coming-soon" ? "Enquire for launch updates" : "Enquire on WhatsApp"}
-          </a>
+          {/* Primary action */}
+          {orderable ? (
+            <button
+              type="button"
+              onClick={() => addItem(product, selected, qty)}
+              data-testid="pd-add-cart"
+              className="mt-5 w-full inline-flex items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full"
+            >
+              <ShoppingBag size={18} /> Add to cart
+            </button>
+          ) : (
+            <div
+              data-testid="pd-coming-soon"
+              className="mt-5 w-full inline-flex items-center justify-center gap-2 border border-terracotta/40 text-terracotta-deep py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full"
+            >
+              Coming soon
+            </div>
+          )}
 
           {/* Secondary actions */}
           <div className="mt-3 flex flex-col sm:flex-row gap-3">
@@ -212,7 +209,7 @@ export default function ProductDetail() {
             <div className="mt-5 border border-ink/15 bg-ivory-warm/50 px-4 py-3" data-testid="pd-prelaunch">
               <p className="font-sans text-[11px] uppercase tracking-[0.15em] text-ink-soft">Pre-launch</p>
               <p className="font-sans text-sm text-ink-soft mt-1">
-                Online checkout opens once AMYA confirms the required food-business approvals. For now, tap Order on WhatsApp and we'll help you place your order.
+                Online checkout isn't active yet — add items to your cart and send your order on WhatsApp. We'll confirm availability, final pricing and delivery with you.
               </p>
             </div>
           )}

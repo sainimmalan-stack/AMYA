@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, MessageCircle } from "lucide-react";
+import { Menu, X, Phone, MessageCircle, ShoppingBag } from "lucide-react";
 import Logo from "@/components/Logo";
+import CartDrawer from "@/components/CartDrawer";
 import { useConfig } from "@/context/ConfigContext";
+import { useCart } from "@/context/CartContext";
 import { waLink, telHref } from "@/lib/api";
 
 const NAV = [
@@ -20,6 +22,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const loc = useLocation();
   const { config } = useConfig();
+  const { count, setOpen: setCartOpen } = useCart();
   const phone = config?.business?.phone || "9675334567";
   const wa = config?.business?.whatsapp || "919675334567";
 
@@ -62,6 +65,19 @@ export default function Header() {
               <MessageCircle size={15} />
             </a>
             <button
+              onClick={() => setCartOpen(true)}
+              data-testid="header-cart-btn"
+              aria-label="Open cart"
+              className="relative h-10 w-10 inline-flex items-center justify-center border border-ivory/30 text-ivory hover:bg-ivory hover:text-terracotta hover:border-ivory transition-colors rounded-full">
+              <ShoppingBag size={15} />
+              {count > 0 && (
+                <span data-testid="cart-count-badge"
+                      className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-ivory text-terracotta text-[10px] font-semibold leading-none">
+                  {count}
+                </span>
+              )}
+            </button>
+            <button
               onClick={() => setOpen(true)}
               data-testid="mobile-menu-open"
               className="lg:hidden h-10 w-10 inline-flex items-center justify-center text-ivory"
@@ -72,6 +88,8 @@ export default function Header() {
           </div>
         </div>
       </header>
+
+      <CartDrawer />
 
       <AnimatePresence>
         {open && (

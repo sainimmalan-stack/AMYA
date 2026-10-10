@@ -1,21 +1,17 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowUpRight, MessageCircle } from "lucide-react";
+import { ArrowUpRight, ShoppingBag } from "lucide-react";
 import Availability from "@/components/Availability";
 import DietMark from "@/components/DietMark";
 import PicklePackMock from "@/components/PicklePackMock";
-import { useConfig } from "@/context/ConfigContext";
-import { waLink, orderMessage } from "@/lib/api";
+import { useCart } from "@/context/CartContext";
 
 export default function ProductCard({ product, index = 0 }) {
-  const { config } = useConfig();
-  const wa = config?.business?.whatsapp || "919675334567";
+  const { addItem } = useCart();
   const img = product.images?.[0];
-  const available = product.availability === "available";
   const comingSoon = product.availability === "coming-soon";
+  const orderable = product.availability === "ready" || product.availability === "available";
   const firstPack = product.pack_sizes?.[0];
-  const msg = orderMessage(product, firstPack?.label, firstPack?.price, available ? 1 : null);
-  const cta = available ? "Order on WhatsApp" : comingSoon ? "Enquire for launch updates" : "Enquire on WhatsApp";
 
   return (
     <motion.div
@@ -69,14 +65,23 @@ export default function ProductCard({ product, index = 0 }) {
           )}
         </div>
       </Link>
-      <a
-        href={waLink(wa, msg)} target="_blank" rel="noreferrer"
-        data-testid={`order-wa-${product.slug}`}
-        data-wa-cta
-        className="mt-auto inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
-      >
-        <MessageCircle size={13} className="shrink-0" /> <span>{cta}</span>
-      </a>
+      {comingSoon ? (
+        <span
+          data-testid={`coming-soon-cta-${product.slug}`}
+          className="mt-auto inline-flex items-center justify-center gap-1.5 border border-terracotta/40 text-terracotta-deep py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
+        >
+          Coming soon
+        </span>
+      ) : (
+        <button
+          type="button"
+          onClick={() => addItem(product, firstPack, 1)}
+          data-testid={`add-cart-${product.slug}`}
+          className="mt-auto inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
+        >
+          <ShoppingBag size={13} className="shrink-0" /> <span>Add to cart</span>
+        </button>
+      )}
     </motion.div>
   );
 }

@@ -549,8 +549,9 @@ INITIAL_PRODUCTS = [
         "pack_sizes": [
             {"label": "500 g", "price": 500, "note": "10 pieces"},
             {"label": "1 kg", "price": 900, "note": "20 pieces"},
+            {"label": "10 kg", "price": 8500, "note": None},
         ],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 0,
+        "availability": "ready", "live_press": False, "featured": True, "sort_order": 0,
     },
     {
         "slug": "guntur-sannam-chilli-powder", "name": "Guntur Sannam Chilli Powder (S4)", "category": "spices",
@@ -560,7 +561,7 @@ INITIAL_PRODUCTS = [
         "highlights": ["Carefully selected Guntur Sannam (S4) chillies", "Premium raw material selection", "Small-batch preparation", "Hygienic handling and processing", "Prepared with the support of local village women", "Suitable for traditional Indian cooking"],
         "diet": "veg",
         "ingredients": "Dried Guntur Sannam (S4) red chillies.",
-        "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
+        "storage": "Storage Tip: Store in the refrigerator to help preserve the chilli powder's colour and quality for longer.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Pack sizes and pricing confirmed at launch.",
@@ -591,14 +592,14 @@ INITIAL_PRODUCTS = [
         "origin": "Andhra Pradesh, India",
         "highlights": ["Traditional Andhra-style sesame podi", "Prepared by Amulya in small batches", "Authentic, home-style flavour"],
         "diet": "veg",
-        "serving": "Mix with piping-hot rice and ghee and enjoy while the rice is hot.",
+        "serving": "Best enjoyed mixed with piping-hot rice and ghee.",
         "serving_highlight": "Best enjoyed with very hot rice + ghee",
         "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Ingredients, pack sizes and pricing shared on enquiry.",
         "images": ["/products/amya-nuvvula-podi.jpg"],
-        "pack_sizes": [],
+        "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
         "availability": "available", "live_press": False, "featured": True, "sort_order": 8,
     },
     {
@@ -608,14 +609,14 @@ INITIAL_PRODUCTS = [
         "origin": "Andhra Pradesh, India",
         "highlights": ["Traditional Andhra-style curry leaf podi", "Prepared by Amulya in small batches", "Familiar, comforting everyday flavour"],
         "diet": "veg",
-        "serving": "Mix generously with piping-hot rice and ghee and enjoy while the rice is hot.",
+        "serving": "Best enjoyed mixed with piping-hot rice and ghee.",
         "serving_highlight": "Best enjoyed with very hot rice + ghee",
         "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Ingredients, pack sizes and pricing shared on enquiry.",
         "images": ["/products/amya-karivepaku-podi.jpg"],
-        "pack_sizes": [],
+        "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
         "availability": "available", "live_press": False, "featured": True, "sort_order": 9,
     },
     {
@@ -625,14 +626,14 @@ INITIAL_PRODUCTS = [
         "origin": "Andhra Pradesh, India",
         "highlights": ["Traditional Andhra-style nallakaram podi", "Prepared by Amulya in small batches", "Bold, comforting flavour"],
         "diet": "veg",
-        "serving": "Enjoy with dosa, or mix with piping-hot rice and ghee for a deeply satisfying traditional meal.",
+        "serving": "Enjoy with dosa, or mix with piping-hot rice and ghee.",
         "serving_highlight": "Best enjoyed with very hot rice + ghee",
         "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Ingredients, pack sizes and pricing shared on enquiry.",
         "images": ["/products/amya-nallakaram.jpg"],
-        "pack_sizes": [],
+        "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
         "availability": "available", "live_press": False, "featured": True, "sort_order": 10,
     },
     {
@@ -728,6 +729,11 @@ async def seed():
     # (e.g. via admin) are never overwritten on restart/redeploy.
     for p in INITIAL_PRODUCTS:
         p = dict(p)
+        # Standard pack-size options by category (fixed set for coming-soon ranges).
+        if p.get("category") == "oils":
+            p["pack_sizes"] = [{"label": "500 ml", "price": None}, {"label": "1 litre", "price": None}]
+        elif p.get("category") == "pickles":
+            p["pack_sizes"] = [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}]
         images = p.pop("images", [])
         await db.products.update_one(
             {"slug": p["slug"]},

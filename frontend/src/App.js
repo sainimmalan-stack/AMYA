@@ -6,6 +6,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import Layout from "@/components/Layout";
 import { ConfigProvider } from "@/context/ConfigContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { CartProvider } from "@/context/CartContext";
 
 import Home from "@/pages/Home";
 import Shop from "@/pages/Shop";
@@ -32,6 +33,7 @@ function App() {
   return (
     <ConfigProvider>
       <AuthProvider>
+        <CartProvider>
         <BrowserRouter>
           <ScrollToTop />
           <SmoothScroll>
@@ -53,6 +55,7 @@ function App() {
           </SmoothScroll>
           <Toaster position="top-center" />
         </BrowserRouter>
+        </CartProvider>
       </AuthProvider>
     </ConfigProvider>
   );
