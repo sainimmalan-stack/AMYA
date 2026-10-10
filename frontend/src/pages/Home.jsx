@@ -62,66 +62,30 @@ function OurCollection() {
     api.get("/products").then(({ data }) => setProducts(data)).catch(() => {});
   }, []);
 
-  const AVAILABLE_ORDER = [
-    "cashew-brittle",
-    "amya-nuvvula-podi",
-    "amya-karivepaku-podi",
-    "amya-nallakaram",
-    "amya-garam-masala",
-    "guntur-sannam-chilli-powder",
-    "amya-turmeric-powder",
-  ];
-  // "Shop Our Products" shows in-stock items — both ready-for-delivery and
-  // available-for-pre-order — explicitly ordered with Cashew Brittles first.
-  const IN_STOCK = new Set(["ready", "order", "available"]);
-  const available = products
-    .filter((p) => IN_STOCK.has(p.availability))
-    .sort((a, b) => {
-      const ia = AVAILABLE_ORDER.indexOf(a.slug);
-      const ib = AVAILABLE_ORDER.indexOf(b.slug);
-      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
-    });
-  const comingSoon = products
-    .filter((p) => !IN_STOCK.has(p.availability))
-    .sort((a, b) => a.sort_order - b.sort_order);
+  // Single explicit order driven by each product's sort_order (set in the backend).
+  // All products stay visible regardless of availability status.
+  const ordered = [...products].sort((a, b) => a.sort_order - b.sort_order);
 
   return (
-    <>
-      <section id="collection" className="bg-ivory" data-testid="shop-products-section">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-5 pb-6 sm:py-11 lg:py-14">
-          <Reveal>
-            <div className="flex items-end justify-between mb-6 sm:mb-8">
-              <div>
-                <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Shop AMYA</span>
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Our Products</h2>
-                <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">Authentic flavours. Carefully crafted in small batches.</p>
-              </div>
-              <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
-                View all <ArrowRight size={14} />
-              </Link>
+    <section id="collection" className="bg-ivory" data-testid="shop-products-section">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-5 pb-6 sm:py-11 lg:py-14">
+        <Reveal>
+          <div className="flex items-end justify-between mb-6 sm:mb-8">
+            <div>
+              <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Shop AMYA</span>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Our Products</h2>
+              <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">Authentic flavours. Carefully crafted in small batches.</p>
             </div>
-          </Reveal>
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-            {available.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+            <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
+              View all <ArrowRight size={14} />
+            </Link>
           </div>
+        </Reveal>
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+          {ordered.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
         </div>
-      </section>
-
-      {comingSoon.length > 0 && (
-        <section className="bg-beige" data-testid="coming-soon-section">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-11 lg:py-14">
-            <Reveal>
-              <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Launching soon</span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Coming Soon.</h2>
-              <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">More of AMYA is on its way.</p>
-            </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
-              {comingSoon.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-            </div>
-          </div>
-        </section>
-      )}
-    </>
+      </div>
+    </section>
   );
 }
 

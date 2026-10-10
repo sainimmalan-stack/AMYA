@@ -498,7 +498,7 @@ INITIAL_PRODUCTS = [
         "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/b41788359d4289ac589981e8d5fa8b87c1507b776d5d7ab012b32b3f968e6e26.jpeg"],
         "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"},
                         {"label": "1 L", "price": None, "note": "Pricing confirmed at launch"}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 1,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 7,
     },
     {
         "slug": "sunflower-oil", "name": "Sunflower Oil", "category": "oils",
@@ -513,7 +513,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Food-label details are added once finalised by AMYA.",
         "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/ef96b70740edd217319255f7967baff4c4dd26d527f22dfae28c93a0aa108a1e.jpeg"],
         "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 4,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 10,
     },
     {
         "slug": "sesame-oil", "name": "Sesame Oil", "category": "oils",
@@ -528,7 +528,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Food-label details are added once finalised by AMYA.",
         "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/3f1d901f274afb9df3339da23892b343c1aafe49019ce9fbba74b907c80a2101.jpeg"],
         "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 2,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 8,
     },
     {
         "slug": "coconut-oil", "name": "Coconut Oil", "category": "oils",
@@ -543,7 +543,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Food-label details are added once finalised by AMYA.",
         "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/6a581d418ed7498e36efa91dbde9de25b3155fd6b37bc340c9389a22dbfe2577.jpeg"],
         "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 3,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 9,
     },
     {
         "slug": "cashew-brittle", "name": "Cashew Brittle", "category": "cashew-brittles",
@@ -583,7 +583,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "AMYA Signature Spice. Pack sizes and pricing confirmed at launch.",
         "images": ["/products/guntur-sannam-chilli-powder.jpg"],
         "pack_sizes": [],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 6,
+        "availability": "available", "live_press": False, "featured": True, "sort_order": 5,
     },
     {
         "slug": "amya-turmeric-powder", "name": "AMYA Turmeric Powder", "category": "spices",
@@ -599,7 +599,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "AMYA Signature Spice. Pack sizes and pricing confirmed on enquiry.",
         "images": ["/products/amya-turmeric-powder.jpg"],
         "pack_sizes": [],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 7,
+        "availability": "available", "live_press": False, "featured": True, "sort_order": 6,
     },
     {
         "slug": "amya-nuvvula-podi", "name": "AMYA Nuvvula Podi", "category": "spices",
@@ -623,7 +623,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 8,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 1,
     },
     {
         "slug": "amya-karivepaku-podi", "name": "AMYA Karivepaku Podi", "category": "spices",
@@ -647,7 +647,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 9,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 2,
     },
     {
         "slug": "amya-nallakaram", "name": "AMYA Nallakaram Podi", "category": "spices",
@@ -671,7 +671,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 10,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 3,
     },
     {
         "slug": "amya-garam-masala", "name": "AMYA Garam Masala", "category": "spices",
@@ -693,7 +693,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 11,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 4,
     },
     {
         "slug": "avakai-pickle", "name": "Avakai Pickle", "category": "pickles",
@@ -703,7 +703,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 14,
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 11,
     },
     {
         "slug": "maagai-pickle", "name": "Maagai Pickle", "category": "pickles",
@@ -713,7 +713,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 15,
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 12,
     },
     {
         "slug": "allam-sweet-pickle", "name": "Allam Sweet Pickle", "category": "pickles",
@@ -723,7 +723,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 16,
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 13,
     },
     {
         "slug": "chicken-pickle", "name": "Chicken Pickle", "category": "pickles",
@@ -733,7 +733,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 17,
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 14,
     },
     {
         "slug": "mutton-pickle", "name": "Mutton Pickle", "category": "pickles",
@@ -743,7 +743,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 18,
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 15,
     },
     {
         "slug": "prawn-pickle", "name": "Prawn Pickle", "category": "pickles",
@@ -753,7 +753,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 19,
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 16,
     },
 ]
 
