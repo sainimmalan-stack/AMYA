@@ -17,9 +17,8 @@ function Hero() {
 
   return (
     <section ref={ref} className="relative bg-terracotta text-ivory grain overflow-hidden">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-10 lg:pt-16 lg:pb-16 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          <div className="lg:col-span-7">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-8 lg:pt-16 lg:pb-16 relative z-10">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
               className="font-sans text-xs uppercase tracking-[0.3em] text-ivory/75 block mb-4">
               Handmade · small batches
@@ -72,8 +71,8 @@ function CollectionCard({ product, name, desc, price, cta, to, extra, index }) {
         {price && <p className="font-sans text-sm text-terracotta-deep mt-2">{price}</p>}
         <div className="mt-auto pt-4">
           <Link to={to} data-testid={`collection-cta-${to.split("/").pop()}`}
-                className="inline-flex w-full items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-3 font-sans text-[10px] sm:text-xs uppercase tracking-[0.18em] rounded-full">
-            {cta} <ArrowRight size={14} />
+                className="inline-flex w-full items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors px-3 py-3 font-sans text-[11px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.18em] leading-tight text-center rounded-full">
+            <span>{cta}</span> <ArrowRight size={14} className="shrink-0" />
           </Link>
           {extra}
         </div>
@@ -97,7 +96,7 @@ function OurCollection() {
   const priceLabel = cashewMin.length ? `From ₹${Math.min(...cashewMin)}` : null;
 
   return (
-    <section id="collection" className="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-14 lg:py-20">
+    <section id="collection" className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-10 sm:py-14 lg:py-20">
       <Reveal>
         <div className="flex items-end justify-between mb-6 sm:mb-8">
           <div>
@@ -110,7 +109,7 @@ function OurCollection() {
         </div>
       </Reveal>
 
-      <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 lg:gap-8">
         <CollectionCard
           product={cashew}
           name="AMYA Cashew Brittle"
