@@ -4,17 +4,17 @@
 @tailwind utilities;
 
 :root {
-  --terracotta: #B94F3F;
-  --terracotta-deep: #963C2D;
-  --terracotta-soft: #CE6B5C;
-  --ivory: #FFF3E6;
-  --ivory-warm: #F0DEC5;
-  --beige: #F0DEC5;
-  --choco: #351D18;
-  --choco-soft: #46261D;
-  --noir: #0A0A0A;
-  --ink: #351D18;
-  --ink-soft: #5A4039;
+  --terracotta: #B95040;
+  --terracotta-deep: #A64032;
+  --terracotta-soft: #D88A76;
+  --ivory: #FFF1E3;
+  --ivory-warm: #FBE7D8;
+  --beige: #F3DACB;
+  --choco: #A64032;
+  --choco-soft: #A64032;
+  --noir: #B95040;
+  --ink: #42251F;
+  --ink-soft: #6B4A40;
 }
 
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }

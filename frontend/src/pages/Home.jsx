@@ -54,8 +54,8 @@ function Hero() {
 function CollectionCard({ product, name, desc, price, cta, to, extra, index, tone = "ivory", fit = "contain" }) {
   const img = product?.images?.[0];
   const badge = product?.availability === "available" ? "Available" : "Coming soon";
-  const cardBg = tone === "beige" ? "bg-beige" : "bg-white";
-  const imgBg = tone === "beige" ? "bg-[#E7D3B9]" : "bg-ivory-warm";
+  const cardBg = tone === "beige" ? "bg-ivory-warm" : "bg-ivory";
+  const imgBg = tone === "beige" ? "bg-beige" : "bg-ivory-warm";
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
@@ -193,20 +193,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why AMYA — premium brand story (deep chocolate) */}
-      <section className="bg-choco text-ivory grain relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14 lg:py-20 relative z-10">
+      {/* Why AMYA — brand story */}
+      <section className="bg-ivory">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14 lg:py-20">
           <Reveal>
-            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta-soft">Why AMYA</span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 mb-10">Genuine, not glossy.</h2>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Why AMYA</span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 mb-10 text-ink">Genuine, not glossy.</h2>
           </Reveal>
           <div className="grid sm:grid-cols-3 gap-8">
             {WHY.map((w, i) => (
               <Reveal key={w.t} delay={i * 0.08}>
-                <div className="border-t border-ivory/20 pt-5">
-                  <w.icon size={22} className="text-terracotta-soft" />
-                  <h3 className="font-serif text-2xl mt-3">{w.t}</h3>
-                  <p className="font-sans text-sm text-ivory/75 mt-2 leading-relaxed">{w.d}</p>
+                <div className="border-t border-ink/15 pt-5">
+                  <w.icon size={22} className="text-terracotta" />
+                  <h3 className="font-serif text-2xl mt-3 text-ink">{w.t}</h3>
+                  <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">{w.d}</p>
                 </div>
               </Reveal>
             ))}

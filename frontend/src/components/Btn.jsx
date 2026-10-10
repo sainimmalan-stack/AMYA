@@ -5,7 +5,7 @@ const base = "inline-flex items-center justify-center gap-2 font-sans text-xs up
 const variants = {
   solid: "bg-terracotta text-ivory hover:bg-terracotta-deep",
   solidIvory: "bg-ivory text-terracotta hover:bg-ivory-warm",
-  outline: "border border-ink/25 text-ink hover:bg-ink hover:text-ivory",
+  outline: "border border-ink/25 text-ink hover:bg-terracotta hover:text-ivory hover:border-terracotta",
   outlineIvory: "border border-ivory/50 text-ivory hover:bg-ivory hover:text-terracotta",
 };
 

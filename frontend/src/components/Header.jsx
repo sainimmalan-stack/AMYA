@@ -35,15 +35,15 @@ export default function Header() {
   return (
     <>
       <AnnouncementBar />
-      <header className="sticky top-0 z-40 bg-ivory/90 backdrop-blur-md border-b border-ink/10">
+      <header className="sticky top-0 z-40 bg-terracotta border-b border-ivory/15">
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center">
           {/* Mobile / tablet: centred logo */}
           <div className="lg:hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <Logo variant="ink" size="header" />
+            <Logo variant="ivory" size="header" />
           </div>
           {/* Desktop: left-aligned logo */}
           <div className="hidden lg:block">
-            <Logo variant="ink" size="header" />
+            <Logo variant="ivory" size="header" />
           </div>
 
           <nav className="hidden lg:flex items-center gap-7 ml-10">
@@ -53,7 +53,7 @@ export default function Header() {
                 to={n.to}
                 data-testid={`nav-${n.label.toLowerCase().replace(/ /g, "-")}`}
                 className={`link-underline font-sans text-xs uppercase tracking-[0.18em] transition-colors ${
-                  loc.pathname === n.to ? "text-terracotta" : "text-ink-soft hover:text-terracotta"
+                  loc.pathname === n.to ? "text-ivory" : "text-ivory/70 hover:text-ivory"
                 }`}
               >
                 {n.label}
@@ -63,18 +63,18 @@ export default function Header() {
 
           <div className="flex items-center gap-2 ml-auto">
             <a href={`tel:${phone}`} data-testid="header-call-btn"
-               className="hidden sm:inline-flex h-10 w-10 items-center justify-center border border-ink/15 text-ink-soft hover:bg-terracotta hover:text-ivory hover:border-terracotta transition-colors rounded-full">
+               className="hidden sm:inline-flex h-10 w-10 items-center justify-center border border-ivory/30 text-ivory hover:bg-ivory hover:text-terracotta hover:border-ivory transition-colors rounded-full">
               <Phone size={15} />
             </a>
             <a href={waLink(wa, "Hello AMYA, I'd like to know more.")} target="_blank" rel="noreferrer"
                data-testid="header-whatsapp-btn"
-               className="hidden sm:inline-flex h-10 w-10 items-center justify-center border border-ink/15 text-ink-soft hover:bg-terracotta hover:text-ivory hover:border-terracotta transition-colors rounded-full">
+               className="hidden sm:inline-flex h-10 w-10 items-center justify-center border border-ivory/30 text-ivory hover:bg-ivory hover:text-terracotta hover:border-ivory transition-colors rounded-full">
               <MessageCircle size={15} />
             </a>
             <button
               onClick={() => setOpen(true)}
               data-testid="mobile-menu-open"
-              className="lg:hidden h-10 w-10 inline-flex items-center justify-center text-ink"
+              className="lg:hidden h-10 w-10 inline-flex items-center justify-center text-ivory"
               aria-label="Open menu"
             >
               <Menu size={22} />

@@ -10,14 +10,14 @@ export default function OilCallout() {
   const wa = config?.business?.whatsapp || "919675334567";
 
   return (
-    <section className="bg-ink text-ivory" data-testid="oils-callout-section">
+    <section className="bg-terracotta text-ivory" data-testid="oils-callout-section">
       <div className="max-w-4xl mx-auto px-5 sm:px-8 py-16 lg:py-20">
         <motion.div
-          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }}
+          initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
-          className="border-l-2 border-terracotta pl-6 sm:pl-8"
+          className="border-l-2 border-ivory/40 pl-6 sm:pl-8"
         >
-          <span className="inline-flex items-center justify-center h-11 w-11 rounded-full bg-terracotta/15 text-terracotta-soft mb-5">
+          <span className="inline-flex items-center justify-center h-11 w-11 rounded-full bg-ivory/15 text-ivory mb-5">
             <Video size={20} />
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.02]">
