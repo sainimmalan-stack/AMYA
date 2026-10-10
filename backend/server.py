@@ -253,6 +253,7 @@ class Settings(BaseModel):
     checkout_enabled: bool = False
     bank_details: str = ""
     upi_id: str = ""
+    oils_video_url: str = ""
     policies: dict = {}
 
 

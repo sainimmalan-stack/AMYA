@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MessageCircle, Minus, Plus, AlertTriangle, ArrowRight } from "lucide-react";
+import { MessageCircle, Minus, Plus, ArrowRight } from "lucide-react";
 import { api, waLink, orderMessage } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 
@@ -70,15 +70,9 @@ export default function CashewFeature() {
             <MessageCircle size={16} /> Order {selected?.label} · ₹{selected?.price} on WhatsApp
           </a>
 
-          {/* Allergen */}
-          {product.allergens && (
-            <div className="mt-5 flex gap-3 border border-terracotta/40 bg-terracotta/5 p-4">
-              <AlertTriangle size={18} className="text-terracotta shrink-0 mt-0.5" />
-              <p className="font-sans text-sm text-ink-soft"><span className="uppercase tracking-[0.15em] text-terracotta-deep text-xs">Allergens — </span>{product.allergens}</p>
-            </div>
-          )}
+          {/* Allergen info intentionally not shown on this card per founder request */}
 
-          <Link to={`/product/${product.slug}`} data-testid="cashew-details-link" className="link-underline inline-flex items-center gap-2 mt-5 font-sans text-xs uppercase tracking-[0.2em] text-ink">
+          <Link to={`/product/${product.slug}`} data-testid="cashew-details-link" className="link-underline inline-flex items-center gap-2 mt-6 font-sans text-xs uppercase tracking-[0.2em] text-ink">
             Full product details <ArrowRight size={14} />
           </Link>
         </div>

@@ -7,6 +7,7 @@ import { useConfig } from "@/context/ConfigContext";
 import { Reveal, MaskedLines } from "@/components/Reveal";
 import Btn from "@/components/Btn";
 import CashewFeature from "@/components/CashewFeature";
+import OilVideo from "@/components/OilVideo";
 
 const HERO_IMG = "https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/355a2d711b475e647f4a4a0607d9de6b7442e80cae73e64ea1c5e36c61d914cf.jpeg";
 
@@ -141,6 +142,9 @@ export default function Home() {
   return (
     <div>
       <Hero />
+
+      {/* AMYA Oils video — highlighted right after the hero */}
+      <OilVideo onDiscover={() => scrollTo("oils")} />
 
       {/* Cashew — priority product */}
       <div id="cashew" className="scroll-mt-24"><CashewFeature /></div>

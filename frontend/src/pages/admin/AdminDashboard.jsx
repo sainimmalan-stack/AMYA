@@ -232,6 +232,11 @@ function SettingsPanel({ settings, setSettings, onSave }) {
         <div><Label className="text-xs text-ink-soft">UPI ID</Label><Input data-testid="upi-id" value={s.upi_id || ""} onChange={(e) => upd("upi_id", e.target.value)} /></div>
       </div>
 
+        <div className="bg-white border border-ink/10 p-5 space-y-4">
+        <p className="font-sans text-xs uppercase tracking-[0.15em] text-ink-soft">AMYA Oils homepage video</p>
+        <div><Label className="text-xs text-ink-soft">Oils video URL (MP4 link). Leave blank to show the placeholder.</Label><Input data-testid="oils-video-url" value={s.oils_video_url || ""} onChange={(e) => upd("oils_video_url", e.target.value)} placeholder="https://.../amya-oils.mp4" /></div>
+      </div>
+
       <div className="bg-white border border-ink/10 p-5 space-y-4">
         <p className="font-sans text-xs uppercase tracking-[0.15em] text-ink-soft">Editable policies</p>
         {[["terms", "Terms & Conditions"], ["privacy", "Privacy Policy"], ["shipping", "Shipping Policy"], ["refund", "Cancellation & Refund"], ["food_disclosure", "Food-business disclosures"]].map(([k, l]) => (

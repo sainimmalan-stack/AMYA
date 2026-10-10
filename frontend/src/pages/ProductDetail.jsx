@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Minus, Plus, MessageCircle, Video, AlertTriangle, Phone } from "lucide-react";
+import { ArrowLeft, Minus, Plus, MessageCircle, Video, Phone } from "lucide-react";
 import { api, waLink, orderMessage } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import Availability from "@/components/Availability";
@@ -36,7 +36,6 @@ export default function ProductDetail() {
   if (!product) return <div className="py-40 text-center font-sans text-ink-soft">Loading…</div>;
 
   const selected = product.pack_sizes?.[pack];
-  const hasAllergen = product.allergens && product.allergens.trim().length > 0;
   const buyable = product.availability === "available";
 
   const enquiryMsg = orderMessage(product, selected?.label, selected?.price, qty);
@@ -109,17 +108,6 @@ export default function ProductDetail() {
               <button onClick={() => setQty((q) => q + 1)} data-testid="qty-plus" className="h-12 w-12 flex items-center justify-center hover:bg-ivory-warm"><Plus size={16} /></button>
             </div>
           </div>
-
-          {/* Allergen */}
-          {hasAllergen && (
-            <div data-testid="allergen-notice" className="mt-8 flex gap-3 border border-terracotta/40 bg-terracotta/5 p-4">
-              <AlertTriangle size={18} className="text-terracotta shrink-0 mt-0.5" />
-              <div>
-                <p className="font-sans text-xs uppercase tracking-[0.15em] text-terracotta-deep">Allergen information</p>
-                <p className="font-sans text-sm text-ink-soft mt-1">{product.allergens}</p>
-              </div>
-            </div>
-          )}
 
           {/* Actions */}
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
