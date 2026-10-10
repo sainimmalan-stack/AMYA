@@ -1,0 +1,51 @@
+{
+  "summary": "Full backend + frontend regression for the premium-product catalog expansion (Spices + Pickles) plus Cashew Brittle preservation. 25/25 pytest tests pass. Public UI verified across homepage, /shop/{spices,pickles,cashew-brittles}, product detail pages, mobile responsiveness (375/390/430), and WhatsApp deep-links.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "verifications": {
+    "GET_/api/products_count": 13,
+    "cashew-brittle": "category=cashew-brittles, availability=available",
+    "oils": "4 slugs (groundnut/sesame/coconut/sunflower) all coming-soon",
+    "spices": "guntur-sannam-chilli-powder & lakadong-turmeric-powder — category=spices, availability=enquire, diet=veg, pack_sizes=[]",
+    "pickles": "6 slugs — avakai/maagai/allam veg; chicken/mutton/prawn non-veg; all coming-soon under category=pickles",
+    "spice_detail_has_origin_and_highlights": true,
+    "home_hero_tagline": "Rooted in Tradition. Crafted with Care. — present",
+    "home_cta_buttons": "'Explore Our Collection' -> /shop  ;  'Our Story' -> /our-story",
+    "home_featured_cards": "3 (cashew-brittle, guntur-sannam-chilli-powder, lakadong-turmeric-powder)",
+    "home_pickles_section": "'Traditional Pickles. Authentic Flavours.' with all 6 pickle cards (avakai, maagai, allam, chicken, mutton, prawn)",
+    "broken_images_home": 0,
+    "nav_links": "Home, Our Story (/our-story), Spices (/shop/spices), Pickles (/shop/pickles), Cashew Brittle (/shop/cashew-brittles), Contact — all correct on desktop & mobile hamburger",
+    "shop_spices": "2 cards, 2x data-testid=diet-veg, CTA 'Enquire on WhatsApp'",
+    "shop_pickles": "6 cards, 3x diet-veg + 3x diet-non-veg, CTA 'Enquire for launch updates'",
+    "shop_cashew-brittles": "1 card",
+    "spice_PD_wa_href": "wa.me/919675334567?text=Hello%20AMYA%2C%20I'd%20like%20to%20enquire%20about%3A%0A%E2%80%A2%20Guntur%20Sannam%20Chilli%20Powder%20(S4)...",
+    "spice_PD_cta_text": "ENQUIRE ON WHATSAPP",
+    "spice_PD_pack_selector_count": 0,
+    "spice_PD_has_pd-highlights": true,
+    "spice_PD_has_origin_MapPin_icon": true,
+    "pickle_PD_wa_href": "wa.me/919675334567?...%E2%80%A2%20Avakai%20Pickle...",
+    "pickle_PD_cta_text": "ENQUIRE FOR LAUNCH UPDATES",
+    "pickle_PD_pack_selector_count": 0,
+    "cashew_PD_prices": "₹500 (500g, default) & ₹900 (1kg) — visually confirmed via screenshot; pack selector + live total + 'Perfect for Gifting' tag + 'Best value · ₹0.90/g' all present",
+    "mobile_horizontal_overflow": "0px at widths 375/390/430 for /, /shop/spices, /shop/pickles, /product/guntur-sannam-chilli-powder, /product/avakai-pickle, /product/cashew-brittle",
+    "console_errors_relevant": "Only pre-existing 401s on __emergent_overlay__/cdn-cgi/rum and Lenis non-static warning (ignored per instructions)"
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Backend seed() is idempotent — upserts by slug and deletes obsolete slugs. Clean.",
+    "ProductCard CTAs correctly diverge by availability (available/enquire/coming-soon) with product-specific WhatsApp messages.",
+    "DietMark component (data-testid=diet-veg / diet-non-veg) applied consistently on cards and product-detail pages with no z-overlap with Availability badge."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (25/25)", "frontend": "100%"},
+  "test_credentials": "admin: amulya@amayafoods.in / AmyaFounder@2026 (from /app/backend/.env)",
+  "seed_data_creation": "None (seed is auto-run on backend startup and already contains the 13-product catalog)",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Catalog = 13 products (1 cashew available, 4 oils coming-soon, 2 spices enquire, 6 pickles coming-soon). WhatsApp number 919675334567. No prices on spices/pickles. Product-specific wa.me messages are built client-side in ProductDetail/ProductCard via buildEnquiryUrl(name). Backend pytest in /app/backend/tests/backend_test.py covers public config, product list/filter/slug/404, 13-product catalog shape, spice detail required fields, bookings/enquiries CRUD, admin product CRUD + availability patch, booking/enquiry status updates, batch CRUD, settings update.",
+  "rca_of_the_issue": "N/A — no bugs found."
+}

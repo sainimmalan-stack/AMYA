@@ -70,6 +70,39 @@ class TestProducts:
         r = session.get(f"{API}/products/does-not-exist-xyz")
         assert r.status_code == 404
 
+    def test_catalog_expansion_13_products(self, session):
+        r = session.get(f"{API}/products")
+        assert r.status_code == 200
+        products = r.json()
+        assert len(products) == 13, f"expected 13 products, got {len(products)}"
+        by_slug = {p["slug"]: p for p in products}
+        # cashew
+        assert by_slug["cashew-brittle"]["availability"] == "available"
+        # spices
+        for s in ("guntur-sannam-chilli-powder", "lakadong-turmeric-powder"):
+            p = by_slug[s]
+            assert p["category"] == "spices"
+            assert p["availability"] == "enquire"
+            assert p.get("diet") == "veg"
+            assert p.get("pack_sizes", []) == []
+        # pickles
+        veg = {"avakai-pickle", "maagai-pickle", "allam-sweet-pickle"}
+        nonveg = {"chicken-pickle", "mutton-pickle", "prawn-pickle"}
+        for s in veg | nonveg:
+            p = by_slug[s]
+            assert p["category"] == "pickles"
+            assert p["availability"] == "coming-soon"
+        for s in veg:
+            assert by_slug[s]["diet"] == "veg"
+        for s in nonveg:
+            assert by_slug[s]["diet"] == "non-veg"
+
+    def test_spice_detail_fields(self, session):
+        for slug in ("guntur-sannam-chilli-powder", "lakadong-turmeric-powder"):
+            p = session.get(f"{API}/products/{slug}").json()
+            assert p.get("origin"), f"{slug} missing origin"
+            assert isinstance(p.get("highlights", []), list) and len(p["highlights"]) > 0
+
 
 # -------------------------- Bookings & Enquiries (public) --------------------------
 class TestBookingsAndEnquiries:
