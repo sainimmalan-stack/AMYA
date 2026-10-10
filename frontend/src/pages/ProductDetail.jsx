@@ -84,14 +84,21 @@ export default function ProductDetail() {
           {/* Pack sizes */}
           {product.pack_sizes?.length > 0 && (
             <div className="mt-8">
-              <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-3">Pack size</p>
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-1">Pack size</p>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-4">
                 {product.pack_sizes.map((ps, i) => {
                   const active = i === pack;
+                  const isGift = i === product.pack_sizes.length - 1 && product.pack_sizes.length > 1;
                   return (
                     <button key={i} onClick={() => setPack(i)} data-testid={`pack-${i}`}
                             aria-pressed={active}
                             className={`relative flex flex-col items-center justify-center text-center px-3 py-6 sm:py-7 border transition-all duration-300 ${active ? "border-terracotta bg-ivory-warm" : "border-ink/15 bg-ivory hover:border-terracotta/60"}`}>
+                      {isGift && (
+                        <span data-testid="gifting-tag"
+                              className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-terracotta text-ivory text-[8px] uppercase tracking-[0.14em] px-2.5 py-0.5 rounded-full whitespace-nowrap shadow-sm">
+                          Perfect for gifting
+                        </span>
+                      )}
                       {active && <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-terracotta" />}
                       <span className="font-serif text-2xl sm:text-3xl leading-none text-ink">{ps.label}</span>
                       {ps.price != null ? (
