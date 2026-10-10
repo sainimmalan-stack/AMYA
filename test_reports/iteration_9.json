@@ -1,0 +1,20 @@
+{
+  "summary": "Website-wide terracotta palette verification for AMYA Artisanal Foods. Tested all 9 public routes (/, /shop, /shop/oils, /product/cashew-brittle, /about, /contact, /live-press, /our-story, /transparency) at 1440 and the home at mobile widths 375/390/430. On every page, header background is exactly rgb(185,80,64) terracotta with ivory AMYA logo+hamburger, and footer background is terracotta (NOT black). No pure black (#000) or pure white (#fff) full-section backgrounds found on any page. Mobile hamburger overlay is fullscreen terracotta (rgb(185,80,64)) with ivory logo/links/close icon; all nav links present (Home, Cashew Brittle, AMYA Oils, About, Contact) plus CALL/WHATSAPP CTAs. Homepage hero is terracotta with ivory 'Shop our products' button (bg ivory #FFF1E3, text terracotta). Both collection cards render immediately with opacity=1 (no scroll needed). Cashew card shows 'AMYA Cashew Brittle', 'From ₹500', 'SHOP CASHEW BRITTLE'; no '250g' or '₹300' on home. Product /product/cashew-brittle: 500g/1kg selector with ₹500/₹900, 'Perfect for gifting' tag, 'Best value · ₹0.90/g' present, no 250g/₹300. pd-whatsapp-enquiry is terracotta bg + ivory text, href=wa.me/919675334567 with pack+price+qty payload. Floating WhatsApp button is a fixed terracotta circle with ivory icon pointing to wa.me/919675334567. No horizontal overflow at 375/390/430/1440. Only console errors are the pre-existing ignorable 401s on /__emergent_overlay__ and /cdn-cgi/rum.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100%"},
+  "test_credentials": "N/A",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Palette migration to terracotta-dominant is complete and verified end-to-end. Header rgb(185,80,64) + footer rgb(185,80,64) on all 9 public routes. No black/white full-section backgrounds remain. Mobile menu + floating WhatsApp + product page pricing + collection cards opacity=1 all pass. WhatsApp = 919675334567. Prices 500g ₹500 / 1kg ₹900.",
+  "rca of the issue": "N/A — verification task only, all acceptance criteria met."
+}
