@@ -7,9 +7,9 @@ import { Reveal } from "@/components/Reveal";
 
 const CATEGORY_META = {
   oils: {
-    eyebrow: "Wood-pressed, prepared to order",
+    eyebrow: "Cold-extracted, prepared to order",
     title: ["AMYA Oils."],
-    sub: "Cooking oils produced using our own traditional wooden chekku / ghani extraction setup. Every oil can be prepared live through AMYA Live Press.",
+    sub: "Cooking oils cold-extracted in small batches using our own setup. Request a live session to watch the actual process and ask questions before you order.",
     key: "oils",
   },
   pickles: {
