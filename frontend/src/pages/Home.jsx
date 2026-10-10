@@ -8,7 +8,7 @@ import { Reveal, MaskedLines } from "@/components/Reveal";
 import Btn from "@/components/Btn";
 import CashewFeature from "@/components/CashewFeature";
 
-const CASHEW_IMG = "https://images.unsplash.com/photo-1772984960196-b387b4f2f524?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200";
+const HERO_IMG = "https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/355a2d711b475e647f4a4a0607d9de6b7442e80cae73e64ea1c5e36c61d914cf.jpeg";
 
 function scrollTo(id) {
   const el = document.getElementById(id);
@@ -56,7 +56,7 @@ function Hero() {
           <div className="lg:col-span-5">
             <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 1 }}
               className="relative aspect-[3/4] overflow-hidden rounded-t-[110px] border border-ivory/20">
-              <motion.img src={CASHEW_IMG} alt="AMYA cashew brittle" style={{ y, scale }} className="h-full w-full object-cover" />
+              <motion.img src={HERO_IMG} alt="AMYA cooking oil" style={{ y, scale }} className="h-full w-full object-cover" />
             </motion.div>
           </div>
         </div>

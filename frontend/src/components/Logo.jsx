@@ -7,7 +7,7 @@ const SRC = {
   ivory: "/brand/amya-logo-ivory.png",
 };
 
-const HEIGHT = { sm: "h-8", md: "h-11", lg: "h-20", header: "h-10 lg:h-9", menu: "h-11" };
+const HEIGHT = { sm: "h-8", md: "h-11", lg: "h-20", header: "h-11 lg:h-9", menu: "h-12" };
 
 export default function Logo({ variant = "ink", className = "", size = "md" }) {
   return (

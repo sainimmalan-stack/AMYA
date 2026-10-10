@@ -21,14 +21,14 @@ export default function CashewFeature() {
   const msg = orderMessage(product, selected?.label, selected?.price, qty);
 
   return (
-    <section className="max-w-7xl mx-auto px-5 sm:px-8 py-16 lg:py-24" data-testid="cashew-feature">
-      <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+    <section className="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-14 lg:py-24" data-testid="cashew-feature">
+      <div className="grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative aspect-[4/5] overflow-hidden bg-ivory-warm rounded-tr-[90px]"
+          className="relative overflow-hidden bg-ivory-warm rounded-2xl rounded-tr-[70px]"
         >
-          {product.images?.[0] && <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />}
+          {product.images?.[0] && <img src={product.images[0]} alt={product.name} className="w-full h-auto max-h-[520px] object-contain mx-auto" />}
           <span className="absolute top-4 left-4 bg-terracotta text-ivory px-3 py-1 text-[10px] uppercase tracking-[0.2em]">Available now</span>
         </motion.div>
 
