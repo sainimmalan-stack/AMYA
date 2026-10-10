@@ -1,0 +1,608 @@
+from dotenv import load_dotenv
+from pathlib import Path
+import os
+
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
+
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends
+from starlette.middleware.cors import CORSMiddleware
+from motor.motor_asyncio import AsyncIOMotorClient
+import logging
+from pydantic import BaseModel, Field, BeforeValidator, ConfigDict
+from typing import List, Optional, Annotated, Any
+from datetime import datetime, timezone, timedelta
+from bson import ObjectId
+import bcrypt
+import jwt
+import re
+
+# ---------------------------------------------------------------------------
+# DB
+# ---------------------------------------------------------------------------
+mongo_url = os.environ['MONGO_URL']
+client = AsyncIOMotorClient(mongo_url)
+db = client[os.environ['DB_NAME']]
+
+JWT_SECRET = os.environ['JWT_SECRET']
+JWT_ALGORITHM = "HS256"
+BUSINESS_WHATSAPP = os.environ.get('BUSINESS_WHATSAPP', '919675334567')
+BUSINESS_PHONE = os.environ.get('BUSINESS_PHONE', '9675334567')
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger("amya")
+
+# ---------------------------------------------------------------------------
+# Mongo base model
+# ---------------------------------------------------------------------------
+PyObjectId = Annotated[str, BeforeValidator(lambda v: str(v) if isinstance(v, ObjectId) else v)]
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+class BaseDocument(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True)
+    id: Optional[PyObjectId] = Field(default=None, alias="_id")
+
+    @classmethod
+    def from_mongo(cls, doc: dict):
+        if not doc:
+            return None
+        return cls(**doc)
+
+    def to_mongo(self) -> dict:
+        data = self.model_dump(by_alias=True, exclude_none=True)
+        data.pop("_id", None)
+        return data
+
+
+# ---------------------------------------------------------------------------
+# Auth helpers
+# ---------------------------------------------------------------------------
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+
+def verify_password(plain: str, hashed: str) -> bool:
+    try:
+        return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
+    except Exception:
+        return False
+
+
+def create_access_token(user_id: str, email: str) -> str:
+    payload = {"sub": user_id, "email": email, "type": "access",
+               "exp": datetime.now(timezone.utc) + timedelta(hours=12)}
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+
+def create_refresh_token(user_id: str) -> str:
+    payload = {"sub": user_id, "type": "refresh",
+               "exp": datetime.now(timezone.utc) + timedelta(days=7)}
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+
+async def get_current_admin(request: Request) -> dict:
+    token = request.cookies.get("access_token")
+    if not token:
+        auth = request.headers.get("Authorization", "")
+        if auth.startswith("Bearer "):
+            token = auth[7:]
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        if payload.get("type") != "access":
+            raise HTTPException(status_code=401, detail="Invalid token type")
+        user = await db.users.find_one({"_id": ObjectId(payload["sub"])})
+        if not user or user.get("role") != "admin":
+            raise HTTPException(status_code=401, detail="Not authorised")
+        user["_id"] = str(user["_id"])
+        user.pop("password_hash", None)
+        return user
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+
+def set_auth_cookies(response: Response, access: str, refresh: str):
+    response.set_cookie("access_token", access, httponly=True, secure=True,
+                        samesite="none", max_age=43200, path="/")
+    response.set_cookie("refresh_token", refresh, httponly=True, secure=True,
+                        samesite="none", max_age=604800, path="/")
+
+
+# ---------------------------------------------------------------------------
+# Models
+# ---------------------------------------------------------------------------
+class PackSize(BaseModel):
+    label: str
+    price: Optional[float] = None
+    note: Optional[str] = None
+
+
+class Product(BaseDocument):
+    slug: str
+    name: str
+    category: str  # oils | cashew-brittles | pickles
+    short_description: str = ""
+    description: str = ""
+    extraction_method: str = ""
+    ingredients: str = ""
+    allergens: str = ""
+    storage: str = ""
+    delivery_info: str = ""
+    returns_info: str = ""
+    food_label_info: str = ""
+    batch_info: str = ""
+    images: List[str] = []
+    pack_sizes: List[PackSize] = []
+    availability: str = "coming-soon"  # available | coming-soon | unavailable
+    live_press: bool = False
+    featured: bool = False
+    sort_order: int = 0
+    created_at: str = Field(default_factory=now_iso)
+
+
+class ProductIn(BaseModel):
+    slug: Optional[str] = None
+    name: str
+    category: str
+    short_description: str = ""
+    description: str = ""
+    extraction_method: str = ""
+    ingredients: str = ""
+    allergens: str = ""
+    storage: str = ""
+    delivery_info: str = ""
+    returns_info: str = ""
+    food_label_info: str = ""
+    batch_info: str = ""
+    images: List[str] = []
+    pack_sizes: List[PackSize] = []
+    availability: str = "coming-soon"
+    live_press: bool = False
+    featured: bool = False
+    sort_order: int = 0
+
+
+class Booking(BaseDocument):
+    name: str
+    mobile: str
+    whatsapp: Optional[str] = None
+    product_slug: Optional[str] = None
+    product_name: str
+    quantity: str
+    preferred_date: str
+    preferred_time: str
+    postcode: Optional[str] = None
+    instructions: Optional[str] = None
+    wants_recording: bool = False
+    status: str = "pending"  # pending | confirmed | rejected
+    created_at: str = Field(default_factory=now_iso)
+
+
+class BookingIn(BaseModel):
+    name: str
+    mobile: str
+    whatsapp: Optional[str] = None
+    product_slug: Optional[str] = None
+    product_name: str
+    quantity: str
+    preferred_date: str
+    preferred_time: str
+    postcode: Optional[str] = None
+    instructions: Optional[str] = None
+    wants_recording: bool = False
+
+
+class Enquiry(BaseDocument):
+    type: str = "general"  # general | shipping | order
+    name: str
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    country: Optional[str] = None
+    postcode: Optional[str] = None
+    product_name: Optional[str] = None
+    message: str = ""
+    status: str = "new"  # new | in-progress | closed
+    created_at: str = Field(default_factory=now_iso)
+
+
+class EnquiryIn(BaseModel):
+    type: str = "general"
+    name: str
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    country: Optional[str] = None
+    postcode: Optional[str] = None
+    product_name: Optional[str] = None
+    message: str = ""
+
+
+class Batch(BaseDocument):
+    batch_id: str
+    product_name: str
+    production_date: str
+    extraction_method: str = ""
+    ingredient_source: str = ""
+    quality_report_url: str = ""
+    video_url: str = ""
+    notes: str = ""
+    created_at: str = Field(default_factory=now_iso)
+
+
+class BatchIn(BaseModel):
+    batch_id: str
+    product_name: str
+    production_date: str
+    extraction_method: str = ""
+    ingredient_source: str = ""
+    quality_report_url: str = ""
+    video_url: str = ""
+    notes: str = ""
+
+
+class Settings(BaseModel):
+    announcement_enabled: bool = True
+    announcement_text: str = "Pre-launch — booking & enquiries open. Online checkout opens once food-business approvals are confirmed."
+    prelaunch_mode: bool = True
+    checkout_enabled: bool = False
+    bank_details: str = ""
+    upi_id: str = ""
+    policies: dict = {}
+
+
+class LoginIn(BaseModel):
+    email: str
+    password: str
+
+
+class StatusUpdate(BaseModel):
+    status: str
+
+
+# ---------------------------------------------------------------------------
+# App + router
+# ---------------------------------------------------------------------------
+app = FastAPI(title="AMYA Artisanal Foods API")
+api = APIRouter(prefix="/api")
+
+
+def slugify(text: str) -> str:
+    s = re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
+    return s or "product"
+
+
+# -------------------- Public config --------------------
+@api.get("/")
+async def root():
+    return {"message": "AMYA Artisanal Foods API"}
+
+
+@api.get("/config")
+async def get_config():
+    s = await db.settings.find_one({"_id": "site"})
+    if not s:
+        s = Settings().model_dump()
+    else:
+        s.pop("_id", None)
+    return {
+        "settings": s,
+        "business": {"whatsapp": BUSINESS_WHATSAPP, "phone": BUSINESS_PHONE},
+    }
+
+
+# -------------------- Products (public) --------------------
+@api.get("/products")
+async def list_products(category: Optional[str] = None):
+    q = {}
+    if category:
+        q["category"] = category
+    docs = await db.products.find(q).sort("sort_order", 1).to_list(500)
+    return [Product.from_mongo(d).model_dump(by_alias=False) for d in docs]
+
+
+@api.get("/products/{slug}")
+async def get_product(slug: str):
+    doc = await db.products.find_one({"slug": slug})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return Product.from_mongo(doc).model_dump(by_alias=False)
+
+
+# -------------------- Bookings (public create) --------------------
+@api.post("/bookings")
+async def create_booking(payload: BookingIn):
+    booking = Booking(**payload.model_dump())
+    res = await db.bookings.insert_one(booking.to_mongo())
+    return {"id": str(res.inserted_id), "status": "pending",
+            "message": "Booking request received. AMYA will contact you to confirm your slot."}
+
+
+# -------------------- Enquiries (public create) --------------------
+@api.post("/enquiries")
+async def create_enquiry(payload: EnquiryIn):
+    enquiry = Enquiry(**payload.model_dump())
+    res = await db.enquiries.insert_one(enquiry.to_mongo())
+    return {"id": str(res.inserted_id), "message": "Thank you. We'll be in touch soon."}
+
+
+# -------------------- Batches (public read) --------------------
+@api.get("/batches")
+async def list_batches():
+    docs = await db.batches.find().sort("created_at", -1).to_list(500)
+    return [Batch.from_mongo(d).model_dump(by_alias=False) for d in docs]
+
+
+# ===========================================================================
+# AUTH
+# ===========================================================================
+@api.post("/auth/login")
+async def login(payload: LoginIn, response: Response):
+    email = payload.email.lower().strip()
+    user = await db.users.find_one({"email": email})
+    if not user or not verify_password(payload.password, user["password_hash"]):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    uid = str(user["_id"])
+    access = create_access_token(uid, email)
+    refresh = create_refresh_token(uid)
+    set_auth_cookies(response, access, refresh)
+    return {"id": uid, "email": email, "name": user.get("name"),
+            "role": user.get("role"), "token": access}
+
+
+@api.post("/auth/logout")
+async def logout(response: Response):
+    response.delete_cookie("access_token", path="/")
+    response.delete_cookie("refresh_token", path="/")
+    return {"message": "Logged out"}
+
+
+@api.get("/auth/me")
+async def me(admin: dict = Depends(get_current_admin)):
+    return admin
+
+
+# ===========================================================================
+# ADMIN — products
+# ===========================================================================
+@api.post("/admin/products")
+async def admin_create_product(payload: ProductIn, admin: dict = Depends(get_current_admin)):
+    data = payload.model_dump()
+    data["slug"] = payload.slug or slugify(payload.name)
+    existing = await db.products.find_one({"slug": data["slug"]})
+    if existing:
+        data["slug"] = f"{data['slug']}-{int(datetime.now().timestamp())}"
+    product = Product(**data)
+    res = await db.products.insert_one(product.to_mongo())
+    doc = await db.products.find_one({"_id": res.inserted_id})
+    return Product.from_mongo(doc).model_dump(by_alias=False)
+
+
+@api.put("/admin/products/{pid}")
+async def admin_update_product(pid: str, payload: ProductIn, admin: dict = Depends(get_current_admin)):
+    data = payload.model_dump()
+    if payload.slug:
+        data["slug"] = payload.slug
+    elif not data.get("slug"):
+        data.pop("slug", None)
+    await db.products.update_one({"_id": ObjectId(pid)}, {"$set": data})
+    doc = await db.products.find_one({"_id": ObjectId(pid)})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return Product.from_mongo(doc).model_dump(by_alias=False)
+
+
+@api.patch("/admin/products/{pid}/availability")
+async def admin_set_availability(pid: str, payload: StatusUpdate, admin: dict = Depends(get_current_admin)):
+    await db.products.update_one({"_id": ObjectId(pid)}, {"$set": {"availability": payload.status}})
+    return {"ok": True}
+
+
+@api.delete("/admin/products/{pid}")
+async def admin_delete_product(pid: str, admin: dict = Depends(get_current_admin)):
+    await db.products.delete_one({"_id": ObjectId(pid)})
+    return {"ok": True}
+
+
+# -------------------- Admin — bookings --------------------
+@api.get("/admin/bookings")
+async def admin_bookings(admin: dict = Depends(get_current_admin)):
+    docs = await db.bookings.find().sort("created_at", -1).to_list(1000)
+    return [Booking.from_mongo(d).model_dump(by_alias=False) for d in docs]
+
+
+@api.patch("/admin/bookings/{bid}")
+async def admin_booking_status(bid: str, payload: StatusUpdate, admin: dict = Depends(get_current_admin)):
+    await db.bookings.update_one({"_id": ObjectId(bid)}, {"$set": {"status": payload.status}})
+    return {"ok": True}
+
+
+# -------------------- Admin — enquiries --------------------
+@api.get("/admin/enquiries")
+async def admin_enquiries(admin: dict = Depends(get_current_admin)):
+    docs = await db.enquiries.find().sort("created_at", -1).to_list(1000)
+    return [Enquiry.from_mongo(d).model_dump(by_alias=False) for d in docs]
+
+
+@api.patch("/admin/enquiries/{eid}")
+async def admin_enquiry_status(eid: str, payload: StatusUpdate, admin: dict = Depends(get_current_admin)):
+    await db.enquiries.update_one({"_id": ObjectId(eid)}, {"$set": {"status": payload.status}})
+    return {"ok": True}
+
+
+# -------------------- Admin — batches --------------------
+@api.post("/admin/batches")
+async def admin_create_batch(payload: BatchIn, admin: dict = Depends(get_current_admin)):
+    batch = Batch(**payload.model_dump())
+    res = await db.batches.insert_one(batch.to_mongo())
+    doc = await db.batches.find_one({"_id": res.inserted_id})
+    return Batch.from_mongo(doc).model_dump(by_alias=False)
+
+
+@api.delete("/admin/batches/{bid}")
+async def admin_delete_batch(bid: str, admin: dict = Depends(get_current_admin)):
+    await db.batches.delete_one({"_id": ObjectId(bid)})
+    return {"ok": True}
+
+
+# -------------------- Admin — settings --------------------
+@api.put("/admin/settings")
+async def admin_update_settings(payload: Settings, admin: dict = Depends(get_current_admin)):
+    data = payload.model_dump()
+    await db.settings.update_one({"_id": "site"}, {"$set": data}, upsert=True)
+    return {"ok": True}
+
+
+# ---------------------------------------------------------------------------
+# Startup: indexes, admin seed, product + settings seed
+# ---------------------------------------------------------------------------
+INITIAL_PRODUCTS = [
+    {
+        "slug": "groundnut-oil", "name": "Wood-Pressed Groundnut Oil", "category": "oils",
+        "short_description": "Traditional wooden chekku groundnut oil, pressed to order.",
+        "description": "Groundnut oil extracted using our traditional wooden chekku (ghani) setup, in small batches. Book AMYA Live Press to watch your batch being prepared.",
+        "extraction_method": "Traditional wooden chekku / ghani cold extraction.",
+        "ingredients": "100% groundnuts (peanuts).",
+        "allergens": "Contains peanuts.",
+        "storage": "Store in a cool, dry place away from direct sunlight.",
+        "delivery_info": "Dispatched after preparation. Delivery timeline shared on confirmation.",
+        "returns_info": "As a fresh-pressed food product, returns are limited. Contact AMYA for any issue with your order.",
+        "food_label_info": "Food-label details are added once finalised by AMYA.",
+        "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/58259c125206fc61ede1823916fe10ee9f506c998b68b96f83d4f7f5a17b2ced.jpeg",
+                     "https://images.unsplash.com/photo-1549978113-29eb25c8177f?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"},
+                        {"label": "1 L", "price": None, "note": "Pricing confirmed at launch"}],
+        "availability": "available", "live_press": True, "featured": True, "sort_order": 1,
+    },
+    {
+        "slug": "sesame-oil", "name": "Wood-Pressed Sesame Oil", "category": "oils",
+        "short_description": "Aromatic wooden chekku sesame (gingelly) oil.",
+        "description": "Sesame oil prepared using our traditional wooden chekku setup. Availability opens as production is ready.",
+        "extraction_method": "Traditional wooden chekku / ghani cold extraction.",
+        "ingredients": "100% sesame seeds.",
+        "allergens": "Contains sesame.",
+        "storage": "Store in a cool, dry place away from direct sunlight.",
+        "delivery_info": "Dispatched after preparation. Delivery timeline shared on confirmation.",
+        "returns_info": "Contact AMYA for any issue with your order.",
+        "food_label_info": "Food-label details are added once finalised by AMYA.",
+        "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/25228b5ad5c77dd61e38e2585e38cccc6cee85790d94094528c4ffede2749c83.jpeg"],
+        "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 2,
+    },
+    {
+        "slug": "coconut-oil", "name": "Wood-Pressed Coconut Oil", "category": "oils",
+        "short_description": "Wooden chekku coconut oil, prepared in small batches.",
+        "description": "Coconut oil prepared using our traditional wooden chekku setup. Availability opens as production is ready.",
+        "extraction_method": "Traditional wooden chekku / ghani cold extraction.",
+        "ingredients": "100% dried coconut.",
+        "allergens": "May contain traces depending on shared handling. Details confirmed by AMYA.",
+        "storage": "Store in a cool, dry place. May solidify in cooler temperatures.",
+        "delivery_info": "Dispatched after preparation. Delivery timeline shared on confirmation.",
+        "returns_info": "Contact AMYA for any issue with your order.",
+        "food_label_info": "Food-label details are added once finalised by AMYA.",
+        "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/5d65a3b6b9c89b0bc6f1eaf5c20a6750a099058b5cf2a5a0a2b613f9ef577d9b.jpeg"],
+        "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 3,
+    },
+    {
+        "slug": "cashew-brittle", "name": "Cashew Brittle", "category": "cashew-brittles",
+        "short_description": "Homemade cashew brittle — crunchy, golden and made in small batches.",
+        "description": "A homemade cashew brittle with generous cashew pieces in a crisp caramel. Made in small batches by AMYA.",
+        "extraction_method": "",
+        "ingredients": "Cashews, sugar, ghee/butter. Full ingredient list confirmed by AMYA.",
+        "allergens": "Contains cashews (tree nuts) and dairy. May contain traces of other nuts.",
+        "storage": "Store in an airtight container in a cool, dry place.",
+        "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
+        "returns_info": "As a perishable homemade food, returns are limited. Contact AMYA for any issue.",
+        "food_label_info": "Food-label details are added once finalised by AMYA.",
+        "images": ["https://images.unsplash.com/photo-1772984960196-b387b4f2f524?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [
+            {"label": "250 g", "price": 300, "note": "approx. 5 pieces"},
+            {"label": "500 g", "price": 500, "note": "approx. 10 pieces"},
+            {"label": "1 kg", "price": 900, "note": "approx. 20 pieces"},
+        ],
+        "availability": "available", "live_press": False, "featured": True, "sort_order": 4,
+    },
+    {
+        "slug": "homemade-pickle", "name": "Homemade Pickle", "category": "pickles",
+        "short_description": "Small-batch homemade pickle, made the traditional way.",
+        "description": "A homemade pickle prepared in small batches. AMYA plans to use its own cooking oils in pickle preparation once those oils become available.",
+        "extraction_method": "",
+        "ingredients": "Confirmed by AMYA per batch.",
+        "allergens": "Allergen details confirmed by AMYA per recipe.",
+        "storage": "Refrigerate after opening. Use a clean, dry spoon.",
+        "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
+        "returns_info": "As a perishable homemade food, returns are limited. Contact AMYA for any issue.",
+        "food_label_info": "Food-label details are added once finalised by AMYA.",
+        "images": ["https://images.unsplash.com/photo-1664791461482-79f5deee490f?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "pack_sizes": [{"label": "250 g", "price": None, "note": "Pricing confirmed by AMYA"}],
+        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 5,
+    },
+]
+
+DEFAULT_POLICIES = {
+    "terms": "Terms & Conditions will be published here. AMYA is a founder-led, pre-launch brand; these terms will be finalised before commercial checkout is enabled.",
+    "privacy": "We collect only the information needed to respond to your enquiry or booking (such as name, phone and WhatsApp number). We do not sell your data. A full privacy policy will be published before launch.",
+    "shipping": "AMYA serves customers across India, and intends to offer shipping to the UK and USA subject to product eligibility, import regulations and confirmed carrier charges. International shipping is quoted individually.",
+    "refund": "Cancellation and refund terms depend on the product and its preparation stage. For fresh-pressed and homemade foods, returns are limited. Please contact AMYA for any order issue.",
+    "food_disclosure": "AMYA is building its food-business documentation. Required food-safety approvals, GST and other registrations will be confirmed before commercial checkout is enabled.",
+}
+
+
+async def seed():
+    await db.users.create_index("email", unique=True)
+
+    admin_email = os.environ.get("ADMIN_EMAIL", "admin@example.com").lower()
+    admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
+    existing = await db.users.find_one({"email": admin_email})
+    if existing is None:
+        await db.users.insert_one({
+            "email": admin_email, "password_hash": hash_password(admin_password),
+            "name": "Amulya Nimmala", "role": "admin", "created_at": now_iso(),
+        })
+        logger.info("Seeded admin %s", admin_email)
+    elif not verify_password(admin_password, existing["password_hash"]):
+        await db.users.update_one({"email": admin_email},
+                                  {"$set": {"password_hash": hash_password(admin_password)}})
+
+    if await db.products.count_documents({}) == 0:
+        for p in INITIAL_PRODUCTS:
+            p = dict(p)
+            p["created_at"] = now_iso()
+            await db.products.insert_one(p)
+        logger.info("Seeded %d products", len(INITIAL_PRODUCTS))
+
+    existing_settings = await db.settings.find_one({"_id": "site"})
+    if not existing_settings:
+        s = Settings().model_dump()
+        s["policies"] = DEFAULT_POLICIES
+        s["_id"] = "site"
+        await db.settings.insert_one(s)
+    elif not existing_settings.get("policies"):
+        await db.settings.update_one({"_id": "site"}, {"$set": {"policies": DEFAULT_POLICIES}})
+
+
+@app.on_event("startup")
+async def on_startup():
+    await seed()
+
+
+app.include_router(api)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origin_regex=".*",
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.on_event("shutdown")
+async def shutdown_db_client():
+    client.close()

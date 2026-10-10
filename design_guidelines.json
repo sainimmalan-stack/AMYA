@@ -1,0 +1,111 @@
+{
+  "theme": "light",
+  "typography": {
+    "primary_heading": "Cormorant Garamond, Playfair Display, serif",
+    "secondary_heading": "Cormorant Garamond, serif",
+    "body": "Outfit, Satoshi, sans-serif",
+    "instructions": "Use elegant editorial serif for all headings. Use clean, highly-readable sans-serif for body text. Ensure typography feels like a premium boutique food brand. Avoid generic 'Inter' for headings. Use tracking-tight for large headings."
+  },
+  "colors": {
+    "primary": "#B94F40",
+    "primary_description": "Terracotta",
+    "secondary": "#FFF5E8",
+    "secondary_description": "Warm Ivory",
+    "background": "#FFF5E8",
+    "text_dark": "#2A1512",
+    "text_light": "#FFF5E8",
+    "instructions": "USE ONLY these two brand colors and their shades. AVOID rainbow colors, excessive gradients, or multiple accent colors. Text should ideally be a very deep shade of Terracotta/Brown for high contrast on Ivory, or Warm Ivory on Terracotta backgrounds."
+  },
+  "visual_enhancers": {
+    "borders": "Restrained, 1px solid in subtle shades of Terracotta or Ivory.",
+    "shadows": "Subtle, ambient shadows only. Avoid harsh drop shadows.",
+    "whitespace": "Generous spacing. Use 2-3x more padding than standard templates (e.g., p-12, p-20) to create a luxurious feel.",
+    "textures": "Clean and solid. Avoid cheap gradients.",
+    "shapes": "Rectangular or clipped frames (arches, pill shapes) for images to evoke a premium editorial feel."
+  },
+  "components": {
+    "hero": "Large kinetic hero with full-width Terracotta background. Ivory 'AMYA' serif logo. Headline 'GOOD FOOD BEGINS WITH TRUST.' with signature on-load masked line-by-line reveal.",
+    "logo": "Terracotta background, ivory 'AMYA' serif lettering, 'ARTISANAL FOODS' in small widely-spaced letters beneath. Original simple SVG logo mark for favicon.",
+    "marquee": "One slow editorial marquee with elegant typography.",
+    "product_cards": "Premium product detail pages and catalog. NO cheap product cards. Spotlight photography, clean layout, restrained borders.",
+    "bento_grid": "Aligned bento grid for categories or 'Our Story' section.",
+    "announcement_bar": "Editable announcement bar at the top."
+  },
+  "layouts": {
+    "general": "Mobile-first, fully responsive. Awwwards Site-of-the-Day level structure.",
+    "spacing": "Use 'bento' grid modes where applicable, ensuring perfect alignment and tension. Do not use generic centered bootstrap columns."
+  },
+  "motion": {
+    "scroll": "Lenis smooth scrolling is MANDATORY.",
+    "interactions": "Framer-motion scroll-reveals + micro-interactions. Premium, purposeful motion. AVOID excessive/distracting animations.",
+    "special": "One subtle parallax/3D hero moment. Kinetic masked reveals for text."
+  },
+  "accessibility": {
+    "contrast": "Ensure sufficient contrast between Terracotta and Ivory, and deep brown text on Ivory.",
+    "testing": "All interactive and key informational elements MUST include a 'data-testid' attribute (kebab-case, role-based)."
+  },
+  "media": {
+    "style": "Real product photography treated deliberately (spotlight, clipped frames).",
+    "images": {
+      "cooking_oil": [
+        {
+          "url": "https://images.unsplash.com/photo-1759749597905-e2fed85d8cd5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHwyfHxnbGFzcyUyMGJvdHRsZSUyMGNvb2tpbmclMjBvaWwlMjBwcmVtaXVtfGVufDB8fHx8MTc5MTYwOTk3Nnww&ixlib=rb-4.1.0&q=85",
+          "description": "Premium glass bottle oil"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1759749597861-e90685f026b4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHw0fHxnbGFzcyUyMGJvdHRsZSUyMGNvb2tpbmclMjBvaWwlMjBwcmVtaXVtfGVufDB8fHx8MTc5MTYwOTk3Nnww&ixlib=rb-4.1.0&q=85",
+          "description": "Premium oil with tag"
+        }
+      ],
+      "pickles": [
+        {
+          "url": "https://images.unsplash.com/photo-1659694459412-02735752031f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHw0fHx0cmFkaXRpb25hbCUyMGluZGlhbiUyMHBpY2tsZSUyMGphciUyMGhvbWVtYWRlfGVufDB8fHx8MTc5MTYwOTk3Nnww&ixlib=rb-4.1.0&q=85",
+          "description": "Traditional homemade pickle jars"
+        }
+      ],
+      "cashew_brittle": [
+        {
+          "url": "https://images.unsplash.com/photo-1772984960196-b387b4f2f524?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxjYXNoZXclMjBicml0dGxlJTIwY2hpa2tpJTIwZm9vZHxlbnwwfHx8fDE3OTE2MDk5NzZ8MA&ixlib=rb-4.1.0&q=85",
+          "description": "Cashew brittle scattered"
+        }
+      ],
+      "live_press": [
+        {
+          "url": "https://images.unsplash.com/photo-1768689033119-c3ac1e437d20?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHx3b29kZW4lMjBjb2xkJTIwcHJlc3MlMjBvaWwlMjBleHRyYWN0aW9ufGVufDB8fHx8MTc5MTYwOTk3Nnww&ixlib=rb-4.1.0&q=85",
+          "description": "Oil extraction / pouring"
+        }
+      ],
+      "founder": [
+        {
+          "url": "https://images.unsplash.com/photo-1768729340668-9b609873e796?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NjV8MHwxfHNlYXJjaHwyfHxpbmRpYW4lMjB3b21hbiUyMGFydGlzYW4lMjBjb29raW5nfGVufDB8fHx8MTc5MTYwOTk3Nnww&ixlib=rb-4.1.0&q=85",
+          "description": "Indian artisan woman working"
+        }
+      ]
+    }
+  },
+  "libraries": {
+    "motion": "framer-motion",
+    "scrolling": "lenis",
+    "components": "shadcn/ui (highly customized to look bespoke and cardless)"
+  },
+  "instructions_to_main_agent": [
+    "Pre-launch mode is ACTIVE: Do NOT build a functional checkout. Add bookings, enquiries, and WhatsApp contact buttons instead.",
+    "Build 'AMYA Live Press' page with 4 steps: Choose Oil, Book Slot, Watch Live on WhatsApp, Receive Order.",
+    "Pages required: Home, Shop, Oils, Pickles, Cashew Brittles, AMYA Live Press, Our Story, Contact, Transparency Promise, About, plus Secure Admin Dashboard.",
+    "Strict color rule: Do NOT use any other colors besides shades of Terracotta (#B94F40) and Warm Ivory (#FFF5E8).",
+    "Do NOT make the UI look like a generic grocery-store template. Avoid too many promo banners.",
+    "Products have states: Available / Coming Soon / Temporarily Unavailable.",
+    "Ensure 'ARTISANAL FOODS' is always below the 'AMYA' serif logo, widely spaced.",
+    "DO NOT use a fully transparent header over hero images if it affects readability. Since hero is full terracotta, header can share the color or use a subtle separator.",
+    "Build the dashboard cleanly using Shadcn, maintaining brand fonts but optimized for data density."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "Avoid generic, 'on distribution' outputs. Create depth through layered design and optical alignment.",
+    "Never center align the entire app container.",
+    "Use modern pill-shaped or sharp buttons with micro-interactions.",
+    "Do not use generic AI emojis for icons. Use lucide-react or @phosphor-icons/react.",
+    "Prioritize reusing UI components from src/components/ui.",
+    "Ensure generous spacing—designs should not feel cramped.",
+    "Apply `data-testid` to all interactive elements for testing."
+  ]
+}
