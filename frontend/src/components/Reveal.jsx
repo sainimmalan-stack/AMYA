@@ -1,16 +1,32 @@
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 
-export const Reveal = ({ children, delay = 0, y = 28, className = "" }) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, y }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-60px" }}
-    transition={{ duration: 0.8, delay, ease: [0.2, 0.8, 0.2, 1] }}
-  >
-    {children}
-  </motion.div>
-);
+// Scroll-reveal with a mount fallback so content can NEVER get stuck invisible
+// if the in-view observer fails to fire (e.g. with smooth-scroll libraries on mobile).
+export const Reveal = ({ children, delay = 0, y = 28, className = "" }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const [fallback, setFallback] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setFallback(true), 700);
+    return () => clearTimeout(t);
+  }, []);
+
+  const visible = inView || fallback;
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, y }}
+      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      transition={{ duration: 0.8, delay, ease: [0.2, 0.8, 0.2, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 // Masked line-by-line heading reveal
 export const MaskedLines = ({ lines, className = "", lineClassName = "", delay = 0 }) => (
