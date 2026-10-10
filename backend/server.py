@@ -124,6 +124,11 @@ class PackSize(BaseModel):
     note: Optional[str] = None
 
 
+class DeliveryRegion(BaseModel):
+    region: str
+    text: str
+
+
 class Product(BaseDocument):
     slug: str
     name: str
@@ -143,9 +148,12 @@ class Product(BaseDocument):
     batch_info: str = ""
     serving: str = ""
     serving_highlight: str = ""
+    preparation: str = ""
+    dispatch: str = ""
+    delivery_details: List[DeliveryRegion] = []
     images: List[str] = []
     pack_sizes: List[PackSize] = []
-    availability: str = "coming-soon"  # available | coming-soon | enquire | unavailable
+    availability: str = "coming-soon"  # ready | order | available | coming-soon | enquire | unavailable
     live_press: bool = False
     featured: bool = False
     sort_order: int = 0
@@ -171,6 +179,9 @@ class ProductIn(BaseModel):
     batch_info: str = ""
     serving: str = ""
     serving_highlight: str = ""
+    preparation: str = ""
+    dispatch: str = ""
+    delivery_details: List[DeliveryRegion] = []
     images: List[str] = []
     pack_sizes: List[PackSize] = []
     availability: str = "coming-soon"
@@ -551,6 +562,11 @@ INITIAL_PRODUCTS = [
             {"label": "1 kg", "price": 900, "note": "20 pieces"},
             {"label": "10 kg", "price": 8500, "note": None},
         ],
+        "delivery_details": [
+            {"region": "Hyderabad", "text": "Orders can be received on the same day you order, subject to order confirmation and delivery arrangements."},
+            {"region": "Outside Hyderabad", "text": "For locations outside Hyderabad, orders are dispatched through courier on the 2nd day."},
+            {"region": "USA & UK", "text": "USA and UK orders are accepted, subject to confirmation of international courier availability, shipping charges and delivery timelines."},
+        ],
         "availability": "ready", "live_press": False, "featured": True, "sort_order": 0,
     },
     {
@@ -599,8 +615,15 @@ INITIAL_PRODUCTS = [
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Ingredients, pack sizes and pricing shared on enquiry.",
         "images": ["/products/amya-nuvvula-podi.jpg"],
-        "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 8,
+        "pack_sizes": [{"label": "250 g", "price": 250}, {"label": "500 g", "price": 450}, {"label": "1 kg", "price": 800}],
+        "preparation": "Prepared in small batches. Please allow 2 days for preparation.",
+        "dispatch": "Orders are dispatched on the 3rd day.",
+        "delivery_details": [
+            {"region": "Hyderabad", "text": "Delivery on the 3rd day may be possible, subject to your location and delivery arrangements."},
+            {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
+            {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
+        ],
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 8,
     },
     {
         "slug": "amya-karivepaku-podi", "name": "AMYA Karivepaku Podi", "category": "spices",
@@ -616,8 +639,15 @@ INITIAL_PRODUCTS = [
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Ingredients, pack sizes and pricing shared on enquiry.",
         "images": ["/products/amya-karivepaku-podi.jpg"],
-        "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 9,
+        "pack_sizes": [{"label": "250 g", "price": 250}, {"label": "500 g", "price": 450}, {"label": "1 kg", "price": 800}],
+        "preparation": "Prepared in small batches. Please allow 2 days for preparation.",
+        "dispatch": "Orders are dispatched on the 3rd day.",
+        "delivery_details": [
+            {"region": "Hyderabad", "text": "Delivery on the 3rd day may be possible, subject to your location and delivery arrangements."},
+            {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
+            {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
+        ],
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 9,
     },
     {
         "slug": "amya-nallakaram", "name": "AMYA Nallakaram Podi", "category": "spices",
@@ -633,8 +663,15 @@ INITIAL_PRODUCTS = [
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Ingredients, pack sizes and pricing shared on enquiry.",
         "images": ["/products/amya-nallakaram.jpg"],
-        "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 10,
+        "pack_sizes": [{"label": "250 g", "price": 250}, {"label": "500 g", "price": 450}, {"label": "1 kg", "price": 800}],
+        "preparation": "Prepared in small batches. Please allow 2 days for preparation.",
+        "dispatch": "Orders are dispatched on the 3rd day.",
+        "delivery_details": [
+            {"region": "Hyderabad", "text": "Delivery on the 3rd day may be possible, subject to your location and delivery arrangements."},
+            {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
+            {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
+        ],
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 10,
     },
     {
         "slug": "avakai-pickle", "name": "Avakai Pickle", "category": "pickles",

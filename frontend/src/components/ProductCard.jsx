@@ -10,7 +10,7 @@ export default function ProductCard({ product, index = 0 }) {
   const { addItem } = useCart();
   const img = product.images?.[0];
   const comingSoon = product.availability === "coming-soon";
-  const orderable = product.availability === "ready" || product.availability === "available";
+  const orderable = ["ready", "order", "available"].includes(product.availability);
   const firstPack = product.pack_sizes?.[0];
 
   return (

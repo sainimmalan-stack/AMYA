@@ -38,7 +38,7 @@ export default function ProductDetail() {
   if (!product) return <div className="py-40 text-center font-sans text-ink-soft">Loading…</div>;
 
   const selected = product.pack_sizes?.[pack];
-  const orderable = product.availability === "ready" || product.availability === "available";
+  const orderable = ["ready", "order", "available"].includes(product.availability);
   const total = selected?.price != null ? selected.price * qty : null;
 
   return (
@@ -197,6 +197,30 @@ export default function ProductDetail() {
               <p className="font-sans text-sm text-ink-soft mt-1">
                 Online checkout isn't active yet — add items to your cart and send your order on WhatsApp. We'll confirm availability, final pricing and delivery with you.
               </p>
+            </div>
+          )}
+
+          {/* Preparation & Dispatch */}
+          {(product.preparation || product.dispatch) && (
+            <div className="mt-5 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-4 py-4" data-testid="pd-prep-dispatch">
+              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Preparation & Dispatch</p>
+              {product.preparation && <p className="font-sans text-sm text-ink mt-2 leading-relaxed">{product.preparation}</p>}
+              {product.dispatch && <p className="font-sans text-sm text-ink mt-1.5 leading-relaxed">{product.dispatch}</p>}
+            </div>
+          )}
+
+          {/* Delivery information */}
+          {product.delivery_details?.length > 0 && (
+            <div className="mt-4 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-4 py-4" data-testid="pd-delivery-info">
+              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Delivery Information</p>
+              <ul className="mt-3 grid gap-3">
+                {product.delivery_details.map((d, i) => (
+                  <li key={i} className="flex flex-col">
+                    <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-ink">{d.region}</span>
+                    <span className="font-sans text-sm text-ink-soft mt-0.5 leading-relaxed">{d.text}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 

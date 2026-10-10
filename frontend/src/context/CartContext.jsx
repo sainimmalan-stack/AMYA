@@ -68,7 +68,7 @@ export function CartProvider({ children }) {
     lines.push("");
     lines.push(grandTotal != null ? `Order total: ${inr(grandTotal)}` : "Order total: To be confirmed");
     lines.push("");
-    lines.push("Please confirm product availability, final pricing where applicable, delivery charges, and delivery details.");
+    lines.push("Please confirm product availability, delivery location, shipping charges if applicable, and the expected delivery or dispatch date.");
     lines.push("");
     lines.push("Thank you!");
     return lines.join("\n");

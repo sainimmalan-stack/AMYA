@@ -72,7 +72,7 @@ function OurCollection() {
   ];
   // "Shop Our Products" shows in-stock items — both ready-for-delivery and
   // available-for-pre-order — explicitly ordered with Cashew Brittles first.
-  const IN_STOCK = new Set(["ready", "available"]);
+  const IN_STOCK = new Set(["ready", "order", "available"]);
   const available = products
     .filter((p) => IN_STOCK.has(p.availability))
     .sort((a, b) => {
