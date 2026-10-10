@@ -72,7 +72,7 @@ export default function ProductDetail() {
           <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7 }}
                       className="relative aspect-[4/3] lg:aspect-[4/5] overflow-hidden bg-ivory-warm rounded-xl">
             {product.images?.[activeImg] ? (
-              <img src={product.images[activeImg]} alt={product.name} className={`h-full w-full ${product.category === "pickles" ? "object-cover" : "object-contain"}`} />
+              <img src={product.images[activeImg]} alt={product.name} className={`h-full w-full object-center ${product.category === "pickles" ? "object-cover" : product.category === "spices" ? "object-contain p-6 sm:p-10" : "object-contain"}`} />
             ) : product.category === "pickles" ? (
               <PicklePackMock name={product.name} />
             ) : (

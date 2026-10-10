@@ -27,8 +27,13 @@ export default function ProductCard({ product, index = 0 }) {
       <Link to={`/product/${product.slug}`} data-testid={`product-card-${product.slug}`} className="group block">
         <div className="relative overflow-hidden bg-ivory-warm aspect-[4/5] rounded-xl">
           {img ? (
-            <img src={img} alt={product.name} loading="lazy"
-                 className={`h-full w-full transition-transform duration-[900ms] ease-out group-hover:scale-105 ${product.category === "spices" ? "object-contain" : "object-cover"}`} />
+            product.category === "spices" ? (
+              <img src={img} alt={product.name} loading="lazy"
+                   className="h-full w-full object-contain object-center p-4 sm:p-6" />
+            ) : (
+              <img src={img} alt={product.name} loading="lazy"
+                   className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105" />
+            )
           ) : product.category === "pickles" ? (
             <PicklePackMock name={product.name} />
           ) : (
@@ -47,6 +52,11 @@ export default function ProductCard({ product, index = 0 }) {
           </div>
         </div>
         <div className="pt-4">
+          {product.slug === "cashew-brittle" && (
+            <span data-testid="most-popular-tag" className="inline-flex items-center gap-1.5 mb-1.5 font-sans text-[10px] uppercase tracking-[0.22em] text-gold">
+              <span className="h-1 w-1 rounded-full bg-gold" /> Most popular
+            </span>
+          )}
           <h3 className="font-serif text-2xl text-ink leading-tight">{product.name}</h3>
           {product.pack_sizes?.length > 0 ? (
             <p className="font-sans text-xs text-ink-soft mt-1">
