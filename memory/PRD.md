@@ -178,3 +178,11 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 ### Still required from founder
 - Genuine pickle product photographs — upload per product (image field already wired) to auto-replace the mockup.
 
+
+## Changelog — 2026-07-10 (Real chilli & turmeric pouch photos)
+- Founder supplied a combined studio image of two AMYA pouches (chilli + turmeric). Cropped into two separate e-commerce images (730x1008 JPG q92), full pouch/label preserved, no distortion/recolour.
+  - `/app/frontend/public/products/guntur-sannam-chilli-powder.jpg` (left crop)
+  - `/app/frontend/public/products/lakadong-turmeric-powder.jpg` (right crop)
+- Updated seed (server.py) + DB docs for slugs `guntur-sannam-chilli-powder` and `lakadong-turmeric-powder` to reference these paths (replacing unsplash placeholders).
+- Image fit: spices now use `object-contain` (ProductCard + ProductDetail) so the full pouch shows on the ivory-warm container; cashew/oils unchanged (`object-cover`/existing).
+- Verified on preview: both images serve 200, display correctly on cards + detail pages, blend into ivory bg. Prices, descriptions, ordering, cashew image untouched. REDEPLOY required to serve on amyafoods.in.

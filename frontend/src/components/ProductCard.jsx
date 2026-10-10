@@ -28,7 +28,7 @@ export default function ProductCard({ product, index = 0 }) {
         <div className="relative overflow-hidden bg-ivory-warm aspect-[4/5] rounded-xl">
           {img ? (
             <img src={img} alt={product.name} loading="lazy"
-                 className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105" />
+                 className={`h-full w-full transition-transform duration-[900ms] ease-out group-hover:scale-105 ${product.category === "spices" ? "object-contain" : "object-cover"}`} />
           ) : product.category === "pickles" ? (
             <PicklePackMock name={product.name} />
           ) : (
