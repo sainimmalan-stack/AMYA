@@ -1,0 +1,25 @@
+{
+  "summary": "Frontend-only verification of AMYA refinement round 3 (Cashew Brittle priority homepage + regressions). All 11 spec items pass functionally. Header NAV is simplified to exactly Cashew Brittle (/shop/cashew-brittles), AMYA Oils (/shop/oils), About (/about), Contact (/contact); mobile menu adds Home and the same four. No 'Pickles'/'Our Story'/'AMYA Live Press' in main header. HERO shows eyebrow 'AMYA · Artisanal Foods', headline 'Small-batch food, made with intention.' and cashew image. hero-cashew-btn smooth-scrolls to #cashew (cashew-feature visible); hero-oils-btn smooth-scrolls to #oils (oils section visible). CASHEW FEATURE shows all 3 packs with correct prices: 250 g ₹300 (5 pieces), 500 g ₹500 (10 pieces), 1 kg ₹900 (20 pieces) via cashew-pack-0/1/2. Selecting pack-1 and tapping cashew-qty-plus twice updates qty to 3 and the order button label dynamically becomes 'Order 500 g · ₹500 on WhatsApp'. cashew-order-wa href = https://wa.me/919675334567?text=... with decoded message 'Hello AMYA, I'd like to order:\\n• Cashew Brittle — 500 g (₹500) × 3\\n\\nPlease confirm availability...' — WhatsApp number, product name, pack size '500 g' and price '500' all present. Allergen notice visible. OILS SECONDARY shows machinery-image-area placeholder (no wooden-press / ghani), 4+ 'Coming soon' labels, oils-enquire-wa (wa.me/919675334567) and oils-book-btn (/live-press). No ₹ price or Order button in oils section. SHOP (/shop) renders 6 ProductCards; cashew card has 'ORDER ON WHATSAPP' button, oils+pickle cards have 'ENQUIRE ON WHATSAPP' — all links point to wa.me/919675334567 with prefilled messages. PRODUCT DETAIL /product/cashew-brittle shows pack/qty selectors and WhatsApp button labelled 'Order on WhatsApp' with order message. /product/groundnut-oil shows 'Enquire on WhatsApp' + 'Book AMYA Live Press' button, no Add-to-cart. REGRESSION: /live-press booking form renders; /contact form renders with 7 fields; admin login page loads and accepts amulya@amayafoods.in. MOBILE 390px: no horizontal scroll, hero headline not clipped, cashew pack buttons and order button tappable within viewport.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "ProductCard testids are 'order-wa-{slug}' (e.g. order-wa-cashew-brittle, order-wa-groundnut-oil) rather than the single 'order-wa-amya-artisanal' name mentioned in the review request. Per-slug naming is actually better for testing, so recommend updating the spec rather than the code.",
+    "Product detail page uses the same data-testid 'pd-whatsapp-enquiry' for both the Order (available) and Enquire (coming-soon) WhatsApp button. Button label switches correctly ('ORDER ON WHATSAPP' vs 'ENQUIRE ON WHATSAPP') but a semantically neutral id like 'pd-whatsapp-cta' or two distinct ids (pd-whatsapp-order / pd-whatsapp-enquiry) would be clearer.",
+    "Home.jsx + CashewFeature correctly use orderMessage() so pack label and price are always synced to the WhatsApp text. No duplication issues found.",
+    "Non-blocking: multiple 401 console errors observed on every page (likely from an auth-check /me call before login). Does not affect functionality but will be noise in production; consider silencing or using 204/empty response for unauthenticated 'me' probe."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "100% (all functional checks pass)"},
+  "test_credentials": "Admin: amulya@amayafoods.in / AmyaFounder@2026 — admin login page loads; previous iteration verified login succeeds.",
+  "seed_data_creation": "None in this iteration. Note: iteration_2 created a booking (name='TEST Playwright', date=2026-02-15) that may still exist in DB.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Round-3 refinement verified end-to-end. All required data-testids present and functional: nav-cashew-brittle, nav-amya-oils, nav-about, nav-contact, hero-cashew-btn, hero-oils-btn, cashew-feature, cashew-pack-0/1/2, cashew-qty-plus/minus, cashew-qty, cashew-order-wa, machinery-image-area, oils-enquire-wa, oils-book-btn, order-wa-{slug} on shop cards, pd-whatsapp-enquiry on product detail. WhatsApp number 919675334567 confirmed in all WA links (wa.me format). Cashew is the only Available product (prices 300/500/900); 4 oils + 1 pickle are Coming Soon with enquiry-only — intentional. Logo and machinery remain intentional placeholders.",
+  "rca of the issue": "N/A — no bugs found."
+}
