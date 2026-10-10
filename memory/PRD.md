@@ -299,3 +299,9 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Packaging image regenerated (edited existing) so sticker label reads "CHILLI POWDER" (removed "Guntur Sannam (S4)"), same pouch/logo/red powder; overwrote /app/frontend/public/products/guntur-sannam-chilli-powder.jpg (DB path unchanged).
 - ProductDetail description AccordionContent now uses whitespace-pre-line so multi-paragraph descriptions render properly.
 - No health claims; 20/80 proportions preserved; availability/prices/pack-sizes/cart unchanged; other products untouched. Verified on mobile preview.
+
+## Changelog — 2026-10-10 (Homepage conversion polish: remove band, simplify product section)
+- Removed the "Small Batches. Unforgettable Taste." pre-order band section from Home (repetitive with hero; pushed products down). Hero now flows directly into the product section.
+- Product section header simplified: eyebrow "Shop AMYA", heading "Our Products", single description "Authentic flavours. Carefully crafted in small batches." (removed the two extra intro paragraphs). data-testid shop-products-section retained.
+- Availability "order" badge label changed "Available to order" → "Made fresh · Dispatch in 3 days" (podis + Garam Masala). Cashew stays "Ready to order"; Chilli/Turmeric stay "Available for pre-order". Removed the now-redundant on-card prep note.
+- Order unchanged (Cashew first via IN_STOCK incl. "ready" + AVAILABLE_ORDER). Prices/pack sizes/images/cart/WhatsApp/availability untouched; Our Story page+nav preserved. Verified on mobile preview.

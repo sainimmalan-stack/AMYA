@@ -57,9 +57,6 @@ export default function ProductCard({ product, index = 0 }) {
               <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1 line-clamp-2">{product.short_description}</p>
             )
           )}
-          {product.availability === "order" && (
-            <p className="font-sans text-[10px] sm:text-[11px] text-terracotta/90 mt-1 leading-snug">Prepared in small batches. Dispatch on the third day.</p>
-          )}
         </div>
       </Link>
       {comingSoon ? (

@@ -1,7 +1,7 @@
 export default function Availability({ status, className = "" }) {
   const map = {
     "ready": { label: "Ready to order", cls: "bg-terracotta text-ivory" },
-    "order": { label: "Available to order", cls: "bg-terracotta text-ivory" },
+    "order": { label: "Made fresh · Dispatch in 3 days", cls: "bg-terracotta text-ivory" },
     "available": { label: "Available for pre-order", cls: "bg-terracotta text-ivory" },
     "enquire": { label: "Signature Spice", cls: "bg-gold text-ivory" },
     "coming-soon": { label: "Coming Soon", cls: "border border-terracotta/40 text-terracotta-deep bg-transparent" },
