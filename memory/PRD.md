@@ -81,3 +81,9 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Confirmed WhatsApp order message includes the chosen quantity, e.g. "Cashew Brittle — 1 kg (₹900) × 3" (orderMessage already passes qty).
 - Verified via self-test: equal side-by-side options, prices ₹500/₹900, gifting tag renders, qty reflected in message, no overflow at 390px. NOT yet published.
 
+
+## Changelog — 2026-07-10 (Best-value per-gram note on 1kg)
+- Added a subtle terracotta "Best value · ₹0.90/g" caption directly under the 1kg option (computed from price/grams; 500g = ₹1.00/g so the 1kg saving is obvious). Placed below the options grid so both options keep equal height. data-testid best-value-note.
+- Prices unchanged: 500g ₹500, 1kg ₹900; 250g removed. Gifting tag + qty-in-message retained.
+- Self-test verified: note shows ₹0.90/g, no overflow at 390px, ordering intact. NOT yet published.
+

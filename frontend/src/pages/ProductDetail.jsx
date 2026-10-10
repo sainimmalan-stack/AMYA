@@ -111,6 +111,22 @@ export default function ProductDetail() {
                   );
                 })}
               </div>
+              {(() => {
+                const last = product.pack_sizes[product.pack_sizes.length - 1];
+                if (!last || last.price == null || product.pack_sizes.length < 2) return null;
+                const m = String(last.label).match(/([\d.]+)\s*(kg|g)/i);
+                const grams = m ? (m[2].toLowerCase() === "kg" ? parseFloat(m[1]) * 1000 : parseFloat(m[1])) : null;
+                if (!grams) return null;
+                const perG = last.price / grams;
+                return (
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-2">
+                    <div aria-hidden="true" />
+                    <p data-testid="best-value-note" className="text-center font-sans text-[10px] tracking-[0.1em] text-terracotta-deep">
+                      Best value · ₹{perG.toFixed(2)}/g
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
