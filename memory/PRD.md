@@ -1,0 +1,41 @@
+# AMYA Artisanal Foods — PRD
+
+## Original problem statement
+Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafoods.in), a founder-led Indian artisanal food brand by Amulya Nimmala (M.Tech). Brand always spelled **AMYA**. Starts with a small range: wood-pressed cooking oils (traditional wooden chekku/ghani), cashew brittles and homemade pickles. Signature feature: **AMYA Live Press** — customers book a live WhatsApp video call to watch their cooking oil being pressed (oils only). Terracotta (#B94F40) + warm ivory (#FFF5E8) only. Pre-launch mode: checkout disabled; bookings, enquiries and WhatsApp active.
+
+## Architecture
+- **Backend**: FastAPI + MongoDB (`/app/backend/server.py`). JWT admin auth (bcrypt, Bearer token + httpOnly cookie). Collections: users, products, bookings, enquiries, batches, settings. All routes under `/api`.
+- **Frontend**: React (CRA/craco) + Tailwind + framer-motion + lenis smooth scroll + shadcn/ui. Terracotta/ivory design system, Cormorant Garamond serif + Outfit sans.
+- **Auth**: single seeded admin (founder). Credentials in `/app/memory/test_credentials.md`.
+
+## User personas
+- **Customer**: browses products, books AMYA Live Press for oils, sends enquiries, contacts via WhatsApp/phone.
+- **Founder/Admin (Amulya)**: manages products, availability, prices, bookings, enquiries, batches, policies and site settings.
+
+## Core requirements (static)
+- Pre-launch: NO commercial checkout until approvals confirmed (admin toggle `checkout_enabled`).
+- Live Press for **oils only**; bookings never shown as confirmed until admin confirms.
+- No fabricated licences, certifications, GST, lab reports, reviews, or business history.
+- Two-colour brand identity; premium, mobile-first, responsive.
+
+## Implemented (2026-06)
+- Homepage: kinetic terracotta hero with masked line reveal, parallax oil image, editorial marquee, brand intro, Live Press feature, featured products, transparency band.
+- Shop + category pages (oils/pickles/cashew-brittles) with availability badges (Available / Coming Soon / Temporarily Unavailable).
+- Product detail: pack-size + quantity selectors, prominent allergen notice, storage/delivery/returns/food-label accordions, WhatsApp enquiry, Book Live Press (oils only), pre-launch notice instead of checkout.
+- AMYA Live Press page: 4-step journey + functional booking form → POST /api/bookings + prefilled WhatsApp click-to-chat to +919675334567; recording-request option; honest "live call ≠ purity proof" note.
+- Our Story (founder), About, Transparency Promise (+ future-ready batch records), Contact (form + call/WhatsApp + international shipping note), editable Policy pages.
+- Admin dashboard: products CRUD + availability, bookings confirm/reject, enquiries status, batch records, settings (announcement bar, pre-launch/checkout toggles, manual bank/UPI fields, editable policies).
+- SEO meta/OG tags, custom SVG favicon, generated AMYA logo + product photography.
+- Original logo + favicon designed; AMYA-branded oil photography generated (groundnut/sesame/coconut).
+- Verified: 23/23 backend tests pass; admin login + all public forms verified end-to-end.
+
+## Backlog / remaining
+- **P1**: Real AMYA product photos (replace stock/generated via admin); founder to supply verified bank/UPI details; confirm FSSAI/GST before enabling checkout.
+- **P1**: Brute-force lockout on /api/auth/login (playbook) before go-live.
+- **P2**: Commercial checkout + payment reconciliation (manual UTR → pending) once approvals + payment provider confirmed.
+- **P2**: Verified international shipping-rate integration (currently "quoted individually").
+- **P2**: Image upload for products/batches (object storage) instead of URL paste.
+- **P3**: Restrict CORS to known origins for production.
+
+## Next tasks
+- Await founder's real photos, bank/UPI details and food-business approvals to progress payments/checkout.
