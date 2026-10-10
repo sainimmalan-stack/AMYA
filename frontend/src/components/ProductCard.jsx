@@ -48,6 +48,7 @@ export default function ProductCard({ product, index = 0 }) {
       <a
         href={waLink(wa, msg)} target="_blank" rel="noreferrer"
         data-testid={`order-wa-${product.slug}`}
+        data-wa-cta
         className="mt-3 inline-flex items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-3 font-sans text-xs uppercase tracking-[0.18em] rounded-full"
       >
         <MessageCircle size={15} /> {available ? "Order on WhatsApp" : "Enquire on WhatsApp"}

@@ -126,7 +126,7 @@ export default function ProductDetail() {
           </div>
 
           <div className="mt-5 flex flex-col sm:flex-row gap-3">
-            <Btn as="a" href={waLink(wa, enquiryMsg)} target="_blank" rel="noreferrer" variant="solid" data-testid="pd-whatsapp-enquiry">
+            <Btn as="a" href={waLink(wa, enquiryMsg)} target="_blank" rel="noreferrer" variant="solid" data-testid="pd-whatsapp-enquiry" data-wa-cta>
               <MessageCircle size={15} /> {buyable ? "Order on WhatsApp" : "Enquire on WhatsApp"}
             </Btn>
             {product.live_press && (

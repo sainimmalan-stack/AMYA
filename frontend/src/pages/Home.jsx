@@ -51,7 +51,7 @@ function Hero() {
   );
 }
 
-function CollectionCard({ product, name, desc, price, cta, to, extra, index, tone = "ivory" }) {
+function CollectionCard({ product, name, desc, price, cta, to, extra, index, tone = "ivory", fit = "contain" }) {
   const img = product?.images?.[0];
   const badge = product?.availability === "available" ? "Available" : "Coming soon";
   const cardBg = tone === "beige" ? "bg-beige" : "bg-white";
@@ -63,8 +63,11 @@ function CollectionCard({ product, name, desc, price, cta, to, extra, index, ton
       className={`flex flex-col ${cardBg} border border-ink/10 overflow-hidden rounded-xl shadow-sm`}
       data-testid={`collection-card-${to.split("/").pop()}`}
     >
-      <div className={`relative aspect-[5/4] sm:aspect-[4/5] ${imgBg}`}>
-        {img && <img src={img} alt={name} loading="lazy" className="h-full w-full object-contain p-2" />}
+      <div className={`relative aspect-[4/3] ${imgBg}`}>
+        {img && (
+          <img src={img} alt={name} loading="lazy"
+               className={`h-full w-full ${fit === "cover" ? "object-cover" : "object-contain p-3"}`} />
+        )}
         <span className="absolute top-3 left-3 bg-terracotta text-ivory px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] rounded-full">{badge}</span>
       </div>
       <div className="p-4 sm:p-5 flex flex-col flex-1">
@@ -72,7 +75,7 @@ function CollectionCard({ product, name, desc, price, cta, to, extra, index, ton
         <p className="font-sans text-xs sm:text-sm text-ink-soft mt-1 leading-relaxed">{desc}</p>
         {price && <p className="font-sans text-sm text-terracotta-deep mt-2 font-medium">{price}</p>}
         <div className="mt-auto pt-4">
-          <Link to={to} data-testid={`collection-cta-${to.split("/").pop()}`}
+          <Link to={to} data-testid={`collection-cta-${to.split("/").pop()}`} data-wa-cta
                 className="inline-flex w-full items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors px-3 py-3 font-sans text-[11px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.18em] leading-tight text-center rounded-full">
             <span>{cta}</span> <ArrowRight size={14} className="shrink-0" />
           </Link>
@@ -122,6 +125,7 @@ function OurCollection() {
           to="/product/cashew-brittle"
           index={0}
           tone="ivory"
+          fit="cover"
         />
         <CollectionCard
           product={oil}
@@ -133,7 +137,7 @@ function OurCollection() {
           index={1}
           tone="beige"
           extra={
-            <a href={waLink(wa, VIDEO_MSG)} target="_blank" rel="noreferrer" data-testid="collection-video-call"
+            <a href={waLink(wa, VIDEO_MSG)} target="_blank" rel="noreferrer" data-testid="collection-video-call" data-wa-cta
                className="mt-3 inline-flex items-center justify-center gap-1.5 w-full font-sans text-[10px] uppercase tracking-[0.18em] text-terracotta-deep hover:text-terracotta">
               <MessageCircle size={13} /> Video call enquiries
             </a>
@@ -223,7 +227,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Btn as="a" href={waLink(wa, "Hello AMYA, I'd like to place an order.")} target="_blank" rel="noreferrer" variant="solidIvory" data-testid="home-contact-whatsapp">
+              <Btn as="a" href={waLink(wa, "Hello AMYA, I'd like to place an order.")} target="_blank" rel="noreferrer" variant="solidIvory" data-testid="home-contact-whatsapp" data-wa-cta>
                 <MessageCircle size={15} /> Order on WhatsApp
               </Btn>
               <Btn as="a" href={`tel:${phone}`} variant="outlineIvory" data-testid="home-contact-call">
