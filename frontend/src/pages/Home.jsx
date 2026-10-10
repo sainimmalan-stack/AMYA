@@ -63,6 +63,7 @@ function OurCollection() {
   }, []);
 
   const featured = products.filter((p) => p.featured).sort((a, b) => a.sort_order - b.sort_order);
+  const oils = products.filter((p) => p.category === "oils").sort((a, b) => a.sort_order - b.sort_order);
   const pickles = products.filter((p) => p.category === "pickles").sort((a, b) => a.sort_order - b.sort_order);
 
   return (
@@ -86,8 +87,25 @@ function OurCollection() {
         </div>
       </section>
 
+      {oils.length > 0 && (
+        <section className="bg-beige" data-testid="oils-section">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-14 lg:py-20">
+            <Reveal>
+              <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Cold-extracted, prepared to order</span>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">AMYA Oils.</h2>
+              <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">
+                Cooking oils cold-extracted in small batches using our own setup. Request a live session to watch the actual process and ask questions before you order.
+              </p>
+            </Reveal>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 mt-8">
+              {oils.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+            </div>
+          </div>
+        </section>
+      )}
+
       {pickles.length > 0 && (
-        <section className="bg-beige" data-testid="pickles-section">
+        <section className="bg-ivory" data-testid="pickles-section">
           <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-14 lg:py-20">
             <Reveal>
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Launching soon</span>

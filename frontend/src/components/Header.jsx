@@ -12,6 +12,7 @@ const NAV = [
   { to: "/shop/spices", label: "Spices" },
   { to: "/shop/pickles", label: "Pickles" },
   { to: "/shop/cashew-brittles", label: "Cashew Brittle" },
+  { to: "/shop/oils", label: "Oils" },
   { to: "/contact", label: "Contact" },
 ];
 
