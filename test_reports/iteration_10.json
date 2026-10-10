@@ -1,0 +1,43 @@
+{
+  "summary": "Frontend-only testing for the restructured AMYA Cashew Brittle product page. All functional requirements verified at mobile 375/390/430 and desktop 1440.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "verifications": {
+    "intro_text_exact": true,
+    "pack_cards": "500 g ₹500 / 10 pieces  and  1 kg ₹900 / 20 pieces present; no 250g/₹300",
+    "default_selected_pack": "500 g (aria-pressed=true); terracotta bg rgb(185,80,64) when selected",
+    "gifting_tag_on_1kg": true,
+    "best_value_note": "Best value · ₹0.90/g",
+    "quantity_row": "QUANTITY  −  n  +  with data-testids qty-minus/qty-value/qty-plus works",
+    "live_total_default": "₹500 for 500g x 1",
+    "live_total_1kg_x3": "₹2,700 (verified via pd-total and WA URL)",
+    "whatsapp_default_url": "wa.me/919675334567?text=... Cashew Brittle / Pack: 500 g (10 pieces) / Quantity: 1 pack / Total: ₹500",
+    "whatsapp_1kg_x3_url": "wa.me/919675334567?text=... Cashew Brittle / Pack: 1 kg (20 pieces) / Quantity: 3 packs / Total: ₹2,700",
+    "order_button_above_prelaunch": "pd-whatsapp-enquiry at top=876 appears BEFORE pd-prelaunch at top=1010 (qty-value=823)",
+    "accordions_below_order_section": "Description, Ingredients, Storage, Delivery, Returns & cancellation render in collapsible accordions below the order+prelaunch section",
+    "forbidden_terms_butter_sugar_ghee_dairy_cashew_pieces": "none found",
+    "horizontal_overflow": "false at 375, 390, 430, 1440",
+    "desktop_two_column_1440": "grid lg:grid-cols-2 renders cleanly; terracotta header/footer and ivory logo intact",
+    "floating_wa_vs_order_cta": "No spatial overlap observed (floating at ~x326,y776 48x48; CTA fills row at x20,width350). Auto-hide is NOT implemented, but there is no actual visual collision in current layout."
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: implement auto-hide/opacity-0 on data-testid=floating-whatsapp when the pd-whatsapp-enquiry CTA enters the viewport (IntersectionObserver). Currently no overlap but spec explicitly asks for auto-hide."
+  ],
+  "critical_code_review_comments": [
+    "ProductDetail.jsx is clean (243 LOC) and uses env-driven whatsapp number via useConfig with sane fallback.",
+    "orderMsg builder correctly interpolates product name, pack label, note (pieces), qty and total with ₹ and en-IN formatting.",
+    "All interactive elements have data-testid as required."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100%"},
+  "test_credentials": "N/A (no auth required for this flow)",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Cashew Brittle product page redesign fully verified. WhatsApp order deep-links contain the correct product, pack label, pieces, quantity and total for both default (500g x1 = ₹500) and 1kg x3 = ₹2,700. Order CTA sits immediately below the quantity row and above the Pre-launch notice. Only outstanding (minor) item is implementing an auto-hide on the floating WhatsApp FAB when the primary CTA is in the viewport — no actual overlap in current layout."
+}
