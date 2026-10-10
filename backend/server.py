@@ -141,6 +141,8 @@ class Product(BaseDocument):
     returns_info: str = ""
     food_label_info: str = ""
     batch_info: str = ""
+    serving: str = ""
+    serving_highlight: str = ""
     images: List[str] = []
     pack_sizes: List[PackSize] = []
     availability: str = "coming-soon"  # available | coming-soon | enquire | unavailable
@@ -167,6 +169,8 @@ class ProductIn(BaseModel):
     returns_info: str = ""
     food_label_info: str = ""
     batch_info: str = ""
+    serving: str = ""
+    serving_highlight: str = ""
     images: List[str] = []
     pack_sizes: List[PackSize] = []
     availability: str = "coming-soon"
@@ -582,11 +586,13 @@ INITIAL_PRODUCTS = [
     },
     {
         "slug": "amya-nuvvula-podi", "name": "AMYA Nuvvula Podi", "category": "spices",
-        "short_description": "Traditional Andhra-style sesame podi, prepared by Amulya in small batches for an authentic homemade flavour.",
-        "description": "AMYA Nuvvula Podi is a traditional Andhra-style sesame powder (podi), prepared by Amulya in small batches for an authentic homemade flavour.\n\nServing suggestion: Enjoy with hot rice and ghee, or serve alongside idli and dosa.",
+        "short_description": "A traditional sesame podi made for simple, satisfying meals with an authentic home-style touch.",
+        "description": "AMYA Nuvvula Podi is a traditional sesame podi, prepared by Amulya in small batches for an authentic, home-style flavour.",
         "origin": "Andhra Pradesh, India",
-        "highlights": ["Traditional Andhra-style sesame podi", "Prepared by Amulya in small batches", "Authentic homemade flavour", "Enjoy with hot rice and ghee, idli or dosa"],
+        "highlights": ["Traditional Andhra-style sesame podi", "Prepared by Amulya in small batches", "Authentic, home-style flavour"],
         "diet": "veg",
+        "serving": "Mix with piping-hot rice and ghee and enjoy while the rice is hot.",
+        "serving_highlight": "Best enjoyed with very hot rice + ghee",
         "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
@@ -597,11 +603,13 @@ INITIAL_PRODUCTS = [
     },
     {
         "slug": "amya-karivepaku-podi", "name": "AMYA Karivepaku Podi", "category": "spices",
-        "short_description": "Traditional Andhra-style curry leaf podi, prepared by Amulya in small batches to bring authentic South Indian flavour to everyday meals.",
-        "description": "AMYA Karivepaku Podi is a traditional Andhra-style curry leaf powder (podi), prepared by Amulya in small batches to bring authentic South Indian flavour to everyday meals.\n\nServing suggestion: Enjoy with hot rice and ghee, or serve with idli and dosa.",
+        "short_description": "A traditional curry leaf podi made to bring a familiar, comforting taste to everyday meals.",
+        "description": "AMYA Karivepaku Podi is a traditional curry leaf podi, prepared by Amulya in small batches to bring a familiar, comforting taste to everyday meals.",
         "origin": "Andhra Pradesh, India",
-        "highlights": ["Traditional Andhra-style curry leaf podi", "Prepared by Amulya in small batches", "Authentic South Indian flavour", "Enjoy with hot rice and ghee, idli or dosa"],
+        "highlights": ["Traditional Andhra-style curry leaf podi", "Prepared by Amulya in small batches", "Familiar, comforting everyday flavour"],
         "diet": "veg",
+        "serving": "Mix generously with piping-hot rice and ghee and enjoy while the rice is hot.",
+        "serving_highlight": "Best enjoyed with very hot rice + ghee",
         "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
@@ -611,12 +619,14 @@ INITIAL_PRODUCTS = [
         "availability": "available", "live_press": False, "featured": True, "sort_order": 9,
     },
     {
-        "slug": "amya-nallakaram", "name": "AMYA Nallakaram", "category": "spices",
-        "short_description": "Traditional Andhra-style nallakaram spice podi, prepared by Amulya in small batches for an authentic, fiery homemade flavour.",
-        "description": "AMYA Nallakaram is a traditional Andhra-style spice powder (podi), prepared by Amulya in small batches for an authentic, fiery homemade flavour.\n\nServing suggestion: Enjoy with hot rice and ghee, or serve alongside idli and dosa.",
+        "slug": "amya-nallakaram", "name": "AMYA Nallakaram Podi", "category": "spices",
+        "short_description": "A traditional Andhra-style podi made for those who love bold, comforting flavours.",
+        "description": "AMYA Nallakaram Podi is a traditional Andhra-style podi, prepared by Amulya in small batches for those who love bold, comforting flavours.",
         "origin": "Andhra Pradesh, India",
-        "highlights": ["Traditional Andhra-style nallakaram podi", "Prepared by Amulya in small batches", "Authentic, fiery homemade flavour", "Enjoy with hot rice and ghee, idli or dosa"],
+        "highlights": ["Traditional Andhra-style nallakaram podi", "Prepared by Amulya in small batches", "Bold, comforting flavour"],
         "diet": "veg",
+        "serving": "Enjoy with dosa, or mix with piping-hot rice and ghee for a deeply satisfying traditional meal.",
+        "serving_highlight": "Best enjoyed with very hot rice + ghee",
         "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",

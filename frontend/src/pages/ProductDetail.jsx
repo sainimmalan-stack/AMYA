@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Minus, Plus, MessageCircle, Video, Phone, MapPin, Check } from "lucide-react";
+import { ArrowLeft, Minus, Plus, MessageCircle, Video, Phone, MapPin, Check, Flame } from "lucide-react";
 import { api, waLink, telHref } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import Availability from "@/components/Availability";
@@ -115,6 +115,19 @@ export default function ProductDetail() {
                 </li>
               ))}
             </ul>
+          )}
+
+          {product.serving && (
+            <div className="mt-5 rounded-lg border border-terracotta/25 bg-terracotta/5 px-4 py-4" data-testid="pd-serving">
+              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">How to enjoy</p>
+              <p className="font-sans text-sm text-ink mt-1.5 leading-relaxed">{product.serving}</p>
+              {product.serving_highlight && (
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-terracotta text-ivory px-4 py-2" data-testid="pd-serving-highlight">
+                  <Flame size={14} className="shrink-0" />
+                  <span className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.14em]">{product.serving_highlight}</span>
+                </div>
+              )}
+            </div>
           )}
 
           {/* Pack sizes */}

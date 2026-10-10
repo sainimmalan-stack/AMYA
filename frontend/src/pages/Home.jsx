@@ -88,9 +88,10 @@ function OurCollection() {
           <Reveal>
             <div className="flex items-end justify-between mb-6 sm:mb-8">
               <div>
-                <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Available to order</span>
+                <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Available for pre-order</span>
                 <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Shop Our Products.</h2>
                 <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">Discover handcrafted favourites from AMYA.</p>
+                <p className="font-sans text-xs sm:text-sm text-ink-soft mt-2 max-w-2xl leading-relaxed">Made in limited quantities. Place your enquiry or pre-order to check availability.</p>
               </div>
               <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
                 View all <ArrowRight size={14} />
@@ -141,6 +142,22 @@ export default function Home() {
   return (
     <div>
       <Hero />
+
+      <section className="bg-ivory-warm" data-testid="preorder-band">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-12 lg:py-16">
+          <Reveal>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Pre-order · small batch</span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Small Batches. Unforgettable Taste.</h2>
+            <p className="font-sans text-sm sm:text-base text-ink-soft mt-4 max-w-2xl leading-relaxed">
+              At AMYA, we make our products in limited quantities and primarily on a pre-order basis. Every batch is prepared with care, because we believe good food deserves attention, not mass production.
+            </p>
+            <p className="font-serif text-lg sm:text-xl text-ink mt-5 max-w-2xl leading-relaxed">
+              Our confidence is simple: once you taste AMYA, we believe you'll want to come back for more.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
       <OurCollection />
 
       {/* How ordering works */}
