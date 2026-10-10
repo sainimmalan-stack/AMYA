@@ -292,3 +292,10 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Mobile vertical spacing reduced ~20% (hero pt-8/pb-8→pt-6/pb-6; pre-order band py-10→py-8; collection pt-7/pb-8→pt-5/pb-6). Desktop sm/lg spacing preserved.
 - ProductCard: removed the green veg DietMark square from cards (+ removed unused import). Added prep note "Prepared in small batches. Dispatch on the third day." on availability=="order" cards (3 podis + Garam Masala). Buttons stay bottom-aligned (mt-auto); image heights consistent (aspect-[4/5]).
 - Order/status/prices/cart unchanged. Verified on mobile preview: copy present, 0 diet marks, notes on 4 items, correct order.
+
+## Changelog — 2026-10-10 (Chilli powder rebrand → AMYA Chilli Powder)
+- Renamed product (slug kept as guntur-sannam-chilli-powder for URL stability) name "Guntur Sannam Chilli Powder (S4)" → "AMYA Chilli Powder". Flows everywhere via DB (homepage card, detail H1, cart, WhatsApp message). No "Guntur" in name/heading.
+- Description replaced with "THE AMYA CHILLI BLEND" story (20% Guntur + 80% other varieties, 20-year blending tradition). Highlights: 20% Guntur chillies / 80% carefully selected red chillies / Balanced colour and flavour / A blending tradition spanning over 20 years. Ingredients: blend 20/80. Origin changed Guntur,AP → Andhra Pradesh, India. Storage: "Refrigerate after opening to help preserve the chilli powder's colour and freshness."
+- Packaging image regenerated (edited existing) so sticker label reads "CHILLI POWDER" (removed "Guntur Sannam (S4)"), same pouch/logo/red powder; overwrote /app/frontend/public/products/guntur-sannam-chilli-powder.jpg (DB path unchanged).
+- ProductDetail description AccordionContent now uses whitespace-pre-line so multi-paragraph descriptions render properly.
+- No health claims; 20/80 proportions preserved; availability/prices/pack-sizes/cart unchanged; other products untouched. Verified on mobile preview.

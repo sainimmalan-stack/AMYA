@@ -229,7 +229,7 @@ export default function ProductDetail() {
             {product.description && (
               <AccordionItem value="desc">
                 <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Description</AccordionTrigger>
-                <AccordionContent className="font-sans text-sm text-ink-soft leading-relaxed">{product.description}</AccordionContent>
+                <AccordionContent className="font-sans text-sm text-ink-soft leading-relaxed whitespace-pre-line">{product.description}</AccordionContent>
               </AccordionItem>
             )}
             {product.extraction_method && (
