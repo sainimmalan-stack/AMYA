@@ -18,7 +18,7 @@ function Hero() {
 
   return (
     <section ref={ref} className="relative bg-ivory-warm text-ink overflow-hidden border-b border-ink/10">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-8 lg:pt-16 lg:pb-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 pb-6 lg:pt-16 lg:pb-16 relative z-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
               className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta block mb-4">
@@ -29,7 +29,7 @@ function Hero() {
             </h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
               className="font-sans text-sm sm:text-lg text-ink-soft max-w-xl mt-3 sm:mt-4 leading-relaxed">
-              Discover the authentic flavours of India through carefully selected spices, traditional recipes and handcrafted artisanal foods. At AMYA, we believe exceptional food begins with exceptional ingredients.
+              Discover authentic Indian flavours through carefully selected ingredients, traditional recipes and handcrafted artisanal foods. Every batch is made with care, in limited quantities.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
               className="mt-5 sm:mt-7 flex flex-col sm:flex-row gap-3">
@@ -88,7 +88,7 @@ function OurCollection() {
   return (
     <>
       <section id="collection" className="bg-ivory" data-testid="shop-products-section">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-7 pb-8 sm:py-11 lg:py-14">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-5 pb-6 sm:py-11 lg:py-14">
           <Reveal>
             <div className="flex items-end justify-between mb-6 sm:mb-8">
               <div>
@@ -148,12 +148,12 @@ export default function Home() {
       <Hero />
 
       <section className="bg-ivory-warm" data-testid="preorder-band">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-12 lg:py-16">
           <Reveal>
             <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Pre-order · small batch</span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Small Batches. Unforgettable Taste.</h2>
             <p className="font-sans text-sm sm:text-base text-ink-soft mt-4 max-w-2xl leading-relaxed">
-              At AMYA, we make our products in limited quantities and primarily on a pre-order basis. Every batch is prepared with care, because we believe good food deserves attention, not mass production.
+              At AMYA, we prepare our products in limited quantities, focusing on freshness, flavour and traditional recipes rather than mass production.
             </p>
             <p className="font-serif text-lg sm:text-xl text-ink mt-5 max-w-2xl leading-relaxed">
               Our confidence is simple: once you taste AMYA, we believe you'll want to come back for more.

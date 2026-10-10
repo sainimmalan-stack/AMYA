@@ -285,3 +285,10 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 ## Changelog — 2026-10-10 (WhatsApp order reference code)
 - CartContext: added auto-generated short order reference "AMYA-XXXXXX" (6 unambiguous alphanumeric chars). Persisted in localStorage (amya_cart_ref_v1), included as "Order reference: AMYA-XXXXXX" near the top of the WhatsApp order message. Rotates to a fresh code via newOrderRef() after the order is sent (Send on WhatsApp onClick) and on Clear cart.
 - CartDrawer: shows "Order reference" row in the footer above Order total (data-testid cart-order-ref). Verified: drawer code matches WA message code, valid format. No backend changes.
+
+## Changelog — 2026-10-10 (Homepage final mobile polish)
+- Hero description replaced with: "Discover authentic Indian flavours through carefully selected ingredients, traditional recipes and handcrafted artisanal foods. Every batch is made with care, in limited quantities." Heading + Explore/Our Story buttons unchanged.
+- Small-batch section: heading kept; first paragraph reworded to "At AMYA, we prepare our products in limited quantities, focusing on freshness, flavour and traditional recipes rather than mass production." Confidence line unchanged.
+- Mobile vertical spacing reduced ~20% (hero pt-8/pb-8→pt-6/pb-6; pre-order band py-10→py-8; collection pt-7/pb-8→pt-5/pb-6). Desktop sm/lg spacing preserved.
+- ProductCard: removed the green veg DietMark square from cards (+ removed unused import). Added prep note "Prepared in small batches. Dispatch on the third day." on availability=="order" cards (3 podis + Garam Masala). Buttons stay bottom-aligned (mt-auto); image heights consistent (aspect-[4/5]).
+- Order/status/prices/cart unchanged. Verified on mobile preview: copy present, 0 diet marks, notes on 4 items, correct order.
