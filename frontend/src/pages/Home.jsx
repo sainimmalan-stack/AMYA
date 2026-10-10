@@ -67,6 +67,7 @@ function OurCollection() {
     "amya-nuvvula-podi",
     "amya-karivepaku-podi",
     "amya-nallakaram",
+    "amya-garam-masala",
     "guntur-sannam-chilli-powder",
     "amya-turmeric-powder",
   ];
