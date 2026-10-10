@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only regression + homepage refinement verification for AMYA. All 12 spec items passed. Hero copy ('Your oil. / Your questions. / Our open process.' with 'Transparency-first cooking oil' eyebrow) is correct, no oversized duplicate AMYA logo in hero body (only header logo). Both hero CTAs work: hero-book-btn smooth-scrolls to #book-session and reveals home-booking-form; hero-explore-oils-btn navigates to /shop/oils. Oil showcase renders exactly 4 cards (groundnut, sesame, coconut, sunflower) all with 'COMING SOON' badges. Machinery area shows the clean placeholder (data-testid machinery-image-area); no ghani/wooden-press imagery detected. Booking form validation shows error toast on empty submit, and successful submission POSTs /api/bookings, shows home-booking-success, and opens a WhatsApp link with the correct number 919675334567 (URL uses api.whatsapp.com/send?phone=919675334567 — functionally equivalent to wa.me). 'Beyond our oils' section visible. Regression: /admin/login works, Bookings tab shows the newly created 'TEST Playwright' booking with 'pending' status; /live-press loads with booking-form visible (7 inputs); /contact form renders. Mobile (390px): no horizontal scroll, headline not clipped, CTAs tappable (350x48 button).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Homepage booking section", "issues": ["Minor: WhatsApp opener uses api.whatsapp.com/send?phone=... instead of wa.me/<number>. Both are valid WhatsApp URLs and the phone number (919675334567) is correct, so no functional impact. Spec text said 'wa.me' — only mention if strict URL format is required."]}
+    ]
+  },
+  "test_report_links": ["/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Home.jsx scrollToBook relies on window.__lenis — confirmed working via SmoothScroll component. Fallback to native scrollIntoView is correct.",
+    "HomeBooking filters oils via live_press flag — all 4 current oils have live_press=true so dropdown is populated. If any oil toggles live_press=false it will silently disappear from the dropdown; consider showing all oils or an empty-state message.",
+    "Console warning observed from a motion/scroll container ('ensure non-static position') — cosmetic, non-blocking."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "100%"},
+  "test_credentials": "Admin: amulya@amayafoods.in / AmyaFounder@2026 — verified working.",
+  "seed_data_creation": "Created one test booking via homepage form: name='TEST Playwright', whatsapp='+919999988888', oil=Groundnut Oil, date=2026-02-15, time=10:00 AM. Visible under admin Bookings tab (status pending). Main agent may want to clean this up.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Homepage refinement verified end-to-end. All data-testids present and functional. If re-running, the 'TEST Playwright' booking may already exist in DB — safe to delete via admin panel. WhatsApp URL format uses api.whatsapp.com (not wa.me) but phone number is correct 919675334567.",
+  "rca of the issue": "N/A — no bugs found."
+}
