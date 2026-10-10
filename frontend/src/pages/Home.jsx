@@ -30,7 +30,7 @@ function Hero() {
           <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
               className="font-sans text-xs uppercase tracking-[0.3em] text-ivory/75 block mb-5">
-              AMYA · Artisanal Foods
+              Handmade · small batches
             </motion.span>
 
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.0] tracking-tight">

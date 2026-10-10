@@ -36,10 +36,17 @@ export default function Header() {
     <>
       <AnnouncementBar />
       <header className="sticky top-0 z-40 bg-ivory/90 backdrop-blur-md border-b border-ink/10">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
-          <Logo variant="ink" size="sm" />
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center">
+          {/* Mobile / tablet: centred logo */}
+          <div className="lg:hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <Logo variant="ink" size="header" />
+          </div>
+          {/* Desktop: left-aligned logo */}
+          <div className="hidden lg:block">
+            <Logo variant="ink" size="header" />
+          </div>
 
-          <nav className="hidden lg:flex items-center gap-7">
+          <nav className="hidden lg:flex items-center gap-7 ml-10">
             {NAV.slice(1).map((n) => (
               <Link
                 key={n.to}
@@ -54,7 +61,7 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-auto">
             <a href={`tel:${phone}`} data-testid="header-call-btn"
                className="hidden sm:inline-flex h-10 w-10 items-center justify-center border border-ink/15 text-ink-soft hover:bg-terracotta hover:text-ivory hover:border-terracotta transition-colors rounded-full">
               <Phone size={15} />
@@ -85,7 +92,7 @@ export default function Header() {
             data-testid="mobile-menu"
           >
             <div className="flex items-center justify-between h-20 px-5">
-              <Logo variant="ivory" size="sm" />
+              <Logo variant="ivory" size="menu" />
               <button onClick={() => setOpen(false)} data-testid="mobile-menu-close" aria-label="Close menu"
                       className="h-10 w-10 inline-flex items-center justify-center">
                 <X size={24} />
