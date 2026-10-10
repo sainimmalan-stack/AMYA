@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Minus, Plus, MessageCircle, Video, AlertTriangle, Phone } from "lucide-react";
-import { api, waLink } from "@/lib/api";
+import { api, waLink, orderMessage } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import Availability from "@/components/Availability";
 import Btn from "@/components/Btn";
@@ -39,10 +39,7 @@ export default function ProductDetail() {
   const hasAllergen = product.allergens && product.allergens.trim().length > 0;
   const buyable = product.availability === "available";
 
-  const enquiryMsg =
-    `Hello AMYA, I'd like to enquire about *${product.name}*` +
-    (selected ? ` — pack: ${selected.label}` : "") +
-    `, quantity: ${qty}.`;
+  const enquiryMsg = orderMessage(product, selected?.label, selected?.price, qty);
 
   return (
     <div data-testid="product-detail">
@@ -142,7 +139,7 @@ export default function ProductDetail() {
 
           <div className="mt-5 flex flex-col sm:flex-row gap-3">
             <Btn as="a" href={waLink(wa, enquiryMsg)} target="_blank" rel="noreferrer" variant="solid" data-testid="pd-whatsapp-enquiry">
-              <MessageCircle size={15} /> Enquire on WhatsApp
+              <MessageCircle size={15} /> {buyable ? "Order on WhatsApp" : "Enquire on WhatsApp"}
             </Btn>
             {product.live_press && (
               <Btn to={`/live-press?oil=${product.slug}`} variant="outline" data-testid="pd-book-livepress">

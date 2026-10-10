@@ -8,12 +8,9 @@ import { waLink } from "@/lib/api";
 
 const NAV = [
   { to: "/", label: "Home" },
-  { to: "/shop", label: "Shop" },
-  { to: "/shop/oils", label: "Oils" },
-  { to: "/shop/pickles", label: "Pickles" },
-  { to: "/shop/cashew-brittles", label: "Cashew Brittles" },
-  { to: "/live-press", label: "AMYA Live Press" },
-  { to: "/our-story", label: "Our Story" },
+  { to: "/shop/cashew-brittles", label: "Cashew Brittle" },
+  { to: "/shop/oils", label: "AMYA Oils" },
+  { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];
 

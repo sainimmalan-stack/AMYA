@@ -536,11 +536,11 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Food-label details are added once finalised by AMYA.",
         "images": ["https://images.unsplash.com/photo-1772984960196-b387b4f2f524?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
         "pack_sizes": [
-            {"label": "250 g", "price": 300, "note": "approx. 5 pieces"},
-            {"label": "500 g", "price": 500, "note": "approx. 10 pieces"},
-            {"label": "1 kg", "price": 900, "note": "approx. 20 pieces"},
+            {"label": "250 g", "price": 300, "note": "5 pieces"},
+            {"label": "500 g", "price": 500, "note": "10 pieces"},
+            {"label": "1 kg", "price": 900, "note": "20 pieces"},
         ],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 4,
+        "availability": "available", "live_press": False, "featured": True, "sort_order": 0,
     },
     {
         "slug": "homemade-pickle", "name": "Homemade Pickle", "category": "pickles",
