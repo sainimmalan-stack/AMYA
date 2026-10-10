@@ -119,7 +119,7 @@ function OurCollection() {
         <CollectionCard
           product={cashew}
           name="AMYA Cashew Brittle"
-          desc="Handcrafted cashew brittle, made in small batches."
+          desc="Premium whole roasted cashews dipped in jaggery."
           price={priceLabel}
           cta="Shop Cashew Brittle"
           to="/product/cashew-brittle"

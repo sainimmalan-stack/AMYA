@@ -103,3 +103,11 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Product collection on light ivory with dark-brown names/prices and terracotta accents; cards ivory / warm-ivory tones. Prices unchanged (500g ₹500 / 1kg ₹900, no 250g).
 - Verified via testing_agent (iteration_9.json — 100% pass) across all 9 public routes: header+footer terracotta everywhere, no black/white sections, collection renders without scroll, mobile menu + floating WhatsApp + pricing + forms intact, no overflow at 375/390/430/1440. NOT yet published.
 
+
+## Changelog — 2026-07-10 (Cashew Brittle copy: whole roasted cashews + jaggery)
+- Updated description (seed + live DB) to the exact new premium copy emphasising WHOLE cashews roasted before being dipped in jaggery (no "pieces"/"broken").
+- Ingredients now exactly "Whole roasted cashews, jaggery." (removed butter, sugar, ghee). Allergen data updated to drop dairy (cashews/tree nuts only).
+- short_description + homepage card copy updated to "Premium whole roasted cashews dipped in jaggery…".
+- WhatsApp order message uses only name/pack/price — no stale product info. Prices/packs/images/ordering unchanged.
+- Verified via API + DB + UI: ingredients + short desc display correctly; no butter/sugar/ghee/dairy/"cashew pieces" remain ("10/20 pieces" refers to brittle pieces per pack and is correct). NOT yet published.
+
