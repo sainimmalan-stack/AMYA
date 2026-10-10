@@ -538,7 +538,7 @@ INITIAL_PRODUCTS = [
         "images": ["https://customer-assets-eiarnc6j.emergentagent.net/job_amya-artisanal/artifacts/eac99c5da7e65e63_1BFEC77A-D52E-4699-9209-806370EA3678.png"],
         "pack_sizes": [
             {"label": "500 g", "price": 500, "note": "10 pieces"},
-            {"label": "1 kg", "price": 900, "note": "20 pieces"},
+            {"label": "1 kg", "price": 1000, "note": "20 pieces"},
         ],
         "availability": "available", "live_press": False, "featured": True, "sort_order": 0,
     },

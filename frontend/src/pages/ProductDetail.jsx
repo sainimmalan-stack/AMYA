@@ -85,16 +85,24 @@ export default function ProductDetail() {
           {product.pack_sizes?.length > 0 && (
             <div className="mt-8">
               <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-3">Pack size</p>
-              <div className="flex flex-wrap gap-3">
-                {product.pack_sizes.map((ps, i) => (
-                  <button key={i} onClick={() => setPack(i)} data-testid={`pack-${i}`}
-                          className={`px-5 py-3 border text-left transition-colors ${i === pack ? "border-terracotta bg-terracotta text-ivory" : "border-ink/20 text-ink hover:border-terracotta"}`}>
-                    <span className="block font-sans text-sm">{ps.label}</span>
-                    <span className="block font-sans text-xs opacity-80 mt-0.5">
-                      {ps.price != null ? `₹${ps.price}` : "Price at launch"}{ps.note ? ` · ${ps.note}` : ""}
-                    </span>
-                  </button>
-                ))}
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                {product.pack_sizes.map((ps, i) => {
+                  const active = i === pack;
+                  return (
+                    <button key={i} onClick={() => setPack(i)} data-testid={`pack-${i}`}
+                            aria-pressed={active}
+                            className={`relative flex flex-col items-center justify-center text-center px-3 py-6 sm:py-7 border transition-all duration-300 ${active ? "border-terracotta bg-ivory-warm" : "border-ink/15 bg-ivory hover:border-terracotta/60"}`}>
+                      {active && <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-terracotta" />}
+                      <span className="font-serif text-2xl sm:text-3xl leading-none text-ink">{ps.label}</span>
+                      {ps.price != null ? (
+                        <span className="font-sans text-xl sm:text-2xl font-medium text-terracotta mt-2 whitespace-nowrap">₹{ps.price.toLocaleString("en-IN")}</span>
+                      ) : (
+                        <span className="font-sans text-sm text-ink-soft mt-2">Price at launch</span>
+                      )}
+                      {ps.note && <span className="font-sans text-[10px] uppercase tracking-[0.16em] text-ink-soft mt-2">{ps.note}</span>}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
