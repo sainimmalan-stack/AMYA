@@ -121,3 +121,10 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Pre-launch notice (data-testid pd-prelaunch) + all detail accordions moved BELOW the order section.
 - Verified via testing_agent (iteration_10.json — 100% pass): order flow correct, totals/message correct, ordering above pre-launch, no forbidden terms, no overflow at 375/390/430/1440, desktop two-column intact. NOT yet published.
 
+
+## Changelog — 2026-07-10 (Hero/header visual separation)
+- Homepage hero changed from terracotta to warm cream (bg-ivory-warm #FBE7D8) with a subtle bottom border, so it clearly separates from the terracotta header above and the lighter ivory 'Our collection' (#FFF1E3) below.
+- Hero text now dark brown (#42251F heading/body), eyebrow 'HANDMADE · SMALL BATCHES' in terracotta, and 'SHOP OUR PRODUCTS' is a solid terracotta button with ivory text. Decorative desktop image framed on ivory with ink/10 border.
+- Header unchanged (terracotta + ivory logo + border-b). Logo/content/prices/ordering untouched.
+- Self-tested on mobile (390) + desktop (1440): header #B95040 vs hero #FBE7D8 clearly distinct, heading wraps naturally, button visible, no horizontal overflow. NOT yet published.
+

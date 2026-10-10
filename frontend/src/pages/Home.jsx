@@ -16,23 +16,23 @@ function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 90]);
 
   return (
-    <section ref={ref} className="relative bg-terracotta text-ivory grain overflow-hidden">
+    <section ref={ref} className="relative bg-ivory-warm text-ink overflow-hidden border-b border-ink/10">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-8 lg:pt-16 lg:pb-16 relative z-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
-              className="font-sans text-xs uppercase tracking-[0.3em] text-ivory/75 block mb-4">
+              className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta block mb-4">
               Handmade · small batches
             </motion.span>
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.0] tracking-tight">
+            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.0] tracking-tight text-ink">
               <MaskedLines lines={["Small-batch food,", "made with intention."]} delay={0.15} />
             </h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
-              className="font-sans text-base sm:text-lg text-ivory/85 max-w-xl mt-4 leading-relaxed">
+              className="font-sans text-base sm:text-lg text-ink-soft max-w-xl mt-4 leading-relaxed">
               Discover handcrafted cashew brittle and thoughtfully prepared cooking oils from AMYA.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
               className="mt-7">
-              <Btn to="/shop" variant="solidIvory" data-testid="hero-shop-btn">
+              <Btn to="/shop" variant="solid" data-testid="hero-shop-btn">
                 Shop our products <ArrowRight size={15} />
               </Btn>
             </motion.div>
@@ -41,7 +41,7 @@ function Hero() {
           {/* Decorative image — desktop only to keep mobile hero compact */}
           <div className="hidden lg:block lg:col-span-5">
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.25, duration: 0.9 }}
-              className="relative aspect-[4/5] overflow-hidden rounded-t-[110px] border border-ivory/20 bg-ivory/5">
+              className="relative aspect-[4/5] overflow-hidden rounded-t-[110px] border border-ink/10 bg-ivory">
               <motion.img src={HERO_IMG} alt="AMYA cooking oil" style={{ y }} className="h-full w-full object-contain" />
             </motion.div>
           </div>
