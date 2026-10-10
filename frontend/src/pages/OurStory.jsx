@@ -5,7 +5,7 @@ import { Phone, MessageCircle } from "lucide-react";
 import { useConfig } from "@/context/ConfigContext";
 import { waLink, telHref, formatPhoneIN } from "@/lib/api";
 
-const FOUNDER_IMG = "https://images.unsplash.com/photo-1768729340668-9b609873e796?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200";
+const FOUNDER_IMG = "https://images.unsplash.com/photo-1769424052115-1631279ce8e7?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200";
 
 export default function OurStory() {
   const { config } = useConfig();
@@ -21,7 +21,7 @@ export default function OurStory() {
       <section className="max-w-7xl mx-auto px-5 sm:px-8 py-20 lg:py-28 grid lg:grid-cols-2 gap-14 items-center">
         <Reveal>
           <div className="relative aspect-[4/5] overflow-hidden rounded-tl-[100px] bg-ivory-warm">
-            <img src={FOUNDER_IMG} alt="Artisan preparing food" className="h-full w-full object-cover" />
+            <img src={FOUNDER_IMG} alt="Carefully selected spices and ingredients in a rustic bowl" className="h-full w-full object-cover" />
           </div>
         </Reveal>
         <Reveal delay={0.1}>
@@ -29,8 +29,8 @@ export default function OurStory() {
           <h2 className="font-serif text-4xl sm:text-5xl tracking-tight mt-5 leading-tight">A simple goal.</h2>
           <p className="font-sans text-base text-ink-soft mt-6 leading-relaxed">
             The goal is simple: help customers understand what they buy and how it is prepared. AMYA begins with a
-            very limited selection of homemade food products, and a traditional wooden chekku oil-pressing experience
-            you can watch live.
+            very limited selection of homemade food products — handcrafted in small batches using carefully chosen
+            ingredients and time-honoured traditional recipes.
           </p>
           <p className="font-sans text-base text-ink-soft mt-4 leading-relaxed">
             We are starting small, focusing on a limited range of products and building our customer experience
