@@ -70,7 +70,7 @@ function OurCollection() {
   return (
     <>
       <section id="collection" className="bg-ivory">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-9 sm:py-14 lg:py-20">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-7 pb-8 sm:py-11 lg:py-14">
           <Reveal>
             <div className="flex items-end justify-between mb-6 sm:mb-8">
               <div>
@@ -90,7 +90,7 @@ function OurCollection() {
 
       {oils.length > 0 && (
         <section className="bg-beige" data-testid="oils-section">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-9 sm:py-14 lg:py-20">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-11 lg:py-14">
             <Reveal>
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Cold-extracted, prepared to order</span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">AMYA Oils.</h2>
@@ -98,7 +98,7 @@ function OurCollection() {
                 Cooking oils cold-extracted in small batches using our own setup. Request a live session to watch the actual process and ask questions before you order.
               </p>
             </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
               {oils.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
           </div>
@@ -107,7 +107,7 @@ function OurCollection() {
 
       {spices.length > 0 && (
         <section className="bg-ivory" data-testid="spices-section">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-9 sm:py-14 lg:py-20">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-11 lg:py-14">
             <Reveal>
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">AMYA Signature Spices</span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Signature Spices.</h2>
@@ -115,7 +115,7 @@ function OurCollection() {
                 Carefully selected Guntur Sannam (S4) chillies and specialty Lakadong turmeric, prepared in small batches with hygienic handling and authentic flavour.
               </p>
             </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
               {spices.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
           </div>
@@ -124,7 +124,7 @@ function OurCollection() {
 
       {pickles.length > 0 && (
         <section className="bg-beige" data-testid="pickles-section">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-9 sm:py-14 lg:py-20">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-11 lg:py-14">
             <Reveal>
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Launching soon</span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Traditional Pickles.<br className="hidden sm:block" /> Authentic Flavours.</h2>
@@ -132,7 +132,7 @@ function OurCollection() {
                 Celebrating the bold, comforting flavours of Indian kitchens through traditional recipes, carefully selected ingredients and thoughtful preparation.
               </p>
             </Reveal>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
               {pickles.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function Home() {
 
       {/* How ordering works */}
       <section className="bg-beige">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 lg:py-14">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 lg:py-12">
           <div className="grid sm:grid-cols-3 gap-6">
             {ORDER_STEPS.map((s, i) => (
               <Reveal key={s.t} delay={i * 0.07}>
@@ -188,12 +188,12 @@ export default function Home() {
 
       {/* Why AMYA — brand story */}
       <section className="bg-ivory">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14 lg:py-20">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-11 lg:py-14">
           <Reveal>
             <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Why AMYA</span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 mb-10 text-ink">Genuine, not glossy.</h2>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 mb-8 text-ink">Genuine, not glossy.</h2>
           </Reveal>
-          <div className="grid sm:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-3 gap-6">
             {WHY.map((w, i) => (
               <Reveal key={w.t} delay={i * 0.08}>
                 <div className="border-t border-ink/15 pt-5">
@@ -209,7 +209,7 @@ export default function Home() {
 
       {/* About + Contact */}
       <section className="bg-terracotta text-ivory grain relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14 lg:py-20 relative z-10 grid lg:grid-cols-2 gap-10 items-center">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-11 lg:py-14 relative z-10 grid lg:grid-cols-2 gap-10 items-center">
           <Reveal>
             <span className="font-sans text-xs uppercase tracking-[0.3em] text-ivory/70">About AMYA</span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 leading-[1.0]">A founder-led brand by Amulya Nimmala.</h2>

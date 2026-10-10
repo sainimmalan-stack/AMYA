@@ -218,3 +218,9 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - OurStory.jsx: removed "traditional wooden chekku oil-pressing experience you can watch live" from the story paragraph; reworded to focus on handcrafted small-batch homemade food, carefully chosen ingredients and traditional recipes.
 - Replaced the elderly-woman founder photo (FOUNDER_IMG) with a premium editorial image of herbs + red chillies in a rustic bowl on warm wood (Unsplash photo-1769424052115) — no identifiable people, warm earthy tones matching brand. alt text updated. Kept the existing aspect-[4/5] rounded container + object-cover (no empty space/cropping).
 - Unchanged: Amulya Nimmala · M.Tech eyebrow, "A simple goal." heading, call/WhatsApp buttons, all product sections/images/prices, AMYA Oils section. Chekku references elsewhere (About/LivePress/Transparency) left as-is since out of Our Story scope. Verified desktop + mobile.
+
+## Changelog — 2026-07-10 (Catalogue compactness pass 2)
+- Added xl:grid-cols-4 to Home product sections (oils/spices/pickles) and Shop grid → 2-col mobile / 3-col lg / 4-col xl for a tighter catalogue with less scrolling. Verified Shop desktop renders 4 columns.
+- Reduced vertical spacing: Home product sections py-9→py-8 sm:py-11 lg:py-14; cashew section pt-7 pb-8; "how ordering" py-10 lg:py-12; "Why AMYA" py-11 lg:py-14 (mb-10→mb-8, gap-8→gap-6); About+Contact py-11 lg:py-14. Shop section py-10 sm:py-14 lg:py-20.
+- All prior compact-card work retained (aspect-[5/6] cards, cashew aspect-[4/5] full-width signature, object-contain oils/spices with centered images, cleaned pickle mockups, compact COMING SOON badge top-left, line-clamp-2 descriptions, smaller WhatsApp buttons, no "Perfect for gifting").
+- Verified: mobile 2-col no horizontal scroll (scrollWidth=390=viewport), desktop 4-col, badges clear of images, veg/non-veg marks intact, prices/availability/logo/colours unchanged.
