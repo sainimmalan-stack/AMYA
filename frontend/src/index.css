@@ -4,12 +4,15 @@
 @tailwind utilities;
 
 :root {
-  --terracotta: #B94F40;
-  --terracotta-deep: #8E3A2E;
+  --terracotta: #B95040;
+  --terracotta-deep: #963C2E;
   --terracotta-soft: #CE6B5C;
-  --ivory: #FFF5E8;
-  --ivory-warm: #F4E6D2;
-  --ink: #2A1512;
+  --ivory: #FFF3E5;
+  --ivory-warm: #F0DFC9;
+  --beige: #F0DFC9;
+  --choco: #301812;
+  --choco-soft: #46261D;
+  --ink: #301812;
   --ink-soft: #5A4039;
 }
 

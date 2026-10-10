@@ -51,24 +51,26 @@ function Hero() {
   );
 }
 
-function CollectionCard({ product, name, desc, price, cta, to, extra, index }) {
+function CollectionCard({ product, name, desc, price, cta, to, extra, index, tone = "ivory" }) {
   const img = product?.images?.[0];
   const badge = product?.availability === "available" ? "Available" : "Coming soon";
+  const cardBg = tone === "beige" ? "bg-beige" : "bg-white";
+  const imgBg = tone === "beige" ? "bg-[#E7D3B9]" : "bg-ivory-warm";
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-      className="flex flex-col bg-white border border-ink/10 overflow-hidden"
+      className={`flex flex-col ${cardBg} border border-ink/10 overflow-hidden rounded-2xl shadow-sm`}
       data-testid={`collection-card-${to.split("/").pop()}`}
     >
-      <div className="relative aspect-[4/5] bg-ivory-warm">
-        {img && <img src={img} alt={name} loading="lazy" className="h-full w-full object-contain" />}
-        <span className="absolute top-3 left-3 bg-terracotta text-ivory px-2.5 py-1 text-[9px] uppercase tracking-[0.18em]">{badge}</span>
+      <div className={`relative aspect-[5/4] sm:aspect-[4/5] ${imgBg}`}>
+        {img && <img src={img} alt={name} loading="lazy" className="h-full w-full object-contain p-2" />}
+        <span className="absolute top-3 left-3 bg-terracotta text-ivory px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] rounded-full">{badge}</span>
       </div>
       <div className="p-4 sm:p-5 flex flex-col flex-1">
         <h3 className="font-serif text-xl sm:text-2xl text-ink leading-tight">{name}</h3>
         <p className="font-sans text-xs sm:text-sm text-ink-soft mt-1 leading-relaxed">{desc}</p>
-        {price && <p className="font-sans text-sm text-terracotta-deep mt-2">{price}</p>}
+        {price && <p className="font-sans text-sm text-terracotta-deep mt-2 font-medium">{price}</p>}
         <div className="mt-auto pt-4">
           <Link to={to} data-testid={`collection-cta-${to.split("/").pop()}`}
                 className="inline-flex w-full items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors px-3 py-3 font-sans text-[11px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.18em] leading-tight text-center rounded-full">
@@ -96,7 +98,8 @@ function OurCollection() {
   const priceLabel = cashewMin.length ? `From ₹${Math.min(...cashewMin)}` : null;
 
   return (
-    <section id="collection" className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-10 sm:py-14 lg:py-20">
+    <section id="collection" className="bg-ivory">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-12 sm:py-14 lg:py-20">
       <Reveal>
         <div className="flex items-end justify-between mb-6 sm:mb-8">
           <div>
@@ -118,6 +121,7 @@ function OurCollection() {
           cta="Shop Cashew Brittle"
           to="/product/cashew-brittle"
           index={0}
+          tone="ivory"
         />
         <CollectionCard
           product={oil}
@@ -127,6 +131,7 @@ function OurCollection() {
           cta="Discover AMYA Oils"
           to="/shop/oils"
           index={1}
+          tone="beige"
           extra={
             <a href={waLink(wa, VIDEO_MSG)} target="_blank" rel="noreferrer" data-testid="collection-video-call"
                className="mt-3 inline-flex items-center justify-center gap-1.5 w-full font-sans text-[10px] uppercase tracking-[0.18em] text-terracotta-deep hover:text-terracotta">
@@ -134,6 +139,7 @@ function OurCollection() {
             </a>
           }
         />
+      </div>
       </div>
     </section>
   );
@@ -162,7 +168,7 @@ export default function Home() {
       <OurCollection />
 
       {/* How ordering works */}
-      <section className="bg-ivory-warm">
+      <section className="bg-beige">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 lg:py-14">
           <div className="grid sm:grid-cols-3 gap-6">
             {ORDER_STEPS.map((s, i) => (
@@ -183,22 +189,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why AMYA */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 py-14 lg:py-20">
-        <Reveal>
-          <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Why AMYA</span>
-          <h2 className="font-serif text-3xl sm:text-4xl tracking-tight mt-3 mb-10">Genuine, not glossy.</h2>
-        </Reveal>
-        <div className="grid sm:grid-cols-3 gap-8">
-          {WHY.map((w, i) => (
-            <Reveal key={w.t} delay={i * 0.08}>
-              <div className="border-t border-ink/15 pt-5">
-                <w.icon size={22} className="text-terracotta" />
-                <h3 className="font-serif text-2xl mt-3">{w.t}</h3>
-                <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">{w.d}</p>
-              </div>
-            </Reveal>
-          ))}
+      {/* Why AMYA — premium brand story (deep chocolate) */}
+      <section className="bg-choco text-ivory grain relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14 lg:py-20 relative z-10">
+          <Reveal>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta-soft">Why AMYA</span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 mb-10">Genuine, not glossy.</h2>
+          </Reveal>
+          <div className="grid sm:grid-cols-3 gap-8">
+            {WHY.map((w, i) => (
+              <Reveal key={w.t} delay={i * 0.08}>
+                <div className="border-t border-ivory/20 pt-5">
+                  <w.icon size={22} className="text-terracotta-soft" />
+                  <h3 className="font-serif text-2xl mt-3">{w.t}</h3>
+                  <p className="font-sans text-sm text-ivory/75 mt-2 leading-relaxed">{w.d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
