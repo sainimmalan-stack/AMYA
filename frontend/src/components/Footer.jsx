@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-14 pt-8 border-t border-ivory/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-sans text-[11px] text-ivory/60">© {new Date().getFullYear()} AMYA Artisanal Foods · amayafoods.in</p>
+          <p className="font-sans text-[11px] text-ivory/60">© {new Date().getFullYear()} AMYA Artisanal Foods · amyafoods.in</p>
           <div className="flex flex-wrap gap-x-6 gap-y-2 font-sans text-[11px] text-ivory/70">
             <Link to="/policies/terms" className="hover:text-ivory">Terms</Link>
             <Link to="/policies/privacy" className="hover:text-ivory">Privacy</Link>
