@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Eye, MessageSquare, ShieldCheck, MessageCircle, Phone, PackageCheck, Truck } from "lucide-react";
-import { api, waLink } from "@/lib/api";
+import { api, waLink, telHref, formatPhoneIN } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { Reveal, MaskedLines } from "@/components/Reveal";
 import Btn from "@/components/Btn";
@@ -230,8 +230,8 @@ export default function Home() {
               <Btn as="a" href={waLink(wa, "Hello AMYA, I'd like to place an order.")} target="_blank" rel="noreferrer" variant="solidIvory" data-testid="home-contact-whatsapp" data-wa-cta>
                 <MessageCircle size={15} /> Order on WhatsApp
               </Btn>
-              <Btn as="a" href={`tel:${phone}`} variant="outlineIvory" data-testid="home-contact-call">
-                <Phone size={15} /> {phone}
+              <Btn as="a" href={telHref(phone)} variant="outlineIvory" data-testid="home-contact-call">
+                <Phone size={15} /> {formatPhoneIN(phone)}
               </Btn>
             </div>
           </Reveal>

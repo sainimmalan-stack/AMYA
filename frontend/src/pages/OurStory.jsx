@@ -3,7 +3,7 @@ import { Reveal } from "@/components/Reveal";
 import Btn from "@/components/Btn";
 import { Phone, MessageCircle } from "lucide-react";
 import { useConfig } from "@/context/ConfigContext";
-import { waLink } from "@/lib/api";
+import { waLink, telHref, formatPhoneIN } from "@/lib/api";
 
 const FOUNDER_IMG = "https://images.unsplash.com/photo-1768729340668-9b609873e796?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200";
 
@@ -37,7 +37,7 @@ export default function OurStory() {
             step by step.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 mt-8">
-            <Btn as="a" href={`tel:${phone}`} variant="solid" data-testid="story-call"><Phone size={15} /> {phone}</Btn>
+            <Btn as="a" href={telHref(phone)} variant="solid" data-testid="story-call"><Phone size={15} /> {formatPhoneIN(phone)}</Btn>
             <Btn as="a" href={waLink(wa, "Hello AMYA")} target="_blank" rel="noreferrer" variant="outline" data-testid="story-whatsapp"><MessageCircle size={15} /> WhatsApp</Btn>
           </div>
         </Reveal>

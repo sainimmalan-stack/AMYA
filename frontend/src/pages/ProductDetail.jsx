@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Minus, Plus, MessageCircle, Video, Phone } from "lucide-react";
-import { api, waLink } from "@/lib/api";
+import { api, waLink, telHref } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import Availability from "@/components/Availability";
 import Btn from "@/components/Btn";
@@ -175,7 +175,7 @@ export default function ProductDetail() {
                 <Video size={15} /> Book AMYA Live Press
               </Btn>
             )}
-            <Btn as="a" href={`tel:${phone}`} variant="outline" data-testid="pd-call">
+            <Btn as="a" href={telHref(phone)} variant="outline" data-testid="pd-call">
               <Phone size={15} /> Call support
             </Btn>
           </div>

@@ -20,6 +20,20 @@ export function waLink(number, message) {
   return `https://wa.me/${n}${message ? `?text=${encodeURIComponent(message)}` : ""}`;
 }
 
+// Indian phone helpers — normalise to a 10-digit local number and present with +91
+function tenDigits(num) {
+  const d = String(num).replace(/[^0-9]/g, "");
+  return d.length > 10 ? d.slice(-10) : d;
+}
+// Display format: "+91 9675334567"
+export function formatPhoneIN(num) {
+  return `+91 ${tenDigits(num)}`;
+}
+// Clickable tel link: "tel:+919675334567"
+export function telHref(num) {
+  return `tel:+91${tenDigits(num)}`;
+}
+
 // Prefilled order/enquiry message for a product
 export function orderMessage(product, packLabel, price, qty) {
   const available = product.availability === "available";

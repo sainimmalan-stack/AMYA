@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Phone, MessageCircle } from "lucide-react";
 import Logo from "@/components/Logo";
 import { useConfig } from "@/context/ConfigContext";
-import { waLink } from "@/lib/api";
+import { waLink, telHref, formatPhoneIN } from "@/lib/api";
 
 export default function Footer() {
   const { config } = useConfig();
@@ -33,8 +33,8 @@ export default function Footer() {
             <ul className="space-y-3 font-sans text-sm">
               <li className="text-ivory/85">Amulya Nimmala</li>
               <li>
-                <a href={`tel:${phone}`} data-testid="footer-call" className="inline-flex items-center gap-2 text-ivory/85 hover:text-ivory">
-                  <Phone size={14} /> {phone}
+                <a href={telHref(phone)} data-testid="footer-call" className="inline-flex items-center gap-2 text-ivory/85 hover:text-ivory">
+                  <Phone size={14} /> {formatPhoneIN(phone)}
                 </a>
               </li>
               <li>

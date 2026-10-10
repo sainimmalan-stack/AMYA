@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import PageHero from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
 import Btn from "@/components/Btn";
-import { api, waLink, formatApiError } from "@/lib/api";
+import { api, waLink, formatApiError, telHref, formatPhoneIN } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -51,7 +51,7 @@ export default function Contact() {
             <h2 className="font-serif text-3xl">Amulya Nimmala</h2>
             <p className="font-sans text-sm text-ink-soft mt-2">Founder, AMYA Artisanal Foods</p>
             <div className="flex flex-col gap-3 mt-7">
-              <Btn as="a" href={`tel:${phone}`} variant="solid" data-testid="contact-call"><Phone size={15} /> Call {phone}</Btn>
+              <Btn as="a" href={telHref(phone)} variant="solid" data-testid="contact-call"><Phone size={15} /> Call {formatPhoneIN(phone)}</Btn>
               <Btn as="a" href={waLink(wa, "Hello AMYA, I have a question.")} target="_blank" rel="noreferrer" variant="outline" data-testid="contact-whatsapp"><MessageCircle size={15} /> Chat on WhatsApp</Btn>
             </div>
             <div className="mt-10 border-t border-ink/15 pt-6">

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, MessageCircle } from "lucide-react";
 import Logo from "@/components/Logo";
 import { useConfig } from "@/context/ConfigContext";
-import { waLink } from "@/lib/api";
+import { waLink, telHref } from "@/lib/api";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -62,7 +62,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2 ml-auto">
-            <a href={`tel:${phone}`} data-testid="header-call-btn"
+            <a href={telHref(phone)} data-testid="header-call-btn"
                className="hidden sm:inline-flex h-10 w-10 items-center justify-center border border-ivory/30 text-ivory hover:bg-ivory hover:text-terracotta hover:border-ivory transition-colors rounded-full">
               <Phone size={15} />
             </a>
@@ -112,7 +112,7 @@ export default function Header() {
               ))}
             </nav>
             <div className="px-6 mt-8 flex gap-3">
-              <a href={`tel:${phone}`} className="flex-1 border border-ivory/40 py-3 text-center text-xs uppercase tracking-[0.2em]">Call</a>
+              <a href={telHref(phone)} className="flex-1 border border-ivory/40 py-3 text-center text-xs uppercase tracking-[0.2em]">Call</a>
               <a href={waLink(wa, "Hello AMYA")} target="_blank" rel="noreferrer" className="flex-1 bg-ivory text-terracotta py-3 text-center text-xs uppercase tracking-[0.2em]">WhatsApp</a>
             </div>
           </motion.div>
