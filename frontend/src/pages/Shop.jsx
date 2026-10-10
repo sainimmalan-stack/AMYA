@@ -51,7 +51,7 @@ export default function Shop() {
         titleLines={meta ? meta.title : ["The Shop."]}
         subtitle={meta ? meta.sub : "Browse the full AMYA collection — oils, cashew brittles and homemade pickles. We introduce products gradually, one at a time."}
       />
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 py-20 lg:py-24">
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-16 lg:py-24">
         {loading ? (
           <p className="font-sans text-ink-soft">Loading…</p>
         ) : products.length === 0 ? (
@@ -59,7 +59,7 @@ export default function Shop() {
             <p className="font-serif text-3xl text-ink/60">No products in this category yet.</p>
           </Reveal>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
             {products.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
           </div>
         )}

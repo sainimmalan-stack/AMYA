@@ -9,7 +9,7 @@ export default function Availability({ status, className = "" }) {
   return (
     <span
       data-testid={`availability-${status}`}
-      className={`inline-block px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] ${m.cls} ${className}`}
+      className={`inline-block px-2.5 py-1 text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.14em] sm:tracking-[0.2em] rounded-sm ${m.cls} ${className}`}
     >
       {m.label}
     </span>
