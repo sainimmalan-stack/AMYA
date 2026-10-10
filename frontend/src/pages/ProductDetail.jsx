@@ -6,6 +6,7 @@ import { api, waLink, telHref } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import Availability from "@/components/Availability";
 import DietMark from "@/components/DietMark";
+import PicklePackMock from "@/components/PicklePackMock";
 import Btn from "@/components/Btn";
 import { Reveal } from "@/components/Reveal";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -72,9 +73,12 @@ export default function ProductDetail() {
                       className="relative aspect-[4/3] lg:aspect-[4/5] overflow-hidden bg-ivory-warm rounded-xl">
             {product.images?.[activeImg] ? (
               <img src={product.images[activeImg]} alt={product.name} className={`h-full w-full ${["spices", "pickles"].includes(product.category) ? "object-cover" : "object-contain"}`} />
+            ) : product.category === "pickles" ? (
+              <PicklePackMock name={product.name} />
             ) : (
               <div className="h-full w-full flex items-center justify-center font-serif text-7xl text-terracotta/25">AMYA</div>
             )}
+            {product.diet && <div className="absolute top-4 right-4"><DietMark diet={product.diet} /></div>}
             <div className="absolute top-4 left-4"><Availability status={product.availability} /></div>
           </motion.div>
           {product.images?.length > 1 && (

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import Availability from "@/components/Availability";
 import DietMark from "@/components/DietMark";
+import PicklePackMock from "@/components/PicklePackMock";
 import { useConfig } from "@/context/ConfigContext";
 import { waLink, orderMessage } from "@/lib/api";
 
@@ -28,6 +29,8 @@ export default function ProductCard({ product, index = 0 }) {
           {img ? (
             <img src={img} alt={product.name} loading="lazy"
                  className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105" />
+          ) : product.category === "pickles" ? (
+            <PicklePackMock name={product.name} />
           ) : (
             <div className="h-full w-full flex items-center justify-center font-serif text-6xl text-terracotta/30">AMYA</div>
           )}

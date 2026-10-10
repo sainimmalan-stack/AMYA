@@ -586,7 +586,7 @@ INITIAL_PRODUCTS = [
         "description": "A traditional Andhra-style raw mango pickle, prepared using carefully selected ingredients and traditional recipes. Launching soon.",
         "diet": "veg",
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
-        "images": ["https://images.unsplash.com/photo-1589135233689-d56032e9680a?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "images": [],
         "pack_sizes": [],
         "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 8,
     },
@@ -596,7 +596,7 @@ INITIAL_PRODUCTS = [
         "description": "A traditional mango pickle inspired by Andhra culinary traditions, prepared with thoughtful care. Launching soon.",
         "diet": "veg",
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
-        "images": ["https://images.unsplash.com/photo-1601702538934-efffab67ab65?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "images": [],
         "pack_sizes": [],
         "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 9,
     },
@@ -606,7 +606,7 @@ INITIAL_PRODUCTS = [
         "description": "A distinctive ginger-based sweet pickle that combines traditional flavours in a comforting preparation. Launching soon.",
         "diet": "veg",
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
-        "images": ["https://images.unsplash.com/photo-1764312899300-e680811f58fb?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "images": [],
         "pack_sizes": [],
         "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 10,
     },
@@ -616,7 +616,7 @@ INITIAL_PRODUCTS = [
         "description": "A flavourful non-vegetarian pickle prepared using chicken, in a traditional style. Launching soon.",
         "diet": "non-veg",
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
-        "images": ["https://images.unsplash.com/photo-1603496987351-f84a3ba5ec85?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "images": [],
         "pack_sizes": [],
         "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 11,
     },
@@ -626,7 +626,7 @@ INITIAL_PRODUCTS = [
         "description": "A rich, traditional-style mutton pickle prepared with careful attention to flavour. Launching soon.",
         "diet": "non-veg",
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
-        "images": ["https://images.unsplash.com/photo-1534939561126-855b8675edd7?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "images": [],
         "pack_sizes": [],
         "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 12,
     },
@@ -636,7 +636,7 @@ INITIAL_PRODUCTS = [
         "description": "A seafood pickle inspired by regional Indian flavours, prepared in a traditional style. Launching soon.",
         "diet": "non-veg",
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
-        "images": ["https://images.unsplash.com/photo-1683533738338-19b9a22c6405?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "images": [],
         "pack_sizes": [],
         "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 13,
     },
@@ -669,11 +669,14 @@ async def seed():
 
     # Upsert the canonical catalog by slug (idempotent) so every environment
     # — preview and production — always carries the full, latest product set.
+    # `images` is only set on first insert so genuine photos uploaded later
+    # (e.g. via admin) are never overwritten on restart/redeploy.
     for p in INITIAL_PRODUCTS:
         p = dict(p)
+        images = p.pop("images", [])
         await db.products.update_one(
             {"slug": p["slug"]},
-            {"$set": p, "$setOnInsert": {"created_at": now_iso()}},
+            {"$set": p, "$setOnInsert": {"created_at": now_iso(), "images": images}},
             upsert=True,
         )
     # Remove obsolete products that are no longer in the catalog.

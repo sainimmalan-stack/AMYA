@@ -168,3 +168,13 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Any verified claims (e.g. Lakadong curcumin %, certifications) before adding — intentionally omitted.
 - REDEPLOY required so the live site (amyafoods.in) serves the new 13-product catalog (idempotent seed runs on deploy).
 
+
+## Changelog — 2026-07-10 (Pickle cards: packaging mockups, no food photos)
+- Removed all pickle food stock photos. Created PicklePackMock.jsx — a premium CSS packaging concept (terracotta-lidded cream jar + "AMYA / ARTISANAL FOODS / <name>" terracotta label, gold hairline, "Packaging concept" caption). Rendered on pickle cards AND pickle detail gallery whenever the product has no real image.
+- Pickle `images` cleared in seed + DB. Seed now sets `images` via `$setOnInsert` only, so genuine photos uploaded later (admin) persist across restarts/redeploys and simply replace the mockup — no redesign needed.
+- Only the pickle section changed: chilli, turmeric, cashew, oils, hero, logo, theme, prices, WhatsApp all untouched. All 6 pickles stay Coming Soon with "Enquire for Launch Updates"; veg/non-veg marks correct.
+- Verified on mobile (390): 6 consistent mockups on homepage + pickle detail pages, no overflow, no food imagery.
+
+### Still required from founder
+- Genuine pickle product photographs — upload per product (image field already wired) to auto-replace the mockup.
+
