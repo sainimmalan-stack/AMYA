@@ -56,7 +56,7 @@ export default function ProductDetail() {
           <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7 }}
                       className="relative aspect-[4/5] overflow-hidden bg-ivory-warm">
             {product.images?.[activeImg] ? (
-              <img src={product.images[activeImg]} alt={product.name} className="h-full w-full object-cover" />
+              <img src={product.images[activeImg]} alt={product.name} className="h-full w-full object-contain" />
             ) : (
               <div className="h-full w-full flex items-center justify-center font-serif text-7xl text-terracotta/25">AMYA</div>
             )}

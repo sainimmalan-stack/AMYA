@@ -5,16 +5,9 @@ import Availability from "@/components/Availability";
 import { useConfig } from "@/context/ConfigContext";
 import { waLink, orderMessage } from "@/lib/api";
 
-function priceFrom(p) {
-  const prices = (p.pack_sizes || []).map((s) => s.price).filter((x) => x != null);
-  if (!prices.length) return null;
-  return Math.min(...prices);
-}
-
 export default function ProductCard({ product, index = 0 }) {
   const { config } = useConfig();
   const wa = config?.business?.whatsapp || "919675334567";
-  const from = priceFrom(product);
   const img = product.images?.[0];
   const available = product.availability === "available";
   const firstPack = product.pack_sizes?.[0];
@@ -32,7 +25,7 @@ export default function ProductCard({ product, index = 0 }) {
         <div className="relative overflow-hidden bg-ivory-warm aspect-[4/5]">
           {img ? (
             <img src={img} alt={product.name} loading="lazy"
-                 className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105" />
+                 className="h-full w-full object-contain transition-transform duration-[900ms] ease-out group-hover:scale-105" />
           ) : (
             <div className="h-full w-full flex items-center justify-center font-serif text-6xl text-terracotta/30">AMYA</div>
           )}
@@ -44,15 +37,10 @@ export default function ProductCard({ product, index = 0 }) {
           </div>
         </div>
         <div className="pt-4">
-          <div className="flex items-start justify-between gap-3">
-            <h3 className="font-serif text-2xl text-ink leading-tight">{product.name}</h3>
-            <span className="font-sans text-sm text-terracotta-deep whitespace-nowrap mt-1">
-              {from != null ? `₹${from}+` : ""}
-            </span>
-          </div>
+          <h3 className="font-serif text-2xl text-ink leading-tight">{product.name}</h3>
           {product.pack_sizes?.length > 0 && (
             <p className="font-sans text-xs text-ink-soft mt-1">
-              {product.pack_sizes.map((s) => s.label).join(" · ")}
+              {product.pack_sizes.map((s) => (s.price != null ? `${s.label} ₹${s.price}` : s.label)).join(" · ")}
             </p>
           )}
         </div>
