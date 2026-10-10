@@ -534,7 +534,7 @@ INITIAL_PRODUCTS = [
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "As a perishable homemade food, returns are limited. Contact AMYA for any issue.",
         "food_label_info": "Food-label details are added once finalised by AMYA.",
-        "images": ["https://images.unsplash.com/photo-1772984960196-b387b4f2f524?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"],
+        "images": ["https://customer-assets-eiarnc6j.emergentagent.net/job_amya-artisanal/artifacts/eac99c5da7e65e63_1BFEC77A-D52E-4699-9209-806370EA3678.png"],
         "pack_sizes": [
             {"label": "250 g", "price": 300, "note": "5 pieces"},
             {"label": "500 g", "price": 500, "note": "10 pieces"},
