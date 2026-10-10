@@ -577,7 +577,7 @@ INITIAL_PRODUCTS = [
         "highlights": ["Carefully selected Guntur Sannam (S4) chillies", "Premium raw material selection", "Small-batch preparation", "Hygienic handling and processing", "Prepared with the support of local village women", "Suitable for traditional Indian cooking"],
         "diet": "veg",
         "ingredients": "Dried Guntur Sannam (S4) red chillies.",
-        "storage": "Storage Tip: Store in the refrigerator to help preserve the chilli powder's colour and quality for longer.",
+        "storage": "Refrigerate after opening to help preserve its colour and freshness.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Pack sizes and pricing confirmed at launch.",

@@ -94,7 +94,7 @@ function OurCollection() {
                 <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Available for pre-order</span>
                 <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Shop Our Products.</h2>
                 <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">Discover handcrafted favourites from AMYA.</p>
-                <p className="font-sans text-xs sm:text-sm text-ink-soft mt-2 max-w-2xl leading-relaxed">Made in limited quantities. Place your enquiry or pre-order to check availability.</p>
+                <p className="font-sans text-xs sm:text-sm text-ink-soft mt-2 max-w-2xl leading-relaxed">Small-batch products, prepared in limited quantities. Order or pre-order depending on availability.</p>
               </div>
               <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
                 View all <ArrowRight size={14} />

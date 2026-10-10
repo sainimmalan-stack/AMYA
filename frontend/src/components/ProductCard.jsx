@@ -21,7 +21,7 @@ export default function ProductCard({ product, index = 0 }) {
       className="flex flex-col h-full"
     >
       <Link to={`/product/${product.slug}`} data-testid={`product-card-${product.slug}`} className="group block">
-        <div className={`relative overflow-hidden bg-ivory-warm rounded-xl ${product.category === "cashew-brittles" ? "aspect-[4/5]" : "aspect-[5/6]"}`}>
+        <div className="relative overflow-hidden bg-ivory-warm rounded-xl aspect-[4/5]">
           {img ? (
             (product.category === "spices" || product.category === "oils") ? (
               <img src={img} alt={product.name} loading="lazy"

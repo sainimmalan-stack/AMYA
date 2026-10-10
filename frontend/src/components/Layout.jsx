@@ -21,7 +21,7 @@ export default function Layout({ children }) {
         right: window.innerWidth,
         bottom: window.innerHeight,
       };
-      const els = document.querySelectorAll("[data-wa-cta]");
+      const els = document.querySelectorAll("[data-wa-cta], [data-testid^='add-cart-'], [data-testid='pd-add-cart']");
       let overlap = false;
       els.forEach((el) => {
         const r = el.getBoundingClientRect();

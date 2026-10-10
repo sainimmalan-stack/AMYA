@@ -269,3 +269,9 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 
 ## Changelog — 2026-10-10 (Our Story image replacement)
 - Replaced OurStory.jsx FOUNDER_IMG (old unsplash dark-bowl-of-herbs photo) with a newly generated premium editorial still-life (cashews, sesame seeds, dried red chillies, curry leaves, turmeric + chilli powder on ivory linen & natural wood). Portrait 848x1264 fits existing aspect-[4/5] container; brand palette aligned; no people/text/machinery/packaging. Founder text "AMULYA NIMMALA · M.TECH" and layout unchanged. Verified on desktop; object-cover renders same on mobile.
+
+## Changelog — 2026-10-10 (Product card layout consistency + content tweaks)
+- ProductCard: unified image container to aspect-[4/5] for ALL cards (was cashew 4/5 vs others 5/6) — all 6 image boxes now equal height (350px), so names/prices/availability badges/ADD TO CART buttons align consistently per row. Mobile 2-col grid (grid-cols-2 base) retained.
+- Home "Shop Our Products" intro reworded to: "Small-batch products, prepared in limited quantities. Order or pre-order depending on availability."
+- Chilli storage text -> "Refrigerate after opening to help preserve its colour and freshness." (seed + live DB). Turmeric origin confirmed "Srikakulam, Andhra Pradesh, India" (no Meghalaya/Lakadong).
+- Layout.jsx floating WhatsApp FAB: overlap-hide detection broadened to also include [data-testid^='add-cart-'] and [data-testid='pd-add-cart'] so the FAB fades out whenever it would cover an Add-to-cart button. Verified on preview; image heights measured equal (350px x6).
