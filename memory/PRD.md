@@ -281,3 +281,7 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Pack sizes/prices: 250g ₹300 / 500g ₹550 / 1kg ₹1000 (no others). Description (verbatim): "AMYA Garam Masala — a traditional Indian spice blend crafted to bring warmth, aroma and depth to your everyday cooking." No invented ingredients/sourcing/health/cert/shelf-life claims. Same prep/dispatch/delivery blocks as other available-to-order spices.
 - Home AVAILABLE_ORDER updated: Cashew → Nuvvula → Karivepaku → Nallakaram → Garam Masala → Chilli → Turmeric. sort_order 11.
 - Verified on mobile: order, 3 prices, pack-size price switching (500g=₹550, 1kg×3=₹3,000), cart totals, WhatsApp message to 919675334567, card fits layout. No duplicate products.
+
+## Changelog — 2026-10-10 (WhatsApp order reference code)
+- CartContext: added auto-generated short order reference "AMYA-XXXXXX" (6 unambiguous alphanumeric chars). Persisted in localStorage (amya_cart_ref_v1), included as "Order reference: AMYA-XXXXXX" near the top of the WhatsApp order message. Rotates to a fresh code via newOrderRef() after the order is sent (Send on WhatsApp onClick) and on Clear cart.
+- CartDrawer: shows "Order reference" row in the footer above Order total (data-testid cart-order-ref). Verified: drawer code matches WA message code, valid format. No backend changes.

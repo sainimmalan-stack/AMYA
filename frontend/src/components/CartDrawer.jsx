@@ -5,7 +5,7 @@ import { useCart } from "@/context/CartContext";
 const inr = (n) => `₹${Number(n).toLocaleString("en-IN")}`;
 
 export default function CartDrawer() {
-  const { items, open, setOpen, setQty, removeItem, clear, count, allPriced, grandTotal, whatsappUrl } = useCart();
+  const { items, open, setOpen, setQty, removeItem, clear, count, allPriced, grandTotal, whatsappUrl, orderRef, newOrderRef } = useCart();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -49,6 +49,10 @@ export default function CartDrawer() {
 
             <div className="border-t border-ink/10 px-5 py-4 space-y-3">
               <div className="flex items-center justify-between">
+                <span className="font-sans text-[11px] uppercase tracking-[0.16em] text-ink-soft">Order reference</span>
+                <span className="font-sans text-xs font-medium tracking-[0.1em] text-terracotta" data-testid="cart-order-ref">{orderRef}</span>
+              </div>
+              <div className="flex items-center justify-between">
                 <span className="font-sans text-sm text-ink-soft">Order total</span>
                 <span className="font-serif text-lg text-ink" data-testid="cart-grand-total">
                   {allPriced ? inr(grandTotal) : "To be confirmed"}
@@ -60,7 +64,7 @@ export default function CartDrawer() {
                 </p>
               )}
               <a
-                href={whatsappUrl()} target="_blank" rel="noreferrer" onClick={() => setOpen(false)}
+                href={whatsappUrl()} target="_blank" rel="noreferrer" onClick={() => { setOpen(false); newOrderRef(); }}
                 className="flex items-center justify-center gap-2 bg-terracotta text-ivory rounded-full py-3 font-sans text-xs uppercase tracking-[0.14em] hover:bg-terracotta-deep transition-colors"
                 data-testid="cart-send-whatsapp"
               >
