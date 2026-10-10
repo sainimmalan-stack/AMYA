@@ -1,0 +1,25 @@
+{
+  "summary": "Frontend-only testing of the new persistent WhatsApp cart feature on AMYA Artisanal Foods. All 10 scenarios (A-J) PASS. Verified add-to-cart from product cards (quick-add with first pack) and from product detail (full pack selection), qty increment with correct line totals (₹1,000 at qty 2 for 500g cashew; ₹8,500 for 10kg; ₹17,000 at qty 2), multi-item cart with 3 distinct items (cashew + 2 podis) persisted correctly in localStorage key amya_cart_v1, persistence across navigation + page refresh, WhatsApp href is exactly https://wa.me/919675334567?text=... with URL-encoded message containing every item/pack/qty, Subtotal only for priced items, 'Price: To be confirmed' for unpriced ones, and 'Order total: To be confirmed' when any item is unpriced. Cart grand total shows 'To be confirmed' (not a number) when mixing priced + unpriced. Oils and pickles (10 products) all show coming-soon-cta on cards (no add-cart button) and pd-coming-soon on detail pages (no pd-add-cart). Header cart badge updates correctly; cart-clear empties cart and badge disappears. Serving callouts on all 3 podis include 'Best enjoyed with very hot rice + ghee' highlight; Nallakaram serving mentions dosa. Guntur Sannam Chilli Powder storage mentions refrigerator. AMYA Turmeric Powder origin is 'Srikakulam, Andhra Pradesh, India' with no Lakadong/Meghalaya anywhere.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "CartDrawer / Sheet", "issues": ["Shadcn DialogContent missing aria-describedby (accessibility warning in console, not functional). Minor a11y improvement: add SheetDescription or aria-describedby={undefined} suppression."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "CartContext.addItem always calls setOpen(true); when adding multiple items quickly from product cards, the Sheet open->close animation can intercept subsequent clicks in automated testing (works fine in real UX because users rarely spam). Not a bug, but consider debouncing or not reopening when drawer is already handling an animation.",
+    "Sheet accessibility warning: 'Missing Description or aria-describedby={undefined} for DialogContent' — add a SheetDescription (even visually hidden) for a11y compliance.",
+    "ProductDetail: pack selection resets to index 0 whenever user navigates away; selected pack is NOT persisted per-session for the detail page (unrelated to cart). Cart itself correctly stores packLabel per line, so this is cosmetic."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "100% (10/10 scenarios A-J pass)"},
+  "test_credentials": "None - public storefront",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "The cart feature works end-to-end. Only cosmetic a11y warning (SheetContent missing aria-describedby). When writing Playwright that spams add-to-cart from multiple cards in sequence, wait >=600ms after Escape before clicking the next add-cart button because the Sheet close animation can intercept pointer events. Direct localStorage verification confirmed all adds persist correctly."
+}
