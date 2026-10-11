@@ -1,0 +1,40 @@
+{
+  "summary": "Frontend-only regression for AMYA homepage refinement. Verified blank-image bug fix for Nuvvula Podi and the 6 other non-pickle product cards at mobile (390x844) and desktop (1920x1080). All 7 target images loaded with naturalWidth>0. Verified hero buttons navigation, 'AMYA Difference' 3-item section, no overlap between floating WhatsApp FAB and Add-to-Cart, cart WhatsApp link, and ProductDetail pack selection for Cashew Brittle (incl. 10 kg \u20b98,500).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Console warning on home: 'container has non-static position' from a scroll-offset calc \u2013 cosmetic, not blocking.",
+    "Two 401 responses from a 3rd-party asset request observed on page load (not from our /api). Non-blocking but worth investigating origin (possibly an analytics/auth probe).",
+    "DialogContent (CartDrawer) emits 'Missing Description or aria-describedby' React warning \u2013 add DialogDescription or aria-describedby for a11y."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Product detail route is /product/:slug (not /products/:slug). Pack testids: pack-0..pack-n. Cashew has 3 packs (500g \u20b9500, 1kg \u20b9900, 10kg \u20b98,500). Floating WhatsApp FAB (bottom-right) does NOT overlap product add-to-cart buttons at 390px. Cart WhatsApp link correctly contains wa.me/919675334567.",
+  "verification_evidence": {
+    "images_mobile_390px": {
+      "cashew-brittle": "naturalWidth=1536",
+      "amya-nuvvula-podi": "naturalWidth=848 (bug FIXED, renders correctly)",
+      "amya-karivepaku-podi": "naturalWidth=848",
+      "amya-nallakaram": "naturalWidth=848",
+      "amya-garam-masala": "naturalWidth=848",
+      "guntur-sannam-chilli-powder": "naturalWidth=848",
+      "amya-turmeric-powder": "naturalWidth=848"
+    },
+    "images_desktop_1920px": "same \u2013 all 7 load with naturalWidth>0",
+    "hero_shop_btn": "navigates to /shop OK",
+    "hero_story_btn": "navigates to /our-story OK",
+    "amya_difference_items": ["Traditional Flavours","Carefully Selected Ingredients","Small-Batch Preparation"],
+    "wa_fab_vs_add_cart_overlap_mobile": "overlap=false (wa at x=326,y=788,48x48; btn at x=201,y=407)",
+    "cart_send_whatsapp_href": "https://wa.me/919675334567?text=... (valid)",
+    "cashew_packs": "pack-0=500g\u20b9500, pack-1=1kg\u20b9900, pack-2=10kg\u20b98,500; pd-total updates to \u20b98,500 on pack-2"
+  }
+}
