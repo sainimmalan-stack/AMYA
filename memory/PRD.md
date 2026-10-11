@@ -379,3 +379,14 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 ## Changelog — 2026-10-11 (Compact product-card image height)
 - ProductCard image container aspect-[4/5] → aspect-square (uniform ~280px on mobile) so images are less dominant and name/price/pack sizes sit within view. Card text padding pt-3/pb-3 → pt-2.5/pb-2.5. Cashew (object-cover) and spice pouches (object-contain) share identical square containers → matching heights + aligned text, no distortion, labels preserved.
 - Verified mobile (390px): image boxes all 280px, no horizontal overflow, name + "From ₹..." + pack sizes visible below image, Add-to-Cart aligned. Pack selectors / Cashew 10kg / cart unchanged (verified earlier). No price/pack/image/data changes.
+
+## Changelog — 2026-10-11 (Homepage restructure + catalogue correctness)
+HOMEPAGE (Home.jsx): header height h-20→h-16; hero description updated to exact approved copy ("From signature cashew brittles to traditional podis, spices and cooking essentials, discover familiar Indian flavours made with care."); REMOVED the 3-card "AMYA Difference" section, replaced with a single compact trust line (TRADITIONAL RECIPES · SMALL-BATCH PREPARATION · MADE WITH CARE); product grid now appears immediately after hero+trust line; supporting line → "Thoughtful ingredients. Familiar flavours. Made with care."; added category quick-links row (Cashew Brittle, Podis & Spices, Pickles, Cooking Oils → /shop/<cat>); consolidated lower sections into: concise brand story → 3-step ordering → terracotta contact (removed repetitive "Why AMYA" grid). 2-col mobile grid retained.
+CATALOGUE CORRECTNESS:
+- Cashew Brittle: removed the incorrect 10 kg pack. Now only 500 g (₹500, 10 pieces) & 1 kg (₹900, 20 pieces); shows "From ₹500".
+- Nuvvula Podi: cleared unconfirmed pack sizes/prices (pack_sizes=[]) and cleared dispatch/preparation/delivery_details. Card shows "Enquire for price and pack sizes"; detail page shows an "Enquire on WhatsApp" button (no pack/qty), no "Day 3" promise.
+- Removed the hardcoded "Dispatch on Day 3 / Dispatch typically on Day 3" promise text from ProductCard and ProductDetail (unconfirmed).
+- ProductCard & ProductDetail now have a 3-way action: Coming soon (coming-soon) / Enquire on WhatsApp (orderable but no confirmed price — Nuvvula, Chilli, Turmeric) / Add to cart (confirmed price). This also fixed Chilli & Turmeric which previously had a broken price-less Add-to-cart.
+- Enquire button → wa.me/919675334567 with a per-product pre-filled enquiry message.
+- WhatsApp cart flow kept for priced items (functional, routes to WhatsApp, no fake online payment).
+Verified: backend API re-seeded (cashew 500g/1kg only; nuvvula packs=[], dispatch cleared); homepage cards render correctly (DOM extraction); Nuvvula detail page shows Enquire on WhatsApp, no Day 3 text. Previous full regression: iteration_14.json (homepage layout, cart, category links all PASS).

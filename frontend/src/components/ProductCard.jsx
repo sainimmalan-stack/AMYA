@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ShoppingBag } from "lucide-react";
+import { ArrowUpRight, ShoppingBag, MessageCircle } from "lucide-react";
 import Availability from "@/components/Availability";
 import PicklePackMock from "@/components/PicklePackMock";
 import { useCart } from "@/context/CartContext";
+import { waLink } from "@/lib/api";
+
+const WA_NUMBER = "919675334567";
 
 export default function ProductCard({ product, index = 0 }) {
   const { addItem } = useCart();
@@ -12,10 +15,12 @@ export default function ProductCard({ product, index = 0 }) {
   const img = product.images?.[0];
   const showImg = img && !imgError;
   const comingSoon = product.availability === "coming-soon";
-  const orderable = ["ready", "order", "available"].includes(product.availability);
   const firstPack = product.pack_sizes?.[0];
   const prices = (product.pack_sizes || []).map((s) => s.price).filter((p) => p != null);
   const fromPrice = prices.length ? Math.min(...prices) : null;
+  // Enquire-only: an orderable product with no confirmed pricing yet.
+  const enquireOnly = !comingSoon && fromPrice == null;
+  const enquireHref = waLink(WA_NUMBER, `Hello AMYA, I would like to enquire about ${product.name} — please share pack sizes and pricing.`);
 
   return (
     <motion.div
@@ -52,22 +57,27 @@ export default function ProductCard({ product, index = 0 }) {
         </div>
         <div className="pt-2.5 pb-2.5">
           <h3 className="font-serif text-base sm:text-xl lg:text-2xl text-ink leading-tight">{product.name}</h3>
-          {product.pack_sizes?.length > 0 ? (
-            <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 tracking-wide">
-              {product.pack_sizes.map((s) => s.label).join(" · ")}
+          {enquireOnly ? (
+            <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 leading-snug" data-testid={`enquire-note-${product.slug}`}>
+              Enquire for price and pack sizes
             </p>
           ) : (
-            product.short_description && (
-              <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 line-clamp-2">{product.short_description}</p>
-            )
-          )}
-          {fromPrice != null && (
-            <p className="font-sans text-[11px] sm:text-xs text-terracotta-deep font-medium mt-1" data-testid={`from-price-${product.slug}`}>
-              From ₹{fromPrice.toLocaleString("en-IN")}
-            </p>
-          )}
-          {product.availability === "order" && (
-            <p className="font-sans text-[10px] sm:text-[11px] text-ink-soft/90 mt-1.5 leading-snug">Freshly prepared to order · Dispatch on Day 3</p>
+            <>
+              {product.pack_sizes?.length > 0 ? (
+                <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 tracking-wide">
+                  {product.pack_sizes.map((s) => s.label).join(" · ")}
+                </p>
+              ) : (
+                product.short_description && (
+                  <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 line-clamp-2">{product.short_description}</p>
+                )
+              )}
+              {fromPrice != null && (
+                <p className="font-sans text-[11px] sm:text-xs text-terracotta-deep font-medium mt-1" data-testid={`from-price-${product.slug}`}>
+                  From ₹{fromPrice.toLocaleString("en-IN")}
+                </p>
+              )}
+            </>
           )}
         </div>
       </Link>
@@ -78,6 +88,16 @@ export default function ProductCard({ product, index = 0 }) {
         >
           Coming soon
         </span>
+      ) : enquireOnly ? (
+        <a
+          href={enquireHref}
+          target="_blank"
+          rel="noreferrer"
+          data-testid={`enquire-cta-${product.slug}`}
+          className="mt-auto inline-flex items-center justify-center gap-1.5 sm:gap-2 border border-terracotta text-terracotta-deep hover:bg-terracotta hover:text-ivory transition-colors py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
+        >
+          <MessageCircle size={13} className="shrink-0" /> <span>Enquire on WhatsApp</span>
+        </a>
       ) : (
         <button
           type="button"

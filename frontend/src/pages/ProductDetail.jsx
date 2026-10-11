@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, MapPin, Check } from "lucide-react";
-import { api, telHref } from "@/lib/api";
+import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, MapPin, Check, MessageCircle } from "lucide-react";
+import { api, telHref, waLink } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { useCart } from "@/context/CartContext";
 import Availability from "@/components/Availability";
@@ -40,6 +40,10 @@ export default function ProductDetail() {
   const selected = product.pack_sizes?.[pack];
   const orderable = ["ready", "order", "available"].includes(product.availability);
   const total = selected?.price != null ? selected.price * qty : null;
+  const hasConfirmedPrice = (product.pack_sizes || []).some((ps) => ps.price != null);
+  // Orderable item with no confirmed pricing yet → route to a WhatsApp enquiry instead of the cart.
+  const enquireOnly = orderable && !hasConfirmedPrice;
+  const enquireHref = waLink("919675334567", `Hello AMYA, I would like to enquire about ${product.name} — please share pack sizes and pricing.`);
 
   return (
     <div data-testid="product-detail">
@@ -138,25 +142,44 @@ export default function ProductDetail() {
           )}
 
           {/* Quantity + live total */}
-          <div className="mt-5 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft">Quantity</p>
-              <div className="inline-flex items-center border border-ink/20 rounded-md overflow-hidden">
-                <button onClick={() => setQty((q) => Math.max(1, q - 1))} data-testid="qty-minus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Minus size={15} /></button>
-                <span data-testid="qty-value" className="w-10 text-center font-sans">{qty}</span>
-                <button onClick={() => setQty((q) => q + 1)} data-testid="qty-plus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Plus size={15} /></button>
+          {!enquireOnly && (
+            <div className="mt-5 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft">Quantity</p>
+                <div className="inline-flex items-center border border-ink/20 rounded-md overflow-hidden">
+                  <button onClick={() => setQty((q) => Math.max(1, q - 1))} data-testid="qty-minus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Minus size={15} /></button>
+                  <span data-testid="qty-value" className="w-10 text-center font-sans">{qty}</span>
+                  <button onClick={() => setQty((q) => q + 1)} data-testid="qty-plus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Plus size={15} /></button>
+                </div>
               </div>
+              {orderable && total != null && (
+                <div className="text-right">
+                  <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">Total</p>
+                  <p data-testid="pd-total" className="font-serif text-2xl text-terracotta leading-none mt-0.5">₹{total.toLocaleString("en-IN")}</p>
+                </div>
+              )}
             </div>
-            {orderable && total != null && (
-              <div className="text-right">
-                <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">Total</p>
-                <p data-testid="pd-total" className="font-serif text-2xl text-terracotta leading-none mt-0.5">₹{total.toLocaleString("en-IN")}</p>
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Primary action */}
-          {orderable ? (
+          {!orderable ? (
+            <div
+              data-testid="pd-coming-soon"
+              className="mt-5 w-full inline-flex items-center justify-center gap-2 border border-terracotta/40 text-terracotta-deep py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full"
+            >
+              Coming soon
+            </div>
+          ) : enquireOnly ? (
+            <a
+              href={enquireHref}
+              target="_blank"
+              rel="noreferrer"
+              data-testid="pd-enquire-whatsapp"
+              className="mt-5 w-full inline-flex items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full"
+            >
+              <MessageCircle size={18} /> Enquire on WhatsApp
+            </a>
+          ) : (
             <button
               type="button"
               onClick={() => addItem(product, selected, qty)}
@@ -165,13 +188,6 @@ export default function ProductDetail() {
             >
               <ShoppingBag size={18} /> Add to cart
             </button>
-          ) : (
-            <div
-              data-testid="pd-coming-soon"
-              className="mt-5 w-full inline-flex items-center justify-center gap-2 border border-terracotta/40 text-terracotta-deep py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full"
-            >
-              Coming soon
-            </div>
           )}
 
           {/* Secondary actions */}
@@ -185,13 +201,6 @@ export default function ProductDetail() {
               <Phone size={15} /> Call support
             </Btn>
           </div>
-
-          {/* Order-confidence microcopy — shown for made-to-order / ready items */}
-          {["ready", "order"].includes(product.availability) && (
-            <p className="mt-3 text-center font-sans text-xs sm:text-sm text-ink-soft" data-testid="pd-confidence-note">
-              Freshly prepared to order · Dispatch typically on Day 3
-            </p>
-          )}
 
           {/* Pre-launch notice — only for products not yet open for ordering */}
           {!checkoutEnabled && !orderable && (
