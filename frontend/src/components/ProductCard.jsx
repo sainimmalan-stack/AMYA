@@ -34,9 +34,11 @@ export default function ProductCard({ product, index = 0 }) {
           ) : (
             <div className="h-full w-full flex items-center justify-center font-serif text-6xl text-terracotta/30">AMYA</div>
           )}
-          <div className="absolute top-2.5 left-2.5">
-            <Availability status={product.availability} />
-          </div>
+          {product.availability !== "order" && (
+            <div className="absolute top-2.5 left-2.5">
+              <Availability status={product.availability} />
+            </div>
+          )}
           <div className="absolute bottom-0 right-0 h-10 w-10 bg-terracotta text-ivory flex items-center justify-center translate-y-full group-hover:translate-y-0 transition-transform duration-300">
             <ArrowUpRight size={17} />
           </div>
@@ -56,6 +58,9 @@ export default function ProductCard({ product, index = 0 }) {
             product.short_description && (
               <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1 line-clamp-2">{product.short_description}</p>
             )
+          )}
+          {product.availability === "order" && (
+            <p className="font-sans text-[10px] sm:text-[11px] text-ink-soft/90 mt-1.5 leading-snug">Prepared fresh against your order · Dispatch on Day 3.</p>
           )}
         </div>
       </Link>

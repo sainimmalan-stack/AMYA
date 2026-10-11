@@ -29,7 +29,7 @@ function Hero() {
             </h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
               className="font-sans text-sm sm:text-lg text-ink-soft max-w-xl mt-3 sm:mt-4 leading-relaxed">
-              Discover authentic Indian flavours through carefully selected ingredients, traditional recipes and handcrafted artisanal foods. Every batch is made with care, in limited quantities.
+              Discover authentic Indian flavours through carefully selected spices, traditional recipes, handcrafted sweets and thoughtfully sourced cooking oils. From freshly prepared podis and aromatic spice blends to our signature cashew brittles, every AMYA product reflects our commitment to quality, flavour and care.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
               className="mt-5 sm:mt-7 flex flex-col sm:flex-row gap-3">
@@ -111,6 +111,19 @@ export default function Home() {
       <Hero />
 
       <OurCollection />
+
+      {/* Small-batch brand statement */}
+      <section className="bg-ivory-warm" data-testid="small-batch-section">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-9 sm:py-12 lg:py-14">
+          <Reveal>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Crafted in small batches</span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Small Batches. Unforgettable Taste.</h2>
+            <p className="font-sans text-sm sm:text-base text-ink-soft mt-4 max-w-3xl leading-relaxed">
+              At AMYA, we bring together traditional recipes, carefully selected ingredients and handcrafted foods. Our podis and spice blends are prepared fresh against orders, while our signature cashew brittles are prepared and delivered according to your location. Our cooking oils follow their own availability and ordering schedule.
+            </p>
+          </Reveal>
+        </div>
+      </section>
 
       {/* How ordering works */}
       <section className="bg-beige">
