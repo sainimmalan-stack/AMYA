@@ -34,7 +34,7 @@ export default function ProductCard({ product, index = 0 }) {
           ) : (
             <div className="h-full w-full flex items-center justify-center font-serif text-6xl text-terracotta/30">AMYA</div>
           )}
-          {product.availability !== "order" && (
+          {product.availability === "coming-soon" && (
             <div className="absolute top-2.5 left-2.5">
               <Availability status={product.availability} />
             </div>

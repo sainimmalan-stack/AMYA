@@ -63,7 +63,9 @@ export default function ProductDetail() {
               <div className="h-full w-full flex items-center justify-center font-serif text-7xl text-terracotta/25">AMYA</div>
             )}
             {product.diet && <div className="absolute top-4 right-4"><DietMark diet={product.diet} /></div>}
-            <div className="absolute top-4 left-4"><Availability status={product.availability} /></div>
+            {product.availability === "coming-soon" && (
+              <div className="absolute top-4 left-4"><Availability status={product.availability} /></div>
+            )}
           </motion.div>
           {product.images?.length > 1 && (
             <div className="flex gap-3 mt-4">

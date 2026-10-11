@@ -318,3 +318,8 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Removed the "MADE FRESH · DISPATCH IN 3 DAYS" overlay badge from "order" products (ProductCard hides Availability overlay when status=="order"). Added compact note below price on those cards: "Prepared fresh against your order · Dispatch on Day 3." Other statuses keep their overlay badge (READY TO ORDER / AVAILABLE FOR PRE-ORDER / COMING SOON).
 - Podi+Garam prep wording updated in detail blocks: preparation "Prepared fresh against your order. Please allow 2 days for preparation.", dispatch "Dispatch on Day 3.", Hyderabad delivery "Hyderabad delivery may be available on Day 3, subject to delivery location and order timing." Prices unchanged (podis 250/450/800; garam 300/550/1000).
 - Cashew: new description (Hyderabad same-day / outside 2nd-day courier / intl enquiries); REMOVED 10 kg pack — now only 500g ₹500 and 1kg ₹900. Oils untouched (coming-soon, no prep message). Verified on mobile + detail page.
+
+## Changelog — 2026-10-11 (Remove status badge overlays except Coming Soon)
+- ProductCard: Availability overlay now renders ONLY when availability=="coming-soon". Removed overlays for ready/order/available (Cashew "READY TO ORDER", podis/garam, Chilli/Turmeric "AVAILABLE FOR PRE-ORDER"). Images now clean/unobstructed with AMYA logo visible.
+- ProductDetail: same — availability overlay on the product image only for coming-soon.
+- Prep/dispatch info retained in card description note + detail-page blocks (not overlaid). Names/prices/descriptions/images/Add-to-Cart unchanged. Coming Soon preserved for oils & pickles. Verified on mobile homepage; applies to collection + detail via shared components.
