@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Eye, MessageSquare, ShieldCheck, MessageCircle, Phone, PackageCheck, Truck, ChefHat, Leaf, Package } from "lucide-react";
+import { ArrowRight, MessageCircle, Phone, PackageCheck, Truck } from "lucide-react";
 import { api, waLink, telHref, formatPhoneIN } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { Reveal, MaskedLines } from "@/components/Reveal";
@@ -9,7 +9,6 @@ import Btn from "@/components/Btn";
 import ProductCard from "@/components/ProductCard";
 
 const HERO_IMG = "https://images.unsplash.com/photo-1643067077447-78239a403a18?crop=entropy&cs=srgb&fm=jpg&q=85&w=1400";
-const VIDEO_MSG = "Hi AMYA, I would like to know more about your oils and request a video call.";
 
 function Hero() {
   const ref = useRef(null);
@@ -29,7 +28,7 @@ function Hero() {
             </h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
               className="font-sans text-sm sm:text-base text-ink-soft max-w-xl mt-2.5 sm:mt-3.5 leading-relaxed">
-              Discover AMYA's signature cashew brittles, traditional podis, flavourful spices and thoughtfully selected cooking essentials.
+              From signature cashew brittles to traditional podis, spices and cooking essentials, discover familiar Indian flavours made with care.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
               className="mt-3 sm:mt-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
@@ -55,6 +54,13 @@ function Hero() {
   );
 }
 
+const CATEGORIES = [
+  { label: "Cashew Brittle", to: "/shop/cashew-brittles" },
+  { label: "Podis & Spices", to: "/shop/spices" },
+  { label: "Pickles", to: "/shop/pickles" },
+  { label: "Cooking Oils", to: "/shop/oils" },
+];
+
 function OurCollection() {
   const [products, setProducts] = useState([]);
 
@@ -68,19 +74,36 @@ function OurCollection() {
 
   return (
     <section id="collection" className="bg-ivory" data-testid="shop-products-section">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-5 pb-6 sm:py-10 lg:py-12">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 pb-8 sm:py-12 lg:py-14">
         <Reveal>
-          <div className="flex items-end justify-between mb-4 sm:mb-6">
+          <div className="flex items-end justify-between mb-3 sm:mb-5">
             <div>
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Shop AMYA</span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Our Products</h2>
-              <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 max-w-2xl leading-relaxed">Authentic flavours, carefully crafted in small batches.</p>
+              <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 max-w-2xl leading-relaxed">Thoughtful ingredients. Familiar flavours. Made with care.</p>
             </div>
             <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
               View all <ArrowRight size={14} />
             </Link>
           </div>
         </Reveal>
+
+        {/* Category quick links — only categories with real products */}
+        <Reveal>
+          <div className="flex flex-wrap gap-2 mb-5 sm:mb-7" data-testid="category-links">
+            {CATEGORIES.map((c) => (
+              <Link
+                key={c.to}
+                to={c.to}
+                data-testid={`category-link-${c.to.split("/").pop()}`}
+                className="inline-flex items-center rounded-full border border-ink/15 bg-ivory-warm px-3.5 py-1.5 font-sans text-[11px] sm:text-xs uppercase tracking-[0.12em] text-ink-soft hover:border-terracotta hover:text-terracotta transition-colors"
+              >
+                {c.label}
+              </Link>
+            ))}
+          </div>
+        </Reveal>
+
         <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
           {ordered.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
         </div>
@@ -89,22 +112,10 @@ function OurCollection() {
   );
 }
 
-const AMYA_DIFF = [
-  { icon: ChefHat, t: "Traditional Recipes", d: "Familiar Indian flavours for everyday meals." },
-  { icon: Leaf, t: "Carefully Selected Ingredients", d: "Chosen with attention to flavour, aroma and quality." },
-  { icon: Package, t: "Small-Batch Preparation", d: "Prepared in limited quantities with care." },
-];
-
 const ORDER_STEPS = [
   { icon: MessageCircle, t: "Tap to order", d: "Choose a pack and tap “Order on WhatsApp” — your selection is pre-filled." },
   { icon: PackageCheck, t: "We confirm", d: "We confirm availability and the final amount with you." },
   { icon: Truck, t: "Delivery", d: "Delivery / courier charges are shared and confirmed before dispatch." },
-];
-
-const WHY = [
-  { icon: Eye, t: "Watch oils being made", d: "Request a live WhatsApp video call to observe our oil preparation, subject to availability." },
-  { icon: ShieldCheck, t: "Small batches", d: "Made in small quantities, with clear information about what goes in." },
-  { icon: MessageSquare, t: "Ask before you buy", d: "Talk to us directly on WhatsApp and get your questions answered." },
 ];
 
 export default function Home() {
@@ -116,37 +127,30 @@ export default function Home() {
     <div>
       <Hero />
 
-      {/* The AMYA Difference — compact trust band */}
-      <section className="bg-ivory border-b border-ink/5" data-testid="amya-difference">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 pb-5 sm:py-9">
-          <Reveal>
-            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">The AMYA Difference</span>
-          </Reveal>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-5 sm:gap-6 mt-4 sm:mt-6">
-            {AMYA_DIFF.map((f, i) => (
-              <Reveal key={f.t} delay={i * 0.06}>
-                <div className={`flex flex-col gap-1.5 ${i === 2 ? "col-span-2 lg:col-span-1" : ""}`}>
-                  <f.icon size={20} className="text-terracotta shrink-0" />
-                  <h3 className="font-serif text-base sm:text-lg text-ink leading-tight">{f.t}</h3>
-                  <p className="font-sans text-xs sm:text-sm text-ink-soft leading-relaxed">{f.d}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+      {/* Compact trust line */}
+      <div className="bg-ivory border-b border-ink/5" data-testid="trust-line">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 sm:py-3.5">
+          <p className="font-sans text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.22em] text-ink-soft text-center">
+            Traditional Recipes <span className="text-terracotta mx-1.5">·</span> Small-Batch Preparation <span className="text-terracotta mx-1.5">·</span> Made with Care
+          </p>
         </div>
-      </section>
+      </div>
 
+      {/* Products appear immediately */}
       <OurCollection />
 
-      {/* Small-batch brand statement */}
-      <section className="bg-ivory-warm" data-testid="small-batch-section">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-9 sm:py-12 lg:py-14">
+      {/* Brand story — concise, below products */}
+      <section className="bg-ivory-warm" data-testid="brand-story-section">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-12 lg:py-14">
           <Reveal>
-            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Crafted in small batches</span>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Our Story</span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Small Batches. Unforgettable Taste.</h2>
             <p className="font-sans text-sm sm:text-base text-ink-soft mt-4 max-w-3xl leading-relaxed">
-              At AMYA, we bring together traditional recipes, carefully selected ingredients and handcrafted foods. Our podis and spice blends are prepared fresh against orders, while our signature cashew brittles are prepared and delivered according to your location. Our cooking oils follow their own availability and ordering schedule.
+              AMYA is a founder-led brand by Amulya Nimmala, bringing together traditional recipes and carefully selected ingredients. Our podis and spice blends are prepared fresh against orders, and our signature cashew brittles are made in small batches — so you always know what you're buying and how it's prepared.
             </p>
+            <Link to="/our-story" className="link-underline inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink mt-5" data-testid="brand-story-link">
+              More about AMYA <ArrowRight size={14} />
+            </Link>
           </Reveal>
         </div>
       </section>
@@ -173,36 +177,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why AMYA — brand story */}
-      <section className="bg-ivory">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-11 lg:py-14">
-          <Reveal>
-            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Why AMYA</span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 mb-8 text-ink">Genuine, not glossy.</h2>
-          </Reveal>
-          <div className="grid sm:grid-cols-3 gap-6">
-            {WHY.map((w, i) => (
-              <Reveal key={w.t} delay={i * 0.08}>
-                <div className="border-t border-ink/15 pt-5">
-                  <w.icon size={22} className="text-terracotta" />
-                  <h3 className="font-serif text-2xl mt-3 text-ink">{w.t}</h3>
-                  <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">{w.d}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* About + Contact */}
+      {/* Contact */}
       <section className="bg-terracotta text-ivory grain relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-11 lg:py-14 relative z-10 grid lg:grid-cols-2 gap-10 items-center">
           <Reveal>
-            <span className="font-sans text-xs uppercase tracking-[0.3em] text-ivory/70">About AMYA</span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 leading-[1.0]">A founder-led brand by Amulya Nimmala.</h2>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-ivory/70">Order with us</span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 leading-[1.0]">Ready to taste tradition?</h2>
             <p className="font-sans text-base text-ivory/85 mt-4 max-w-lg leading-relaxed">
-              We start small and focus on a limited, carefully made range — helping you understand what you buy and how
-              it's prepared. <Link to="/about" className="link-underline">More about AMYA</Link>.
+              Build your order and send it to us on WhatsApp — we'll confirm availability, pricing and delivery before dispatch.
             </p>
           </Reveal>
           <Reveal delay={0.1}>

@@ -29,7 +29,7 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-40 bg-terracotta border-b border-ivory/15">
-        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center">
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center">
           {/* Mobile / tablet: centred logo */}
           <div className="lg:hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <Logo variant="ivory" size="header" />
