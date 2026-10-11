@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, ShoppingBag } from "lucide-react";
 import Availability from "@/components/Availability";
@@ -7,7 +8,9 @@ import { useCart } from "@/context/CartContext";
 
 export default function ProductCard({ product, index = 0 }) {
   const { addItem } = useCart();
+  const [imgError, setImgError] = useState(false);
   const img = product.images?.[0];
+  const showImg = img && !imgError;
   const comingSoon = product.availability === "coming-soon";
   const orderable = ["ready", "order", "available"].includes(product.availability);
   const firstPack = product.pack_sizes?.[0];
@@ -23,12 +26,14 @@ export default function ProductCard({ product, index = 0 }) {
     >
       <Link to={`/product/${product.slug}`} data-testid={`product-card-${product.slug}`} className="group block">
         <div className="relative overflow-hidden bg-ivory-warm rounded-xl aspect-[4/5]">
-          {img ? (
+          {showImg ? (
             (product.category === "spices" || product.category === "oils") ? (
-              <img src={img} alt={product.name} loading="lazy"
+              <img src={img} alt={product.name} loading={index < 4 ? "eager" : "lazy"} decoding="async"
+                   onError={() => setImgError(true)}
                    className="h-full w-full object-contain object-center p-2.5 sm:p-3" />
             ) : (
-              <img src={img} alt={product.name} loading="lazy"
+              <img src={img} alt={product.name} loading={index < 4 ? "eager" : "lazy"} decoding="async"
+                   onError={() => setImgError(true)}
                    className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105" />
             )
           ) : product.category === "pickles" ? (

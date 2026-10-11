@@ -21,18 +21,18 @@ function Hero() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-3 pb-4 lg:pt-14 lg:pb-14 relative z-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
-              className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta block mb-3">
+              className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta block mb-2.5">
               Authentic Indian flavours · Made with care
             </motion.span>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-ink">
               <MaskedLines lines={["Tradition You Can Taste."]} delay={0.15} />
             </h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
-              className="font-sans text-sm sm:text-base text-ink-soft max-w-xl mt-3 sm:mt-4 leading-relaxed">
+              className="font-sans text-sm sm:text-base text-ink-soft max-w-xl mt-2.5 sm:mt-3.5 leading-relaxed">
               Discover AMYA's signature cashew brittles, traditional podis, flavourful spices and thoughtfully selected cooking essentials. Made in small batches and inspired by the flavours of home.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
-              className="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+              className="mt-3 sm:mt-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
               <Btn to="/shop" variant="solid" data-testid="hero-shop-btn">
                 Shop Our Collection <ArrowRight size={15} />
               </Btn>
@@ -68,7 +68,7 @@ function OurCollection() {
 
   return (
     <section id="collection" className="bg-ivory" data-testid="shop-products-section">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 pb-6 sm:py-10 lg:py-12">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-5 pb-6 sm:py-10 lg:py-12">
         <Reveal>
           <div className="flex items-end justify-between mb-4 sm:mb-6">
             <div>
@@ -118,14 +118,14 @@ export default function Home() {
 
       {/* The AMYA Difference — compact trust band */}
       <section className="bg-ivory border-b border-ink/5" data-testid="amya-difference">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-6 sm:py-9">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 pb-5 sm:py-9">
           <Reveal>
             <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">The AMYA Difference</span>
           </Reveal>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-5 sm:gap-6 mt-4 sm:mt-6">
             {AMYA_DIFF.map((f, i) => (
               <Reveal key={f.t} delay={i * 0.06}>
-                <div className="flex flex-col gap-1.5">
+                <div className={`flex flex-col gap-1.5 ${i === 2 ? "col-span-2 lg:col-span-1" : ""}`}>
                   <f.icon size={20} className="text-terracotta shrink-0" />
                   <h3 className="font-serif text-base sm:text-lg text-ink leading-tight">{f.t}</h3>
                   <p className="font-sans text-xs sm:text-sm text-ink-soft leading-relaxed">{f.d}</p>
