@@ -58,9 +58,16 @@ export default function ProductCard({ product, index = 0 }) {
         <div className="pt-2.5 pb-2.5">
           <h3 className="font-serif text-base sm:text-xl lg:text-2xl text-ink leading-tight">{product.name}</h3>
           {enquireOnly ? (
-            <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 leading-snug" data-testid={`enquire-note-${product.slug}`}>
-              Enquire for price and pack sizes
-            </p>
+            <>
+              {product.pack_sizes?.length > 0 && (
+                <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 tracking-wide">
+                  {product.pack_sizes.map((s) => s.label).join(" · ")}
+                </p>
+              )}
+              <p className="font-sans text-[11px] sm:text-xs text-terracotta-deep font-medium mt-1" data-testid={`enquire-note-${product.slug}`}>
+                {product.pack_sizes?.length > 0 ? "Enquire for price" : "Enquire for price and pack sizes"}
+              </p>
+            </>
           ) : (
             <>
               {product.pack_sizes?.length > 0 ? (

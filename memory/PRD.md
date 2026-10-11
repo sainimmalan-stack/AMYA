@@ -390,3 +390,9 @@ CATALOGUE CORRECTNESS:
 - Enquire button → wa.me/919675334567 with a per-product pre-filled enquiry message.
 - WhatsApp cart flow kept for priced items (functional, routes to WhatsApp, no fake online payment).
 Verified: backend API re-seeded (cashew 500g/1kg only; nuvvula packs=[], dispatch cleared); homepage cards render correctly (DOM extraction); Nuvvula detail page shows Enquire on WhatsApp, no Day 3 text. Previous full regression: iteration_14.json (homepage layout, cart, category links all PASS).
+
+## Changelog — 2026-10-11 (Pack-size catalogue update)
+- Cashew Brittle: re-added 10 kg (₹8,500) as a 3rd selectable pack → 500 g ₹500 (10 pieces), 1 kg ₹900 (20 pieces), 10 kg ₹8,500. From ₹500. 10 kg is exclusive to Cashew. Verified: selecting 10 kg updates detail-page total to ₹8,500; Add to cart active.
+- Nuvvula Podi: added 3 selectable pack sizes 250 g / 500 g / 1 kg with price=None (no invented prices). Detail page shows a selectable pack grid (each "Enquire"), quantity hidden, primary action "Enquire on WhatsApp" (wa.me/919675334567). Homepage/shop card shows "250 g · 500 g · 1 kg" + "Enquire for price" + Enquire on WhatsApp button. ProductCard enquire-only display now shows pack labels + "Enquire for price" when packs exist, else "Enquire for price and pack sizes".
+- Karivepaku Podi & Nallakaram Podi: unchanged (250g ₹250 / 500g ₹450 / 1kg ₹800) — confirmed via API.
+- No 10 kg on any non-cashew product. Branding, fonts, images and 2-col mobile layout preserved. Verified via API + DOM extraction + screenshots on desktop & product pages.
