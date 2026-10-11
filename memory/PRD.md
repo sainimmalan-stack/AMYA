@@ -399,3 +399,13 @@ Verified: backend API re-seeded (cashew 500g/1kg only; nuvvula packs=[], dispatc
 
 ## Changelog — 2026-10-11 (Nuvvula pricing confirmed)
 - Nuvvula Podi pack prices set to match Karivepaku exactly: 250 g ₹250, 500 g ₹450, 1 kg ₹800. Now fully orderable (card "From ₹250" + Add to cart; detail pack selector updates total; "Enquire" text removed). Cashew Brittle 10 kg (₹8,500) verified end-to-end in cart (₹8,500/pack, order total ₹8,500). No other product/image/style changes.
+
+## Changelog — 2026-10-11 (Premium mobile hero/spacing polish)
+Home.jsx only (no branding/image/price/category changes):
+- Hero: padding → px-6 (24px) mobile, pt-6 pb-7; eyebrow mb-3; actions mt-6 with connected rhythm.
+- Headline: text-[2.625rem] (42px) mobile with [text-wrap:balance] + leading-[1.08] → two balanced lines ("Tradition You" / "Can Taste."). sm:text-5xl lg:text-6xl unchanged.
+- Description: text-[17px] leading-[1.6] [text-wrap:pretty], max-w-md on mobile.
+- Primary button: passed className py-[20px] + full-width on mobile → ~56px tall, prominent. "Our Story" converted from Btn(subtle) to a subtle link-underline text link beneath, tighter gap.
+- Trust strip: flex row with nowrap phrase spans; responsive micro-type text-[8.5px]/min-[400px]:9.5px, px-3 band padding, gap-x-1.5 → single line at 375/390 (overflow 0), no phrase/hyphen split, no dangling punctuation. sm+ wraps naturally at text-xs.
+- Product header: tightened margins (mb-2.5), "Our Products" desc text-[15px] max-w-xs [text-wrap:balance] → balanced 2 lines, no orphan "care."; category row mb-4.
+Verified via viewport measurement + screenshots at 360/375/390/414px. Pure layout/typography; backend untouched.

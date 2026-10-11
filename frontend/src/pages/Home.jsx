@@ -17,27 +17,28 @@ function Hero() {
 
   return (
     <section ref={ref} className="relative bg-ivory-warm text-ink overflow-hidden border-b border-ink/10">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-3 pb-4 lg:pt-14 lg:pb-14 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 pt-6 pb-7 lg:pt-12 lg:pb-12 relative z-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
-              className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta block mb-2.5">
+              className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.28em] text-terracotta block mb-3">
               Authentic Indian flavours · Made with care
             </motion.span>
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-ink">
+            <h1 className="font-serif text-[2.625rem] sm:text-5xl lg:text-6xl leading-[1.08] sm:leading-[1.05] tracking-tight text-ink [text-wrap:balance]">
               <MaskedLines lines={["Tradition You Can Taste."]} delay={0.15} />
             </h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
-              className="font-sans text-sm sm:text-base text-ink-soft max-w-xl mt-2.5 sm:mt-3.5 leading-relaxed">
+              className="font-sans text-[17px] sm:text-lg text-ink-soft max-w-md sm:max-w-xl mt-4 leading-[1.6] [text-wrap:pretty]">
               From signature cashew brittles to traditional podis, spices and cooking essentials, discover familiar Indian flavours made with care.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
-              className="mt-3 sm:mt-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-              <Btn to="/shop" variant="solid" data-testid="hero-shop-btn">
+              className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6">
+              <Btn to="/shop" variant="solid" className="py-[20px] w-full sm:w-auto justify-center" data-testid="hero-shop-btn">
                 Shop Our Collection <ArrowRight size={15} />
               </Btn>
-              <Btn to="/our-story" variant="subtle" data-testid="hero-story-btn">
+              <Link to="/our-story" data-testid="hero-story-btn"
+                className="link-underline font-sans text-xs uppercase tracking-[0.2em] text-ink-soft hover:text-terracotta transition-colors self-center sm:self-auto">
                 Our Story
-              </Btn>
+              </Link>
             </motion.div>
           </div>
 
@@ -74,13 +75,13 @@ function OurCollection() {
 
   return (
     <section id="collection" className="bg-ivory" data-testid="shop-products-section">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 pb-8 sm:py-12 lg:py-14">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-4 pb-8 sm:py-12 lg:py-14">
         <Reveal>
-          <div className="flex items-end justify-between mb-3 sm:mb-5">
+          <div className="flex items-end justify-between mb-2.5 sm:mb-4">
             <div>
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Shop AMYA</span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Our Products</h2>
-              <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 max-w-2xl leading-relaxed">Thoughtful ingredients. Familiar flavours. Made with care.</p>
+              <p className="font-sans text-[15px] sm:text-base text-ink-soft mt-2 max-w-xs sm:max-w-2xl leading-relaxed [text-wrap:balance]">Thoughtful ingredients. Familiar flavours. Made with care.</p>
             </div>
             <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
               View all <ArrowRight size={14} />
@@ -90,7 +91,7 @@ function OurCollection() {
 
         {/* Category quick links — only categories with real products */}
         <Reveal>
-          <div className="flex flex-wrap gap-2 mb-5 sm:mb-7" data-testid="category-links">
+          <div className="flex flex-wrap gap-2 mb-4 sm:mb-6" data-testid="category-links">
             {CATEGORIES.map((c) => (
               <Link
                 key={c.to}
@@ -129,9 +130,13 @@ export default function Home() {
 
       {/* Compact trust line */}
       <div className="bg-ivory border-b border-ink/5" data-testid="trust-line">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 sm:py-3.5">
-          <p className="font-sans text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.22em] text-ink-soft text-center">
-            Traditional Recipes <span className="text-terracotta mx-1.5">·</span> Small-Batch Preparation <span className="text-terracotta mx-1.5">·</span> Made with Care
+        <div className="max-w-7xl mx-auto px-3 sm:px-8 py-2.5 sm:py-3">
+          <p className="font-sans text-[8.5px] min-[400px]:text-[9.5px] sm:text-xs uppercase tracking-[0.08em] sm:tracking-[0.22em] text-ink-soft flex flex-nowrap sm:flex-wrap items-center justify-center gap-x-1.5 gap-y-1 whitespace-nowrap">
+            <span className="whitespace-nowrap">Traditional Recipes</span>
+            <span className="text-terracotta">·</span>
+            <span className="whitespace-nowrap">Small-Batch Preparation</span>
+            <span className="text-terracotta">·</span>
+            <span className="whitespace-nowrap">Made with Care</span>
           </p>
         </div>
       </div>
