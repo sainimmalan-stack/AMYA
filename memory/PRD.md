@@ -323,3 +323,6 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - ProductCard: Availability overlay now renders ONLY when availability=="coming-soon". Removed overlays for ready/order/available (Cashew "READY TO ORDER", podis/garam, Chilli/Turmeric "AVAILABLE FOR PRE-ORDER"). Images now clean/unobstructed with AMYA logo visible.
 - ProductDetail: same — availability overlay on the product image only for coming-soon.
 - Prep/dispatch info retained in card description note + detail-page blocks (not overlaid). Names/prices/descriptions/images/Add-to-Cart unchanged. Coming Soon preserved for oils & pickles. Verified on mobile homepage; applies to collection + detail via shared components.
+
+## Changelog — 2026-10-11 (Hide prices on product cards)
+- ProductCard pack-size line now renders labels only (e.g. "250 g · 500 g · 1 kg"; cashew "500 g · 1 kg") — removed ₹/prices from cards. Shared component → applies on homepage + collection consistently. Prices still shown on ProductDetail pack-size selector + totals (unchanged). No DB/price/pack/image/description/cart changes. Verified on mobile (no ₹ in card section).

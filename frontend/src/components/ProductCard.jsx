@@ -51,8 +51,8 @@ export default function ProductCard({ product, index = 0 }) {
           )}
           <h3 className="font-serif text-base sm:text-xl lg:text-2xl text-ink leading-tight">{product.name}</h3>
           {product.pack_sizes?.length > 0 ? (
-            <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1">
-              {product.pack_sizes.map((s) => (s.price != null ? `${s.label} ₹${s.price}` : s.label)).join(" · ")}
+            <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1 tracking-wide">
+              {product.pack_sizes.map((s) => s.label).join(" · ")}
             </p>
           ) : (
             product.short_description && (
