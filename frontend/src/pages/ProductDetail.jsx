@@ -192,8 +192,15 @@ export default function ProductDetail() {
             </Btn>
           </div>
 
-          {/* Pre-launch notice — below the ordering section */}
-          {!checkoutEnabled && (
+          {/* Order-confidence microcopy — shown for made-to-order / ready items */}
+          {["ready", "order"].includes(product.availability) && (
+            <p className="mt-3 text-center font-sans text-xs sm:text-sm text-ink-soft" data-testid="pd-confidence-note">
+              Freshly prepared to order · Dispatch typically on Day 3
+            </p>
+          )}
+
+          {/* Pre-launch notice — only for products not yet open for ordering */}
+          {!checkoutEnabled && !orderable && (
             <div className="mt-5 border border-ink/15 bg-ivory-warm/50 px-4 py-3" data-testid="pd-prelaunch">
               <p className="font-sans text-[11px] uppercase tracking-[0.15em] text-ink-soft">Pre-launch</p>
               <p className="font-sans text-sm text-ink-soft mt-1">

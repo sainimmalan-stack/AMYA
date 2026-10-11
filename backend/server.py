@@ -547,8 +547,8 @@ INITIAL_PRODUCTS = [
     },
     {
         "slug": "cashew-brittle", "name": "Cashew Brittle", "category": "cashew-brittles",
-        "short_description": "Handcrafted cashew brittles made with premium ingredients.",
-        "description": "Handcrafted cashew brittles made with premium ingredients. Hyderabad orders can be delivered on the day of ordering, subject to order timing and availability. Orders outside Hyderabad are dispatched through courier on the second day. Domestic and international enquiries are welcome.",
+        "short_description": "A little sweetness. A lot of crunch.\n\nMade in small batches with premium cashews and jaggery, AMYA Cashew Brittle delivers a rich caramelised crunch in every bite. Thoughtfully crafted for festive gifting, sharing with loved ones, or enjoying as your own special treat.",
+        "description": "Made in small batches with premium cashews and jaggery for a rich caramelised crunch. Hyderabad orders can be delivered on the day of ordering, subject to order timing and availability. Orders outside Hyderabad are dispatched through courier on the second day. Domestic and international enquiries are welcome.",
         "extraction_method": "",
         "ingredients": "Whole roasted cashews, jaggery.",
         "allergens": "Contains cashews (tree nuts). May contain traces of other nuts.",
