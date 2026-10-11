@@ -1,0 +1,21 @@
+{
+  "summary": "Frontend-only verification of the pickle collection pricing + stock state. All 6 pickles render on /shop/pickles with correct badges and CTAs: Chicken, Allam Sweet, Mutton, Prawn show 'AVAILABLE TO ORDER' + add-cart-<slug> buttons; Avakai and Maagai show 'OUT OF STOCK' + out-of-stock-cta-<slug>. All 18 pack prices on detail pages exactly match spec (Chicken 400/750/1,400 ; Avakai 200/300/500 ; Maagai 200/300/500 ; Allam Sweet 200/300/500 ; Mutton 500/900/1,700 ; Prawn 600/1,000/1,900) in Indian rupee format with thousands separator. Pack-size selection + quantity update pd-total correctly (Chicken 1kg x 2 = ₹2,800 verified). Cart add + multi-item grand total verified: Chicken 1kg x2 (₹2,800) + Allam Sweet 500g x1 (₹300) = header badge 3, cart grand total ₹3,100. Out-of-stock detail pages (Avakai/Maagai) correctly show pd-out-of-stock 'CURRENTLY UNAVAILABLE', pd-out-of-stock-note restock message, three pack prices visible, and NO pd-add-cart / qty controls. Admin login works at /admin/login; avail-<slug> is a native <select> with the required options 'Available to Order' (in-stock) and 'Out of Stock' (out-of-stock) plus 3 other states. Changing Avakai to in-stock via admin dropdown persisted via PATCH and the detail page immediately showed Add to Cart; reverted back to out-of-stock as requested so initial state is preserved. Regression confirmed: Cashew Brittle still orderable with 500g/1kg/10kg packs (₹500/₹900/₹8,500), Chilli Powder & Turmeric Powder on /shop/spices show 'Enquire for price and pack sizes', all 4 oils still show 'COMING SOON' badge, header WhatsApp + call buttons present.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "ProductCard testids on pickle collection use the slug (e.g. add-cart-chicken-pickle) while spice cards use a different slug prefix (product-card-amya-nuvvula-podi, product-card-guntur-sannam-chilli-powder). Slug conventions are inconsistent across categories; not a bug but harder for test automation.",
+    "Admin availability <select> uses a native dropdown (no shadcn Select). Works correctly but visual style differs from the rest of the admin UI."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a", "frontend": "100%"},
+  "seed_data_creation": "None. Avakai was temporarily toggled to in-stock via admin and reverted to out-of-stock at the end — final state matches founder intent (Avakai + Maagai OOS).",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Pickle testids verified: product cards use slug directly (add-cart-chicken-pickle, out-of-stock-cta-avakai-pickle, etc.). Detail page: pack-0/1/2 for 250g/500g/1kg, pd-total, pd-add-cart, pd-out-of-stock, pd-out-of-stock-note, qty-plus/minus/value. Admin dropdown testid is avail-<slug> (native SELECT; use page.select_option with values 'in-stock' / 'out-of-stock' / 'coming-soon' / 'available' / 'unavailable'). Admin login testids: login-email, login-password, login-submit. Cart testids: header-cart-btn, cart-count-badge, cart-item-<slug>, cart-line-total-<slug>, cart-grand-total. Cashew-brittle slug is 'cashew-brittle' (packs 500g/1kg/10kg)."
+}

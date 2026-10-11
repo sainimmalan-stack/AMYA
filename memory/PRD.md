@@ -443,3 +443,9 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
   - Mutton Pickle: 250g ₹500 / 500g ₹900 / 1kg ₹1,700
   - Prawn Pickle: 250g ₹600 / 500g ₹1,000 / 1kg ₹1,900
 - Cards show "From ₹X" + Coming soon; detail pages show per-pack ₹ prices (en-IN format, e.g. ₹1,400), checkout remains disabled. Verified mobile + desktop. CSS pickle pack mockups, images, descriptions, other products, branding, layout all unchanged.
+
+## Changelog — 2026-10-11 (Pickle stock states + ordering enabled)
+- Introduced two availability states: "in-stock" (badge "Available to Order", orderable → Add to cart) and "out-of-stock" (badge "Out of Stock", prices visible, disabled "Currently Unavailable", no add-to-cart/qty, restock note). Added to Availability.jsx, ProductCard.jsx, ProductDetail.jsx, and both admin dropdowns (avail-<slug> quick select + pf-availability edit form).
+- Pickle statuses: Chicken, Allam Sweet, Mutton, Prawn = in-stock; Avakai, Maagai = out-of-stock. Prices unchanged from previous turn (18 pack prices).
+- Inventory now admin-managed & persistent: moved `availability` from $set to $setOnInsert in the seed (admin changes survive redeploy); added one-time migration "pickle_stock_v1" (db.migrations) to apply the initial pickle statuses to existing preview + production DBs exactly once. Admin can toggle stock anytime via /admin.
+- Verified by testing agent (iteration_15.json): 100% frontend pass, 0 bugs — all 18 prices, badges, pack/qty totals, cart line+grand totals (multi-item ₹3,100), out-of-stock gating, admin toggle persistence, and no regressions (cashew/chilli/turmeric/oils intact). Out-of-stock items can't be added to cart. Ready to publish (redeploy runs the migration on production).
