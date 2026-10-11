@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, MapPin, Check, Flame } from "lucide-react";
+import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, MapPin, Check } from "lucide-react";
 import { api, telHref } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { useCart } from "@/context/CartContext";
@@ -96,7 +96,7 @@ export default function ProductDetail() {
           </Reveal>
 
           {product.highlights?.length > 0 && (
-            <ul className="mt-4 grid gap-2" data-testid="pd-highlights">
+            <ul className="mt-3 grid gap-1.5" data-testid="pd-highlights">
               {product.highlights.map((h, i) => (
                 <li key={i} className="flex items-start gap-2 font-sans text-sm text-ink-soft">
                   <Check size={15} className="text-terracotta shrink-0 mt-0.5" /> {h}
@@ -106,21 +106,15 @@ export default function ProductDetail() {
           )}
 
           {product.serving && (
-            <div className="mt-5 rounded-lg border border-terracotta/25 bg-terracotta/5 px-4 py-4" data-testid="pd-serving">
+            <div className="mt-4 rounded-lg border border-beige bg-ivory-warm px-4 py-3" data-testid="pd-serving">
               <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">How to enjoy</p>
               <p className="font-sans text-sm text-ink mt-1.5 leading-relaxed">{product.serving}</p>
-              {product.serving_highlight && (
-                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-terracotta text-ivory px-4 py-2" data-testid="pd-serving-highlight">
-                  <Flame size={14} className="shrink-0" />
-                  <span className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.14em]">{product.serving_highlight}</span>
-                </div>
-              )}
             </div>
           )}
 
           {/* Pack sizes */}
           {product.pack_sizes?.length > 0 && (
-            <div className="mt-5">
+            <div className="mt-4">
               <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-2">Pack size</p>
               <div className="flex flex-wrap gap-2">
                 {product.pack_sizes.map((ps, i) => {
