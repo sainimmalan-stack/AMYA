@@ -680,7 +680,7 @@ INITIAL_PRODUCTS = [
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Further details added when finalised by AMYA.",
-        "images": ["/products/amya-garam-masala.jpg"],
+        "images": ["/products/amya-garam-masala.jpg?v=3"],
         "pack_sizes": [{"label": "250 g", "price": 300}, {"label": "500 g", "price": 550}, {"label": "1 kg", "price": 1000}],
         "preparation": "Prepared fresh against your order. Please allow 2 days for preparation.",
         "dispatch": "Dispatch on Day 3.",
@@ -786,7 +786,7 @@ async def seed():
     # photographs, so their images are force-synced on every deploy.
     FORCE_IMAGE_SLUGS = {
         "cashew-brittle", "guntur-sannam-chilli-powder", "amya-turmeric-powder",
-        "amya-nuvvula-podi", "amya-karivepaku-podi", "amya-nallakaram",
+        "amya-nuvvula-podi", "amya-karivepaku-podi", "amya-nallakaram", "amya-garam-masala",
     }
     for p in INITIAL_PRODUCTS:
         p = dict(p)
