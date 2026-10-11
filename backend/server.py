@@ -788,13 +788,28 @@ async def seed():
         "cashew-brittle", "guntur-sannam-chilli-powder", "amya-turmeric-powder",
         "amya-nuvvula-podi", "amya-karivepaku-podi", "amya-nallakaram", "amya-garam-masala",
     }
+    # Confirmed pickle pricing (per 250 g / 500 g / 1 kg). Availability stays
+    # "coming-soon" until the founder approves enabling checkout.
+    PICKLE_PRICES = {
+        "chicken-pickle": [400, 750, 1400],
+        "avakai-pickle": [200, 300, 500],
+        "maagai-pickle": [200, 300, 500],
+        "allam-sweet-pickle": [200, 300, 500],
+        "mutton-pickle": [500, 900, 1700],
+        "prawn-pickle": [600, 1000, 1900],
+    }
     for p in INITIAL_PRODUCTS:
         p = dict(p)
         # Standard pack-size options by category (fixed set for coming-soon ranges).
         if p.get("category") == "oils":
             p["pack_sizes"] = [{"label": "500 ml", "price": None}, {"label": "1 litre", "price": None}]
         elif p.get("category") == "pickles":
-            p["pack_sizes"] = [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}]
+            prices = PICKLE_PRICES.get(p["slug"], [None, None, None])
+            p["pack_sizes"] = [
+                {"label": "250 g", "price": prices[0]},
+                {"label": "500 g", "price": prices[1]},
+                {"label": "1 kg", "price": prices[2]},
+            ]
         images = p.pop("images", [])
         set_fields = dict(p)
         on_insert = {"created_at": now_iso()}

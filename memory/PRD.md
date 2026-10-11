@@ -433,3 +433,13 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 
 ## Changelog — 2026-10-11 (Garam Masala real photo)
 - Replaced Garam Masala image with its REAL photo from the uploaded ZIP (Garam Masala.PNG → optimised JPG 1254px q88 at /products/amya-garam-masala.jpg?v=3). Added amya-garam-masala to FORCE_IMAGE_SLUGS so it force-syncs on deploy; updated seed path + MongoDB doc. Verified on preview detail page (src ?v=3, 0 broken, full label visible). Single images field => updates homepage/grid/detail/related automatically. All other products/images/prices/pack sizes/cart/Cashfree/WhatsApp/layout unchanged. Requires REDEPLOY for live site.
+
+## Changelog — 2026-10-11 (Pickle pricing)
+- Set confirmed prices for the six pickles in the data source (seed PICKLE_PRICES map + applied via $set, so existing docs update on restart/redeploy). Availability kept "coming-soon" (no checkout enabled per founder instruction).
+  - Chicken Pickle (chicken-pickle): 250g ₹400 / 500g ₹750 / 1kg ₹1,400
+  - Avakai Pickle: 250g ₹200 / 500g ₹300 / 1kg ₹500
+  - Maagai Pickle: 250g ₹200 / 500g ₹300 / 1kg ₹500
+  - Allam Sweet Pickle: 250g ₹200 / 500g ₹300 / 1kg ₹500
+  - Mutton Pickle: 250g ₹500 / 500g ₹900 / 1kg ₹1,700
+  - Prawn Pickle: 250g ₹600 / 500g ₹1,000 / 1kg ₹1,900
+- Cards show "From ₹X" + Coming soon; detail pages show per-pack ₹ prices (en-IN format, e.g. ₹1,400), checkout remains disabled. Verified mobile + desktop. CSS pickle pack mockups, images, descriptions, other products, branding, layout all unchanged.
