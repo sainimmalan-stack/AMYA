@@ -25,7 +25,7 @@ export default function ProductCard({ product, index = 0 }) {
       className="flex flex-col h-full"
     >
       <Link to={`/product/${product.slug}`} data-testid={`product-card-${product.slug}`} className="group block">
-        <div className="relative overflow-hidden bg-ivory-warm rounded-xl aspect-[4/5]">
+        <div className="relative overflow-hidden bg-ivory-warm rounded-xl aspect-square">
           {showImg ? (
             (product.category === "spices" || product.category === "oils") ? (
               <img src={img} alt={product.name} loading={index < 4 ? "eager" : "lazy"} decoding="async"
@@ -50,7 +50,7 @@ export default function ProductCard({ product, index = 0 }) {
             <ArrowUpRight size={17} />
           </div>
         </div>
-        <div className="pt-3 pb-3">
+        <div className="pt-2.5 pb-2.5">
           <h3 className="font-serif text-base sm:text-xl lg:text-2xl text-ink leading-tight">{product.name}</h3>
           {product.pack_sizes?.length > 0 ? (
             <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 tracking-wide">

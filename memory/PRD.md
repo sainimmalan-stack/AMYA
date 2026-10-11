@@ -375,3 +375,7 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - The AMYA Difference: benefit #1 title "Traditional Flavours"→"Traditional Recipes" with line "Familiar Indian flavours for everyday meals." (3 compact items, 3-col desktop / 2-col mobile retained).
 - Our Products supporting line punctuation: "Authentic flavours. Carefully crafted..." → "Authentic flavours, carefully crafted in small batches."
 - NOTE: compact product cards, refined pack-size tiles, Cashew 10kg (₹8,500), consistent aspect-[4/5] image containers, eager-load image fix — all implemented in prior iterations and verified by testing_agent (iteration_13); unchanged here. No price/pack/cart/link changes. Verified on mobile.
+
+## Changelog — 2026-10-11 (Compact product-card image height)
+- ProductCard image container aspect-[4/5] → aspect-square (uniform ~280px on mobile) so images are less dominant and name/price/pack sizes sit within view. Card text padding pt-3/pb-3 → pt-2.5/pb-2.5. Cashew (object-cover) and spice pouches (object-contain) share identical square containers → matching heights + aligned text, no distortion, labels preserved.
+- Verified mobile (390px): image boxes all 280px, no horizontal overflow, name + "From ₹..." + pack sizes visible below image, Add-to-Cart aligned. Pack selectors / Cashew 10kg / cart unchanged (verified earlier). No price/pack/image/data changes.
