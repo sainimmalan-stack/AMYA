@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Eye, MessageSquare, ShieldCheck, MessageCircle, Phone, PackageCheck, Truck } from "lucide-react";
+import { ArrowRight, Eye, MessageSquare, ShieldCheck, MessageCircle, Phone, PackageCheck, Truck, ChefHat, Leaf, Package, Clock } from "lucide-react";
 import { api, waLink, telHref, formatPhoneIN } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { Reveal, MaskedLines } from "@/components/Reveal";
@@ -25,12 +25,17 @@ function Hero() {
               Authentic ingredients · Traditional recipes
             </motion.span>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.0] tracking-tight text-ink">
-              <MaskedLines lines={["Rooted in Tradition.", "Crafted with Care."]} delay={0.15} />
+              <MaskedLines lines={["Tradition You Can Taste.", "Quality You Can Trust."]} delay={0.15} />
             </h1>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
-              className="font-sans text-sm sm:text-lg text-ink-soft max-w-xl mt-3 sm:mt-4 leading-relaxed">
-              Discover authentic Indian flavours through carefully selected spices, traditional recipes, handcrafted sweets and thoughtfully sourced cooking oils. From freshly prepared podis and aromatic spice blends to our signature cashew brittles, every AMYA product reflects our commitment to quality, flavour and care.
-            </motion.p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
+              className="max-w-xl mt-3 sm:mt-4 space-y-2 sm:space-y-3">
+              <p className="font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
+                Discover the authentic flavours of Indian kitchens with AMYA. From our signature cashew brittles and freshly prepared podis to carefully blended spices and thoughtfully sourced cooking oils, every product is created with care.
+              </p>
+              <p className="font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
+                Rooted in traditional recipes and made in small batches, we believe great food starts with good ingredients, honest preparation and flavour worth coming back for.
+              </p>
+            </motion.div>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
               className="mt-5 sm:mt-7 flex flex-col sm:flex-row gap-3">
               <Btn to="/shop" variant="solid" data-testid="hero-shop-btn">
@@ -89,6 +94,13 @@ function OurCollection() {
   );
 }
 
+const AMYA_DIFF = [
+  { icon: ChefHat, t: "Traditional Recipes", d: "Inspired by familiar Indian flavours and time-tested preparation methods." },
+  { icon: Leaf, t: "Carefully Selected Ingredients", d: "Chosen with attention to quality, flavour and aroma." },
+  { icon: Package, t: "Small-Batch Preparation", d: "Made in limited quantities with care." },
+  { icon: Clock, t: "Made Fresh to Order", d: "Prepared against your order, with dispatch typically on Day 3 where applicable." },
+];
+
 const ORDER_STEPS = [
   { icon: MessageCircle, t: "Tap to order", d: "Choose a pack and tap “Order on WhatsApp” — your selection is pre-filled." },
   { icon: PackageCheck, t: "We confirm", d: "We confirm availability and the final amount with you." },
@@ -109,6 +121,26 @@ export default function Home() {
   return (
     <div>
       <Hero />
+
+      {/* The AMYA Difference — compact trust band */}
+      <section className="bg-ivory border-b border-ink/5" data-testid="amya-difference">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-11">
+          <Reveal>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">The AMYA Difference</span>
+          </Reveal>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-6 sm:gap-6 mt-5 sm:mt-6">
+            {AMYA_DIFF.map((f, i) => (
+              <Reveal key={f.t} delay={i * 0.06}>
+                <div className="flex flex-col gap-2">
+                  <f.icon size={20} className="text-terracotta shrink-0" />
+                  <h3 className="font-serif text-base sm:text-lg text-ink leading-tight">{f.t}</h3>
+                  <p className="font-sans text-xs sm:text-sm text-ink-soft leading-relaxed">{f.d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <OurCollection />
 

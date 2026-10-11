@@ -332,3 +332,8 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - Consistent layout per card: image → name (serif, prominent) → pack sizes (small, "250 g · 500 g · 1 kg") → subtle "From ₹X" (min pack price, data-testid from-price-<slug>) → short prep note (order status only) → Add to Cart.
 - Prep note shortened to "Freshly prepared to order · Dispatch on Day 3" (podis + Garam only; Cashew excluded). Removed the "Most popular" promo tag for layout consistency. Coming Soon overlay retained for oils/pickles only.
 - Prices shown subtly on cards as "From ₹…" (not hidden) and remain full on detail pages / pack selector. No product data invented; Chilli/Turmeric (no configured prices) show no From line. No prices/pack/images/descriptions/ordering changed. Verified on mobile.
+
+## Changelog — 2026-10-11 (Hero copy + The AMYA Difference trust section)
+- Hero heading → "Tradition You Can Taste. / Quality You Can Trust." (MaskedLines 2 lines). Description replaced with 2 concise paragraphs (space-y, text-sm/base) to stay compact on mobile. Eyebrow + Explore (solid) / Our Story (outline) buttons unchanged.
+- Added compact "THE AMYA DIFFERENCE" trust band between Hero and products (data-testid amya-difference): 4 points (ChefHat/Leaf/Package/Clock icons) — Traditional Recipes, Carefully Selected Ingredients, Small-Batch Preparation, Made Fresh to Order ("dispatch typically on Day 3 where applicable"). grid-cols-2 mobile / 4 desktop. No invented reviews/awards/claims.
+- Product section (Shop AMYA / Our Products / subtitle) and cards already compliant (status banners removed, names w/o AMYA, weights shown, "From ₹…" price, prep in description, working cart). Verified hero + trust + products on desktop & mobile.
