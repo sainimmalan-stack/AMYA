@@ -787,6 +787,8 @@ async def seed():
     FORCE_IMAGE_SLUGS = {
         "cashew-brittle", "guntur-sannam-chilli-powder", "amya-turmeric-powder",
         "amya-nuvvula-podi", "amya-karivepaku-podi", "amya-nallakaram", "amya-garam-masala",
+        "chicken-pickle", "avakai-pickle", "maagai-pickle",
+        "allam-sweet-pickle", "mutton-pickle", "prawn-pickle",
     }
     # Confirmed pickle pricing (per 250 g / 500 g / 1 kg). Availability stays
     # "coming-soon" until the founder approves enabling checkout.
@@ -810,6 +812,7 @@ async def seed():
                 {"label": "500 g", "price": prices[1]},
                 {"label": "1 kg", "price": prices[2]},
             ]
+            p["images"] = [f"/products/{p['slug']}.jpg?v=1"]
         images = p.pop("images", [])
         # `availability` is admin-managed inventory: set it only on first insert so
         # changes made in the admin panel (e.g. marking stock back in) persist across
