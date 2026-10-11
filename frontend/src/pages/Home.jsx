@@ -8,7 +8,7 @@ import { Reveal, MaskedLines } from "@/components/Reveal";
 import Btn from "@/components/Btn";
 import ProductCard from "@/components/ProductCard";
 
-const HERO_IMG = "/products/amya-hero.jpg";
+const HERO_IMG = "/products/amya-hero.jpg?v=2";
 
 function Hero() {
   const ref = useRef(null);
