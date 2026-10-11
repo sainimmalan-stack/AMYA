@@ -396,3 +396,6 @@ Verified: backend API re-seeded (cashew 500g/1kg only; nuvvula packs=[], dispatc
 - Nuvvula Podi: added 3 selectable pack sizes 250 g / 500 g / 1 kg with price=None (no invented prices). Detail page shows a selectable pack grid (each "Enquire"), quantity hidden, primary action "Enquire on WhatsApp" (wa.me/919675334567). Homepage/shop card shows "250 g · 500 g · 1 kg" + "Enquire for price" + Enquire on WhatsApp button. ProductCard enquire-only display now shows pack labels + "Enquire for price" when packs exist, else "Enquire for price and pack sizes".
 - Karivepaku Podi & Nallakaram Podi: unchanged (250g ₹250 / 500g ₹450 / 1kg ₹800) — confirmed via API.
 - No 10 kg on any non-cashew product. Branding, fonts, images and 2-col mobile layout preserved. Verified via API + DOM extraction + screenshots on desktop & product pages.
+
+## Changelog — 2026-10-11 (Nuvvula pricing confirmed)
+- Nuvvula Podi pack prices set to match Karivepaku exactly: 250 g ₹250, 500 g ₹450, 1 kg ₹800. Now fully orderable (card "From ₹250" + Add to cart; detail pack selector updates total; "Enquire" text removed). Cashew Brittle 10 kg (₹8,500) verified end-to-end in cart (₹8,500/pack, order total ₹8,500). No other product/image/style changes.

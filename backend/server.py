@@ -615,7 +615,7 @@ INITIAL_PRODUCTS = [
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Ingredients, pack sizes and pricing shared on enquiry.",
         "images": ["/products/amya-nuvvula-podi.jpg"],
-        "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
+        "pack_sizes": [{"label": "250 g", "price": 250}, {"label": "500 g", "price": 450}, {"label": "1 kg", "price": 800}],
         "preparation": "",
         "dispatch": "",
         "delivery_details": [],
