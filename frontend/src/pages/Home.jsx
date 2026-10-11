@@ -29,7 +29,7 @@ function Hero() {
             </h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
               className="font-sans text-sm sm:text-base text-ink-soft max-w-xl mt-2.5 sm:mt-3.5 leading-relaxed">
-              Discover AMYA's signature cashew brittles, traditional podis, flavourful spices and thoughtfully selected cooking essentials. Made in small batches and inspired by the flavours of home.
+              Discover AMYA's signature cashew brittles, traditional podis, flavourful spices and thoughtfully selected cooking essentials.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
               className="mt-3 sm:mt-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
@@ -74,7 +74,7 @@ function OurCollection() {
             <div>
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Shop AMYA</span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Our Products</h2>
-              <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 max-w-2xl leading-relaxed">Authentic flavours. Carefully crafted in small batches.</p>
+              <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 max-w-2xl leading-relaxed">Authentic flavours, carefully crafted in small batches.</p>
             </div>
             <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
               View all <ArrowRight size={14} />
@@ -90,7 +90,7 @@ function OurCollection() {
 }
 
 const AMYA_DIFF = [
-  { icon: ChefHat, t: "Traditional Flavours", d: "Familiar Indian recipes made for everyday meals." },
+  { icon: ChefHat, t: "Traditional Recipes", d: "Familiar Indian flavours for everyday meals." },
   { icon: Leaf, t: "Carefully Selected Ingredients", d: "Chosen with attention to flavour, aroma and quality." },
   { icon: Package, t: "Small-Batch Preparation", d: "Prepared in limited quantities with care." },
 ];
