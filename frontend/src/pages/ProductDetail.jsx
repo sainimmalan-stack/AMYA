@@ -122,20 +122,20 @@ export default function ProductDetail() {
           {product.pack_sizes?.length > 0 && (
             <div className="mt-5">
               <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-2">Pack size</p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-wrap gap-2">
                 {product.pack_sizes.map((ps, i) => {
                   const active = i === pack;
                   return (
                     <button key={i} onClick={() => setPack(i)} data-testid={`pack-${i}`}
                             aria-pressed={active}
-                            className={`relative flex flex-col items-center justify-center text-center px-3 py-3.5 border transition-all duration-300 rounded-md ${active ? "border-terracotta bg-terracotta text-ivory" : "border-ink/15 bg-ivory text-ink hover:border-terracotta/60"}`}>
-                      <span className="font-serif text-xl sm:text-2xl leading-none">{ps.label}</span>
+                            className={`flex-1 min-w-[84px] flex flex-col items-center justify-center text-center px-2 py-2 border rounded-lg transition-all duration-200 ${active ? "border-terracotta bg-terracotta text-ivory" : "border-beige bg-ivory-warm text-ink hover:border-terracotta/60"}`}>
+                      <span className="font-serif text-base sm:text-lg leading-none">{ps.label}</span>
                       {ps.price != null ? (
-                        <span className={`font-sans text-lg sm:text-xl font-medium mt-1 whitespace-nowrap ${active ? "text-ivory" : "text-terracotta"}`}>₹{ps.price.toLocaleString("en-IN")}</span>
+                        <span className={`font-sans text-sm sm:text-base font-medium mt-1 leading-none whitespace-nowrap ${active ? "text-ivory" : "text-terracotta"}`}>₹{ps.price.toLocaleString("en-IN")}</span>
                       ) : (
-                        <span className="font-sans text-sm mt-1">Enquire for price</span>
+                        <span className="font-sans text-xs mt-1">Enquire</span>
                       )}
-                      {ps.note && <span className={`font-sans text-[10px] uppercase tracking-[0.16em] mt-1 ${active ? "text-ivory/80" : "text-ink-soft"}`}>{ps.note}</span>}
+                      {ps.note && <span className={`font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.1em] mt-1 leading-none ${active ? "text-ivory/80" : "text-ink-soft"}`}>{ps.note}</span>}
                     </button>
                   );
                 })}

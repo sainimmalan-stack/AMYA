@@ -349,3 +349,8 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - PRE-LAUNCH notice now hidden for orderable products (condition `!checkoutEnabled && !orderable`) — removes conflicting pre-launch messaging on cashew/podi/garam/chilli/turmeric pages; still available for coming-soon.
 - Pack selector unchanged (two-option, terracotta active, 500g ₹500/10pc, 1kg ₹900/20pc). Cart/qty/price calc intact. Verified on mobile: desc, packs, totals (₹500/₹900), microcopy, no pre-launch.
 - NOTE: microcopy "Day 3" is general; cashew Delivery Information block still states Hyderabad same-day / outside 2nd-day (owner's exact wording kept for both).
+
+## Changelog — 2026-10-11 (Compact premium pack selector + Cashew 10kg re-added)
+- ProductDetail pack selector redesigned compact: flex flex-wrap, flex-1 min-w-[84px] equal-width cards in one row (wrap only if needed); reduced padding (py-3.5→py-2) and fonts (label text-xl/2xl→base/lg, price text-lg/xl→sm/base, note →[9px]). Selected = terracotta bg / ivory text; unselected = bg-ivory-warm, border-beige, text-ink. Applied to ALL products via shared component.
+- Cashew Brittle pack_sizes: re-added 10 kg — now 500 g ₹500 (10 pieces), 1 kg ₹900 (20 pieces), 10 kg ₹8,500 (200 pieces). 10kg exists ONLY on cashew; no other product changed. Card "From ₹" stays ₹500 (min). Homepage card weights now "500 g · 1 kg · 10 kg".
+- Verified mobile: cashew 3 options one row, 10kg total ₹8,500; podi 3 options (250/500/1kg) total ₹800, no 10kg. Price/total/cart calculations correct; legible, no clipping.

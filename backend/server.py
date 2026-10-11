@@ -560,6 +560,7 @@ INITIAL_PRODUCTS = [
         "pack_sizes": [
             {"label": "500 g", "price": 500, "note": "10 pieces"},
             {"label": "1 kg", "price": 900, "note": "20 pieces"},
+            {"label": "10 kg", "price": 8500, "note": "200 pieces"},
         ],
         "delivery_details": [
             {"region": "Hyderabad", "text": "Orders can be received on the same day you order, subject to order confirmation and delivery arrangements."},
