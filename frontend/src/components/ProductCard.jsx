@@ -15,11 +15,12 @@ export default function ProductCard({ product, index = 0 }) {
   const img = product.images?.[0];
   const showImg = img && !imgError;
   const comingSoon = product.availability === "coming-soon";
+  const outOfStock = product.availability === "out-of-stock";
   const firstPack = product.pack_sizes?.[0];
   const prices = (product.pack_sizes || []).map((s) => s.price).filter((p) => p != null);
   const fromPrice = prices.length ? Math.min(...prices) : null;
   // Enquire-only: an orderable product with no confirmed pricing yet.
-  const enquireOnly = !comingSoon && fromPrice == null;
+  const enquireOnly = !comingSoon && !outOfStock && fromPrice == null;
   const enquireHref = waLink(WA_NUMBER, `Hello AMYA, I would like to enquire about ${product.name} — please share pack sizes and pricing.`);
 
   return (
@@ -46,7 +47,7 @@ export default function ProductCard({ product, index = 0 }) {
           ) : (
             <div className="h-full w-full flex items-center justify-center font-serif text-6xl text-terracotta/30">AMYA</div>
           )}
-          {product.availability === "coming-soon" && (
+          {["coming-soon", "out-of-stock", "in-stock"].includes(product.availability) && (
             <div className="absolute top-2.5 left-2.5">
               <Availability status={product.availability} />
             </div>
@@ -94,6 +95,13 @@ export default function ProductCard({ product, index = 0 }) {
           className="mt-auto inline-flex items-center justify-center gap-1.5 border border-terracotta/40 text-terracotta-deep py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
         >
           Coming soon
+        </span>
+      ) : outOfStock ? (
+        <span
+          data-testid={`out-of-stock-cta-${product.slug}`}
+          className="mt-auto inline-flex items-center justify-center gap-1.5 border border-ink/20 bg-ink/5 text-ink-soft py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full cursor-not-allowed"
+        >
+          Currently Unavailable
         </span>
       ) : enquireOnly ? (
         <a

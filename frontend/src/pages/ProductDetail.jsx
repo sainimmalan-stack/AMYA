@@ -38,7 +38,8 @@ export default function ProductDetail() {
   if (!product) return <div className="py-40 text-center font-sans text-ink-soft">Loading…</div>;
 
   const selected = product.pack_sizes?.[pack];
-  const orderable = ["ready", "order", "available"].includes(product.availability);
+  const orderable = ["ready", "order", "available", "in-stock"].includes(product.availability);
+  const outOfStock = product.availability === "out-of-stock";
   const total = selected?.price != null ? selected.price * qty : null;
   const hasConfirmedPrice = (product.pack_sizes || []).some((ps) => ps.price != null);
   // Orderable item with no confirmed pricing yet → route to a WhatsApp enquiry instead of the cart.
@@ -67,7 +68,7 @@ export default function ProductDetail() {
               <div className="h-full w-full flex items-center justify-center font-serif text-7xl text-terracotta/25">AMYA</div>
             )}
             {product.diet && <div className="absolute top-4 right-4"><DietMark diet={product.diet} /></div>}
-            {product.availability === "coming-soon" && (
+            {["coming-soon", "out-of-stock", "in-stock"].includes(product.availability) && (
               <div className="absolute top-4 left-4"><Availability status={product.availability} /></div>
             )}
           </motion.div>
@@ -142,7 +143,7 @@ export default function ProductDetail() {
           )}
 
           {/* Quantity + live total */}
-          {!enquireOnly && (
+          {orderable && !enquireOnly && (
             <div className="mt-5 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft">Quantity</p>
@@ -162,7 +163,14 @@ export default function ProductDetail() {
           )}
 
           {/* Primary action */}
-          {!orderable ? (
+          {outOfStock ? (
+            <div
+              data-testid="pd-out-of-stock"
+              className="mt-5 w-full inline-flex items-center justify-center gap-2 border border-ink/20 bg-ink/5 text-ink-soft py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full cursor-not-allowed"
+            >
+              Currently Unavailable
+            </div>
+          ) : !orderable ? (
             <div
               data-testid="pd-coming-soon"
               className="mt-5 w-full inline-flex items-center justify-center gap-2 border border-terracotta/40 text-terracotta-deep py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full"
@@ -202,8 +210,18 @@ export default function ProductDetail() {
             </Btn>
           </div>
 
+          {/* Out-of-stock restock notice */}
+          {outOfStock && (
+            <div className="mt-5 border border-ink/15 bg-ivory-warm/50 px-4 py-3" data-testid="pd-out-of-stock-note">
+              <p className="font-sans text-[11px] uppercase tracking-[0.15em] text-ink-soft">Out of stock</p>
+              <p className="font-sans text-sm text-ink-soft mt-1">
+                This product is currently unavailable. Message us on WhatsApp or call and we'll let you know as soon as it's back in stock.
+              </p>
+            </div>
+          )}
+
           {/* Pre-launch notice — only for products not yet open for ordering */}
-          {!checkoutEnabled && !orderable && (
+          {!checkoutEnabled && !orderable && !outOfStock && (
             <div className="mt-5 border border-ink/15 bg-ivory-warm/50 px-4 py-3" data-testid="pd-prelaunch">
               <p className="font-sans text-[11px] uppercase tracking-[0.15em] text-ink-soft">Pre-launch</p>
               <p className="font-sans text-sm text-ink-soft mt-1">

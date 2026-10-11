@@ -699,7 +699,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 11,
+        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 11,
     },
     {
         "slug": "maagai-pickle", "name": "Maagai Pickle", "category": "pickles",
@@ -709,7 +709,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 12,
+        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 12,
     },
     {
         "slug": "allam-sweet-pickle", "name": "Allam Sweet Pickle", "category": "pickles",
@@ -719,7 +719,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 13,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 13,
     },
     {
         "slug": "chicken-pickle", "name": "Chicken Pickle", "category": "pickles",
@@ -729,7 +729,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 14,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 14,
     },
     {
         "slug": "mutton-pickle", "name": "Mutton Pickle", "category": "pickles",
@@ -739,7 +739,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 15,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 15,
     },
     {
         "slug": "prawn-pickle", "name": "Prawn Pickle", "category": "pickles",
@@ -749,7 +749,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "coming-soon", "live_press": False, "featured": False, "sort_order": 16,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 16,
     },
 ]
 
@@ -811,8 +811,12 @@ async def seed():
                 {"label": "1 kg", "price": prices[2]},
             ]
         images = p.pop("images", [])
+        # `availability` is admin-managed inventory: set it only on first insert so
+        # changes made in the admin panel (e.g. marking stock back in) persist across
+        # restarts/redeploys. A one-time migration below sets the initial statuses.
+        avail = p.pop("availability", "coming-soon")
         set_fields = dict(p)
-        on_insert = {"created_at": now_iso()}
+        on_insert = {"created_at": now_iso(), "availability": avail}
         if p["slug"] in FORCE_IMAGE_SLUGS:
             set_fields["images"] = images
         else:
@@ -826,6 +830,20 @@ async def seed():
     valid_slugs = [p["slug"] for p in INITIAL_PRODUCTS]
     await db.products.delete_many({"slug": {"$nin": valid_slugs}})
     logger.info("Upserted %d products", len(INITIAL_PRODUCTS))
+
+    # One-time migration: apply the confirmed initial pickle stock statuses to
+    # existing databases (preview & production). Runs once per DB; afterwards the
+    # admin panel fully controls these statuses.
+    if not await db.migrations.find_one({"_id": "pickle_stock_v1"}):
+        pickle_status = {
+            "chicken-pickle": "in-stock", "allam-sweet-pickle": "in-stock",
+            "mutton-pickle": "in-stock", "prawn-pickle": "in-stock",
+            "avakai-pickle": "out-of-stock", "maagai-pickle": "out-of-stock",
+        }
+        for slug, st in pickle_status.items():
+            await db.products.update_one({"slug": slug}, {"$set": {"availability": st}})
+        await db.migrations.insert_one({"_id": "pickle_stock_v1"})
+        logger.info("Applied pickle_stock_v1 migration")
 
     existing_settings = await db.settings.find_one({"_id": "site"})
     if not existing_settings:
