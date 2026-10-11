@@ -8,7 +8,7 @@ import { Reveal, MaskedLines } from "@/components/Reveal";
 import Btn from "@/components/Btn";
 import ProductCard from "@/components/ProductCard";
 
-const HERO_IMG = "https://images.unsplash.com/photo-1643067077447-78239a403a18?crop=entropy&cs=srgb&fm=jpg&q=85&w=1400";
+const HERO_IMG = "/products/amya-hero.jpg";
 
 function Hero() {
   const ref = useRef(null);
@@ -46,7 +46,7 @@ function Hero() {
           <div className="hidden lg:block lg:col-span-5">
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.25, duration: 0.9 }}
               className="relative aspect-[4/5] overflow-hidden rounded-t-[110px] border border-ink/10 bg-ivory">
-              <motion.img src={HERO_IMG} alt="AMYA Indian spices" style={{ y }} className="h-full w-full object-cover" />
+              <motion.img src={HERO_IMG} alt="AMYA cashew brittle gold gift box with bowls of podi and spices" style={{ y }} className="h-full w-full object-cover" />
             </motion.div>
           </div>
         </div>

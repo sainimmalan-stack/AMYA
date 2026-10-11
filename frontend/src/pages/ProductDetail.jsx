@@ -118,22 +118,22 @@ export default function ProductDetail() {
 
           {/* Pack sizes */}
           {product.pack_sizes?.length > 0 && (
-            <div className="mt-4">
-              <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-2">Pack size</p>
-              <div className="flex flex-wrap gap-2">
+            <div className="mt-5">
+              <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-2.5">Pack size</p>
+              <div className="grid gap-2 sm:gap-2.5 [grid-template-columns:repeat(auto-fit,minmax(88px,1fr))]">
                 {product.pack_sizes.map((ps, i) => {
                   const active = i === pack;
                   return (
                     <button key={i} onClick={() => setPack(i)} data-testid={`pack-${i}`}
                             aria-pressed={active}
-                            className={`flex-1 min-w-[84px] flex flex-col items-center justify-center text-center px-2 py-2 border rounded-lg transition-all duration-200 ${active ? "border-terracotta bg-terracotta text-ivory" : "border-beige bg-ivory-warm text-ink hover:border-terracotta/60"}`}>
-                      <span className="font-serif text-base sm:text-lg leading-none">{ps.label}</span>
+                            className={`flex flex-col items-center justify-center gap-1.5 px-2 py-3.5 border rounded-xl transition-all duration-200 ${active ? "border-terracotta bg-terracotta text-ivory shadow-sm" : "border-beige bg-ivory-warm text-ink hover:border-terracotta/60"}`}>
+                      <span className="font-sans text-[15px] sm:text-base font-semibold leading-none">{ps.label}</span>
                       {ps.price != null ? (
-                        <span className={`font-sans text-sm sm:text-base font-medium mt-1 leading-none whitespace-nowrap ${active ? "text-ivory" : "text-terracotta"}`}>₹{ps.price.toLocaleString("en-IN")}</span>
+                        <span className={`font-sans text-lg sm:text-xl font-bold tabular-nums leading-none ${active ? "text-ivory" : "text-terracotta"}`}>₹{ps.price.toLocaleString("en-IN")}</span>
                       ) : (
-                        <span className="font-sans text-xs mt-1">Enquire</span>
+                        <span className="font-sans text-sm font-semibold leading-none">Enquire</span>
                       )}
-                      {ps.note && <span className={`font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.1em] mt-1 leading-none ${active ? "text-ivory/80" : "text-ink-soft"}`}>{ps.note}</span>}
+                      <span className={`font-sans text-[10px] font-medium uppercase tracking-[0.08em] leading-none min-h-[11px] ${active ? "text-ivory/75" : "text-ink-soft"}`}>{ps.note || ""}</span>
                     </button>
                   );
                 })}
@@ -148,14 +148,14 @@ export default function ProductDetail() {
                 <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft">Quantity</p>
                 <div className="inline-flex items-center border border-ink/20 rounded-md overflow-hidden">
                   <button onClick={() => setQty((q) => Math.max(1, q - 1))} data-testid="qty-minus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Minus size={15} /></button>
-                  <span data-testid="qty-value" className="w-10 text-center font-sans">{qty}</span>
+                  <span data-testid="qty-value" className="w-10 text-center font-sans text-base font-semibold tabular-nums">{qty}</span>
                   <button onClick={() => setQty((q) => q + 1)} data-testid="qty-plus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Plus size={15} /></button>
                 </div>
               </div>
               {orderable && total != null && (
                 <div className="text-right">
                   <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">Total</p>
-                  <p data-testid="pd-total" className="font-serif text-2xl text-terracotta leading-none mt-0.5">₹{total.toLocaleString("en-IN")}</p>
+                  <p data-testid="pd-total" className="font-sans text-2xl font-bold text-terracotta tabular-nums leading-none mt-1">₹{total.toLocaleString("en-IN")}</p>
                 </div>
               )}
             </div>
