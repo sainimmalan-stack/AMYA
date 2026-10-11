@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Eye, MessageSquare, ShieldCheck, MessageCircle, Phone, PackageCheck, Truck, ChefHat, Leaf, Package, Clock } from "lucide-react";
+import { ArrowRight, Eye, MessageSquare, ShieldCheck, MessageCircle, Phone, PackageCheck, Truck, ChefHat, Leaf, Package } from "lucide-react";
 import { api, waLink, telHref, formatPhoneIN } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { Reveal, MaskedLines } from "@/components/Reveal";
@@ -18,30 +18,25 @@ function Hero() {
 
   return (
     <section ref={ref} className="relative bg-ivory-warm text-ink overflow-hidden border-b border-ink/10">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-4 pb-5 lg:pt-16 lg:pb-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-3 pb-4 lg:pt-14 lg:pb-14 relative z-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
-              className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta block mb-4">
-              Authentic ingredients · Traditional recipes
+              className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta block mb-3">
+              Authentic Indian flavours · Made with care
             </motion.span>
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.0] tracking-tight text-ink">
-              <MaskedLines lines={["Tradition You Can Taste.", "Quality You Can Trust."]} delay={0.15} />
+            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-ink">
+              <MaskedLines lines={["Tradition You Can Taste."]} delay={0.15} />
             </h1>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
-              className="max-w-xl mt-3 sm:mt-4 space-y-2 sm:space-y-3">
-              <p className="font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
-                Discover the flavours of India with AMYA — from signature cashew brittles and traditional podis to carefully blended spices and thoughtfully sourced cooking oils.
-              </p>
-              <p className="font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
-                Made in small batches with carefully selected ingredients, every AMYA product brings traditional flavours to your table.
-              </p>
-            </motion.div>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
+              className="font-sans text-sm sm:text-base text-ink-soft max-w-xl mt-3 sm:mt-4 leading-relaxed">
+              Discover AMYA's signature cashew brittles, traditional podis, flavourful spices and thoughtfully selected cooking essentials. Made in small batches and inspired by the flavours of home.
+            </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
-              className="mt-4 sm:mt-7 flex flex-col sm:flex-row gap-3">
+              className="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
               <Btn to="/shop" variant="solid" data-testid="hero-shop-btn">
-                Explore Our Collection <ArrowRight size={15} />
+                Shop Our Collection <ArrowRight size={15} />
               </Btn>
-              <Btn to="/our-story" variant="outline" data-testid="hero-story-btn">
+              <Btn to="/our-story" variant="subtle" data-testid="hero-story-btn">
                 Our Story
               </Btn>
             </motion.div>
@@ -73,13 +68,13 @@ function OurCollection() {
 
   return (
     <section id="collection" className="bg-ivory" data-testid="shop-products-section">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-5 pb-6 sm:py-11 lg:py-14">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 pb-6 sm:py-10 lg:py-12">
         <Reveal>
-          <div className="flex items-end justify-between mb-6 sm:mb-8">
+          <div className="flex items-end justify-between mb-4 sm:mb-6">
             <div>
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Shop AMYA</span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Our Products</h2>
-              <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">Authentic flavours. Carefully crafted in small batches.</p>
+              <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 max-w-2xl leading-relaxed">Authentic flavours. Carefully crafted in small batches.</p>
             </div>
             <Link to="/shop" className="link-underline hidden sm:inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink" data-testid="collection-viewall">
               View all <ArrowRight size={14} />
@@ -95,10 +90,9 @@ function OurCollection() {
 }
 
 const AMYA_DIFF = [
-  { icon: ChefHat, t: "Traditional Recipes", d: "Familiar Indian flavours inspired by tradition." },
-  { icon: Leaf, t: "Selected Ingredients", d: "Chosen for flavour, aroma and quality." },
+  { icon: ChefHat, t: "Traditional Flavours", d: "Familiar Indian recipes made for everyday meals." },
+  { icon: Leaf, t: "Carefully Selected Ingredients", d: "Chosen with attention to flavour, aroma and quality." },
   { icon: Package, t: "Small-Batch Preparation", d: "Prepared in limited quantities with care." },
-  { icon: Clock, t: "Made Fresh to Order", d: "Prepared to order, with dispatch typically on Day 3 where applicable." },
 ];
 
 const ORDER_STEPS = [
@@ -124,14 +118,14 @@ export default function Home() {
 
       {/* The AMYA Difference — compact trust band */}
       <section className="bg-ivory border-b border-ink/5" data-testid="amya-difference">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-7 sm:py-11">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-6 sm:py-9">
           <Reveal>
             <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">The AMYA Difference</span>
           </Reveal>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-6 sm:gap-6 mt-5 sm:mt-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-5 sm:gap-6 mt-4 sm:mt-6">
             {AMYA_DIFF.map((f, i) => (
               <Reveal key={f.t} delay={i * 0.06}>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1.5">
                   <f.icon size={20} className="text-terracotta shrink-0" />
                   <h3 className="font-serif text-base sm:text-lg text-ink leading-tight">{f.t}</h3>
                   <p className="font-sans text-xs sm:text-sm text-ink-soft leading-relaxed">{f.d}</p>

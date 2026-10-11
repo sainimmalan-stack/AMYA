@@ -7,6 +7,7 @@ const variants = {
   solidIvory: "bg-ivory text-terracotta hover:bg-ivory-warm",
   outline: "border border-ink/25 text-ink hover:bg-terracotta hover:text-ivory hover:border-terracotta",
   outlineIvory: "border border-ivory/50 text-ivory hover:bg-ivory hover:text-terracotta",
+  subtle: "text-ink-soft hover:text-terracotta",
 };
 
 export default function Btn({ as = "link", to, href, variant = "solid", className = "", children, ...props }) {
