@@ -18,7 +18,7 @@ function Hero() {
 
   return (
     <section ref={ref} className="relative bg-ivory-warm text-ink overflow-hidden border-b border-ink/10">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 pb-6 lg:pt-16 lg:pb-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-4 pb-5 lg:pt-16 lg:pb-16 relative z-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
               className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta block mb-4">
@@ -30,14 +30,14 @@ function Hero() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
               className="max-w-xl mt-3 sm:mt-4 space-y-2 sm:space-y-3">
               <p className="font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
-                Discover the authentic flavours of Indian kitchens with AMYA. From our signature cashew brittles and freshly prepared podis to carefully blended spices and thoughtfully sourced cooking oils, every product is created with care.
+                Discover the flavours of India with AMYA — from signature cashew brittles and traditional podis to carefully blended spices and thoughtfully sourced cooking oils.
               </p>
               <p className="font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
-                Rooted in traditional recipes and made in small batches, we believe great food starts with good ingredients, honest preparation and flavour worth coming back for.
+                Made in small batches with carefully selected ingredients, every AMYA product brings traditional flavours to your table.
               </p>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
-              className="mt-5 sm:mt-7 flex flex-col sm:flex-row gap-3">
+              className="mt-4 sm:mt-7 flex flex-col sm:flex-row gap-3">
               <Btn to="/shop" variant="solid" data-testid="hero-shop-btn">
                 Explore Our Collection <ArrowRight size={15} />
               </Btn>
@@ -95,10 +95,10 @@ function OurCollection() {
 }
 
 const AMYA_DIFF = [
-  { icon: ChefHat, t: "Traditional Recipes", d: "Inspired by familiar Indian flavours and time-tested preparation methods." },
-  { icon: Leaf, t: "Carefully Selected Ingredients", d: "Chosen with attention to quality, flavour and aroma." },
-  { icon: Package, t: "Small-Batch Preparation", d: "Made in limited quantities with care." },
-  { icon: Clock, t: "Made Fresh to Order", d: "Prepared against your order, with dispatch typically on Day 3 where applicable." },
+  { icon: ChefHat, t: "Traditional Recipes", d: "Familiar Indian flavours inspired by tradition." },
+  { icon: Leaf, t: "Selected Ingredients", d: "Chosen for flavour, aroma and quality." },
+  { icon: Package, t: "Small-Batch Preparation", d: "Prepared in limited quantities with care." },
+  { icon: Clock, t: "Made Fresh to Order", d: "Prepared to order, with dispatch typically on Day 3 where applicable." },
 ];
 
 const ORDER_STEPS = [
@@ -124,7 +124,7 @@ export default function Home() {
 
       {/* The AMYA Difference — compact trust band */}
       <section className="bg-ivory border-b border-ink/5" data-testid="amya-difference">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 sm:py-11">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-7 sm:py-11">
           <Reveal>
             <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">The AMYA Difference</span>
           </Reveal>
