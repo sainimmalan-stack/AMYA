@@ -420,3 +420,8 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 
 ## Changelog — 2026-10-11 (Our Story founder line refinement)
 - OurStory.jsx: changed the founder eyebrow from "Amulya Nimmala · M.Tech" (uppercase, tracking-[0.3em]) to a refined "Founded by Amulya Nimmala" — font-sans text-sm/15px, tracking-wide (subtle), muted terracotta, normal case, smaller than the "A simple goal." heading (heading mt tightened to mt-3 for connection). Removed M.Tech. Heading and story paragraphs unchanged; no other site changes.
+
+## Changelog — 2026-10-11 (Real product photographs replaced)
+- Replaced the six products' images with the founder's REAL original photographs from uploaded Amya.zip (matched 1:1 by on-pack AMYA labels): cashew-brittle (gold gift boxes 500g/1kg), guntur-sannam-chilli-powder, amya-turmeric-powder, amya-nuvvula-podi, amya-karivepaku-podi, amya-nallakaram.
+- Converted PNG→optimised progressive JPG (cap 1400px, q88) into /app/frontend/public/products/ (overwriting the 5 spice/podi files; cashew now local at /products/cashew-brittle.jpg). Updated server.py seed image paths (?v=3 cache-bust) AND updated existing MongoDB docs directly (images use $setOnInsert so reseed alone wouldn't update them).
+- No display-logic changes needed: spice/podi square photos render full via existing object-contain (no crop of AMYA label); cashew landscape via object-cover (both boxes/labels visible). Verified 0 broken images on shop grid, detail page (turmeric) and mobile homepage. Prices, pack sizes, cart, enquiry/WhatsApp/call, branding, logo all unchanged. Garam Masala photo was also in the zip but left untouched (not in the requested six). Uploaded source files preserved in /tmp/amya_zip.
