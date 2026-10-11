@@ -11,6 +11,8 @@ export default function ProductCard({ product, index = 0 }) {
   const comingSoon = product.availability === "coming-soon";
   const orderable = ["ready", "order", "available"].includes(product.availability);
   const firstPack = product.pack_sizes?.[0];
+  const prices = (product.pack_sizes || []).map((s) => s.price).filter((p) => p != null);
+  const fromPrice = prices.length ? Math.min(...prices) : null;
 
   return (
     <motion.div
@@ -24,7 +26,7 @@ export default function ProductCard({ product, index = 0 }) {
           {img ? (
             (product.category === "spices" || product.category === "oils") ? (
               <img src={img} alt={product.name} loading="lazy"
-                   className="h-full w-full object-contain object-center p-4 sm:p-6" />
+                   className="h-full w-full object-contain object-center p-2.5 sm:p-3" />
             ) : (
               <img src={img} alt={product.name} loading="lazy"
                    className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105" />
@@ -44,23 +46,23 @@ export default function ProductCard({ product, index = 0 }) {
           </div>
         </div>
         <div className="pt-3 pb-3">
-          {product.slug === "cashew-brittle" && (
-            <span data-testid="most-popular-tag" className="inline-flex items-center gap-1.5 mb-1 font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-gold">
-              <span className="h-1 w-1 rounded-full bg-gold" /> Most popular
-            </span>
-          )}
           <h3 className="font-serif text-base sm:text-xl lg:text-2xl text-ink leading-tight">{product.name}</h3>
           {product.pack_sizes?.length > 0 ? (
-            <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1 tracking-wide">
+            <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 tracking-wide">
               {product.pack_sizes.map((s) => s.label).join(" · ")}
             </p>
           ) : (
             product.short_description && (
-              <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1 line-clamp-2">{product.short_description}</p>
+              <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 line-clamp-2">{product.short_description}</p>
             )
           )}
+          {fromPrice != null && (
+            <p className="font-sans text-[11px] sm:text-xs text-terracotta-deep font-medium mt-1" data-testid={`from-price-${product.slug}`}>
+              From ₹{fromPrice.toLocaleString("en-IN")}
+            </p>
+          )}
           {product.availability === "order" && (
-            <p className="font-sans text-[10px] sm:text-[11px] text-ink-soft/90 mt-1.5 leading-snug">Prepared fresh against your order · Dispatch on Day 3.</p>
+            <p className="font-sans text-[10px] sm:text-[11px] text-ink-soft/90 mt-1.5 leading-snug">Freshly prepared to order · Dispatch on Day 3</p>
           )}
         </div>
       </Link>

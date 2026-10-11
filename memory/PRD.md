@@ -326,3 +326,9 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 
 ## Changelog — 2026-10-11 (Hide prices on product cards)
 - ProductCard pack-size line now renders labels only (e.g. "250 g · 500 g · 1 kg"; cashew "500 g · 1 kg") — removed ₹/prices from cards. Shared component → applies on homepage + collection consistently. Prices still shown on ProductDetail pack-size selector + totals (unchanged). No DB/price/pack/image/description/cart changes. Verified on mobile (no ₹ in card section).
+
+## Changelog — 2026-10-11 (Product card premium redesign)
+- ProductCard refined for a consistent premium look: reduced packshot padding (p-4/p-6 → p-2.5/p-3) to cut empty space while keeping full image + AMYA label (object-contain, no crop). Uniform aspect-[4/5] rounded-xl containers retained.
+- Consistent layout per card: image → name (serif, prominent) → pack sizes (small, "250 g · 500 g · 1 kg") → subtle "From ₹X" (min pack price, data-testid from-price-<slug>) → short prep note (order status only) → Add to Cart.
+- Prep note shortened to "Freshly prepared to order · Dispatch on Day 3" (podis + Garam only; Cashew excluded). Removed the "Most popular" promo tag for layout consistency. Coming Soon overlay retained for oils/pickles only.
+- Prices shown subtly on cards as "From ₹…" (not hidden) and remain full on detail pages / pack selector. No product data invented; Chilli/Turmeric (no configured prices) show no From line. No prices/pack/images/descriptions/ordering changed. Verified on mobile.
