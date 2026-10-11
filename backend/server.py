@@ -782,6 +782,12 @@ async def seed():
     # — preview and production — always carries the full, latest product set.
     # `images` is only set on first insert so genuine photos uploaded later
     # (e.g. via admin) are never overwritten on restart/redeploy.
+    # Exception: the products below ship with the founder's real product
+    # photographs, so their images are force-synced on every deploy.
+    FORCE_IMAGE_SLUGS = {
+        "cashew-brittle", "guntur-sannam-chilli-powder", "amya-turmeric-powder",
+        "amya-nuvvula-podi", "amya-karivepaku-podi", "amya-nallakaram",
+    }
     for p in INITIAL_PRODUCTS:
         p = dict(p)
         # Standard pack-size options by category (fixed set for coming-soon ranges).
@@ -790,9 +796,15 @@ async def seed():
         elif p.get("category") == "pickles":
             p["pack_sizes"] = [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}]
         images = p.pop("images", [])
+        set_fields = dict(p)
+        on_insert = {"created_at": now_iso()}
+        if p["slug"] in FORCE_IMAGE_SLUGS:
+            set_fields["images"] = images
+        else:
+            on_insert["images"] = images
         await db.products.update_one(
             {"slug": p["slug"]},
-            {"$set": p, "$setOnInsert": {"created_at": now_iso(), "images": images}},
+            {"$set": set_fields, "$setOnInsert": on_insert},
             upsert=True,
         )
     # Remove obsolete products that are no longer in the catalog.
