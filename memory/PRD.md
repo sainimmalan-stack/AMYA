@@ -417,3 +417,6 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 
 ## Changelog — 2026-10-11 (Hero image v2 — real products)
 - Replaced the homepage hero image again per feedback: removed the gold gift-box composition (looked empty/artificial). New AI-generated premium editorial portrait shows a bowl of cashew brittle (caramelised jaggery + visible whole cashews) with small terracotta bowls of Guntur chilli powder, turmeric and roasted podi, on warm walnut wood with ivory/terracotta backdrop. No boxes, no labels/logos, no loose cashews on powders, no unrelated props. Overwrote /app/frontend/public/products/amya-hero.jpg; HERO_IMG = "/products/amya-hero.jpg?v=2" (cache-bust). Desktop-only hero image; layout/headline/buttons/nav unchanged. Verified on desktop (1280) — crops correctly in the 4:5 container.
+
+## Changelog — 2026-10-11 (Our Story founder line refinement)
+- OurStory.jsx: changed the founder eyebrow from "Amulya Nimmala · M.Tech" (uppercase, tracking-[0.3em]) to a refined "Founded by Amulya Nimmala" — font-sans text-sm/15px, tracking-wide (subtle), muted terracotta, normal case, smaller than the "A simple goal." heading (heading mt tightened to mt-3 for connection). Removed M.Tech. Heading and story paragraphs unchanged; no other site changes.

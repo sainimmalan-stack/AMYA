@@ -25,8 +25,8 @@ export default function OurStory() {
           </div>
         </Reveal>
         <Reveal delay={0.1}>
-          <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Amulya Nimmala · M.Tech</span>
-          <h2 className="font-serif text-4xl sm:text-5xl tracking-tight mt-5 leading-tight">A simple goal.</h2>
+          <span className="block font-sans text-sm sm:text-[15px] tracking-wide text-terracotta">Founded by Amulya Nimmala</span>
+          <h2 className="font-serif text-4xl sm:text-5xl tracking-tight mt-3 leading-tight">A simple goal.</h2>
           <p className="font-sans text-base text-ink-soft mt-6 leading-relaxed">
             The goal is simple: help customers understand what they buy and how it is prepared. AMYA begins with a
             very limited selection of homemade food products — handcrafted in small batches using carefully chosen
