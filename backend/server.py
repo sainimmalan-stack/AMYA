@@ -17,6 +17,7 @@ import bcrypt
 import jwt
 import re
 import secrets
+import json
 from urllib.parse import urlparse
 from pydantic import EmailStr
 from fastapi import Query
@@ -326,6 +327,14 @@ class OrderCreate(BaseModel):
     delivery_address: str
     items: List[OrderItemIn]
     client_ref: Optional[str] = None
+    payment_method: str = "cod"  # cod | razorpay
+
+
+class RazorpayVerify(BaseModel):
+    order_number: str
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
 
 
 class OrderStatusUpdate(BaseModel):
@@ -333,6 +342,17 @@ class OrderStatusUpdate(BaseModel):
     order_status: Optional[str] = None
     preparation_status: Optional[str] = None
     dispatch_status: Optional[str] = None
+    tracking_reference: Optional[str] = None
+    courier_name: Optional[str] = None
+    cancellation_reason: Optional[str] = None
+    note: Optional[str] = None
+
+
+# Order lifecycle (single source of truth) and payment states
+ORDER_STATUSES = ["placed", "confirmed", "preparing", "ready_to_dispatch", "shipped", "delivered", "cancelled"]
+# COD: cod_pending -> cod_collected ; Online: pending -> paid / failed ; Refund: refund_processing -> refunded
+PAYMENT_STATUSES = ["cod_pending", "cod_collected", "pending", "paid", "failed", "refund_processing", "refunded"]
+BUSINESS_FALLBACK_EMAIL = "Contactamyafoods@gmail.com"
 
 
 # ---------------------------------------------------------------------------
@@ -959,6 +979,19 @@ async def on_startup():
 # ---------------------------------------------------------------------------
 # Orders + PDF invoices
 # ---------------------------------------------------------------------------
+import razorpay as _razorpay_sdk
+
+RZP_KEY_ID = os.environ.get("RAZORPAY_KEY_ID", "")
+RZP_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET", "")
+RZP_WEBHOOK_SECRET = os.environ.get("RAZORPAY_WEBHOOK_SECRET", "")
+
+
+def _razorpay_client():
+    if not (RZP_KEY_ID and RZP_KEY_SECRET):
+        return None
+    return _razorpay_sdk.Client(auth=(RZP_KEY_ID, RZP_KEY_SECRET))
+
+
 async def _settings_dict() -> dict:
     s = await db.settings.find_one({"_id": "site"})
     if not s:
@@ -1039,8 +1072,13 @@ async def _build_order_doc(payload: OrderCreate, request: Request) -> dict:
         "items": items,
         "subtotal": subtotal, "delivery_charge": delivery_charge, "discount": discount,
         "gst_amount": gst_amount, "total": total, "total_pending": any_unpriced,
-        "payment_method": "cod", "payment_status": "cod_pending",
+        "payment_method": "razorpay" if payload.payment_method == "razorpay" else "cod",
+        "payment_status": "pending" if payload.payment_method == "razorpay" else "cod_pending",
+        "razorpay_order_id": None,
+        "razorpay_payment_id": None,
         "order_status": "placed", "preparation_status": "pending", "dispatch_status": "not_dispatched",
+        "tracking_reference": "", "courier_name": "", "cancellation_reason": "",
+        "status_history": [],
         "download_token": secrets.token_urlsafe(24),
         "invoice_generated": True,
         "site_origin": _site_origin(request),
@@ -1064,13 +1102,36 @@ async def create_order(payload: OrderCreate, request: Request):
         if existing:
             return _public_order(existing)
     doc = await _build_order_doc(payload, request)
+
+    # Online payment: create a Razorpay order (amount in paise) before persisting
+    rzp_out = {}
+    if payload.payment_method == "razorpay":
+        client = _razorpay_client()
+        if not client:
+            raise HTTPException(status_code=503, detail="Online payment is not configured. Please choose Cash on Delivery.")
+        if doc.get("total_pending") or doc.get("total") is None or doc["total"] <= 0:
+            raise HTTPException(status_code=400, detail="This order needs price confirmation and can't be paid online yet. Please choose Cash on Delivery.")
+        rz = client.order.create({
+            "amount": int(round(doc["total"] * 100)),
+            "currency": "INR",
+            "payment_capture": 1,
+            "receipt": doc["order_number"][:40],
+        })
+        doc["razorpay_order_id"] = rz["id"]
+        rzp_out = {"razorpay_order_id": rz["id"], "razorpay_key_id": RZP_KEY_ID,
+                   "amount": rz["amount"], "currency": "INR"}
+
     await db.orders.insert_one(dict(doc))
+    out = _public_order(doc)
+    out.update(rzp_out)
 
     # Best-effort notifications (customer + business). Never block the order.
+    # For online payment, confirmation emails are sent after payment is verified.
+    send_now = payload.payment_method != "razorpay"
     invoice_url = f"{doc['site_origin']}/api/orders/{doc['order_number']}/invoice?token={doc['download_token']}"
     admin_url = f"{doc['site_origin']}/admin"
     logs = []
-    if doc["customer"]["email"]:
+    if send_now and doc["customer"]["email"]:
         res = await emailer.send_email(
             to=doc["customer"]["email"],
             subject=f"Your AMYA order {doc['order_number']} is confirmed",
@@ -1078,8 +1139,8 @@ async def create_order(payload: OrderCreate, request: Request):
         logs.append({"type": "customer_email", "to": doc["customer"]["email"],
                      "ok": res.get("ok"), "detail": res.get("id") or res.get("error"), "at": now_iso()})
     cfg = await _settings_dict()
-    biz_email = cfg.get("business_notify_email")
-    if biz_email:
+    biz_email = cfg.get("business_notify_email") or BUSINESS_FALLBACK_EMAIL
+    if send_now and biz_email:
         res = await emailer.send_email(
             to=biz_email, subject=f"New AMYA order {doc['order_number']} — {doc['customer']['name']}",
             html=emailer.business_email_html(doc, admin_url))
@@ -1089,7 +1150,7 @@ async def create_order(payload: OrderCreate, request: Request):
         await db.orders.update_one({"order_number": doc["order_number"]},
                                    {"$push": {"notifications": {"$each": logs}}})
         doc["notifications"] = logs
-    return _public_order(doc)
+    return out
 
 
 @api.get("/orders/{order_number}")
@@ -1114,26 +1175,174 @@ async def download_invoice(order_number: str, token: str = Query(...)):
     return _invoice_response(doc, await _settings_dict())
 
 
+@api.get("/payments/razorpay/config")
+async def razorpay_config():
+    return {"enabled": bool(RZP_KEY_ID and RZP_KEY_SECRET), "key_id": RZP_KEY_ID}
+
+
+async def _send_order_emails(doc: dict):
+    logs = []
+    invoice_url = f"{doc.get('site_origin') or 'https://amyafoods.in'}/api/orders/{doc['order_number']}/invoice?token={doc['download_token']}"
+    admin_url = f"{doc.get('site_origin') or 'https://amyafoods.in'}/admin"
+    if doc["customer"].get("email"):
+        res = await emailer.send_email(to=doc["customer"]["email"],
+            subject=f"Your AMYA order {doc['order_number']} is confirmed",
+            html=emailer.customer_email_html(doc, invoice_url))
+        logs.append({"type": "customer_email", "to": doc["customer"]["email"], "ok": res.get("ok"),
+                     "detail": res.get("id") or res.get("error"), "at": now_iso()})
+    cfg = await _settings_dict()
+    biz_email = cfg.get("business_notify_email") or BUSINESS_FALLBACK_EMAIL
+    if biz_email:
+        res = await emailer.send_email(to=biz_email,
+            subject=f"New AMYA order {doc['order_number']} — {doc['customer']['name']}",
+            html=emailer.business_email_html(doc, admin_url))
+        logs.append({"type": "business_email", "to": biz_email, "ok": res.get("ok"),
+                     "detail": res.get("id") or res.get("error"), "at": now_iso()})
+    if logs:
+        await db.orders.update_one({"order_number": doc["order_number"]}, {"$push": {"notifications": {"$each": logs}}})
+
+
+@api.post("/payments/razorpay/verify")
+async def razorpay_verify(payload: RazorpayVerify):
+    client = _razorpay_client()
+    if not client:
+        raise HTTPException(status_code=503, detail="Online payment not configured")
+    doc = await db.orders.find_one({"order_number": payload.order_number})
+    if not doc or doc.get("razorpay_order_id") != payload.razorpay_order_id:
+        raise HTTPException(status_code=404, detail="Order not found")
+    try:
+        client.utility.verify_payment_signature({
+            "razorpay_order_id": payload.razorpay_order_id,
+            "razorpay_payment_id": payload.razorpay_payment_id,
+            "razorpay_signature": payload.razorpay_signature,
+        })
+    except Exception:
+        raise HTTPException(status_code=400, detail="Payment verification failed")
+    if doc.get("payment_status") != "paid":
+        await db.orders.update_one({"order_number": payload.order_number}, {"$set": {
+            "payment_status": "paid", "razorpay_payment_id": payload.razorpay_payment_id,
+            "order_status": "confirmed"}})
+        doc = await db.orders.find_one({"order_number": payload.order_number})
+        await _send_order_emails(doc)
+    return {"ok": True}
+
+
+@api.post("/payments/razorpay/webhook")
+async def razorpay_webhook(request: Request):
+    if not RZP_WEBHOOK_SECRET:
+        raise HTTPException(status_code=503, detail="Webhook not configured")
+    body = await request.body()
+    signature = request.headers.get("X-Razorpay-Signature", "")
+    client = _razorpay_client()
+    try:
+        client.utility.verify_webhook_signature(body.decode(), signature, RZP_WEBHOOK_SECRET)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid webhook signature")
+    data = json.loads(body.decode())
+    entity = (((data.get("payload") or {}).get("payment") or {}).get("entity")) or {}
+    rzp_order_id, rzp_payment_id = entity.get("order_id"), entity.get("id")
+    if data.get("event") in ("payment.captured", "order.paid") and rzp_order_id:
+        doc = await db.orders.find_one({"razorpay_order_id": rzp_order_id})
+        if doc and doc.get("payment_status") != "paid":
+            await db.orders.update_one({"_id": doc["_id"]}, {"$set": {
+                "payment_status": "paid", "razorpay_payment_id": rzp_payment_id, "order_status": "confirmed"}})
+            doc = await db.orders.find_one({"_id": doc["_id"]})
+            await _send_order_emails(doc)
+    return {"status": "ok"}
+
+
 # -------------------- Admin: orders --------------------
+def _admin_order(doc: dict) -> dict:
+    """Serialize an order for the admin dashboard with safe defaults for legacy docs."""
+    doc.pop("_id", None)
+    doc.setdefault("tracking_reference", "")
+    doc.setdefault("courier_name", "")
+    doc.setdefault("cancellation_reason", "")
+    doc.setdefault("status_history", [])
+    return doc
+
+
 @api.get("/admin/orders")
 async def admin_orders(admin: dict = Depends(get_current_admin)):
-    docs = await db.orders.find().sort("created_at", -1).to_list(500)
-    for d in docs:
-        d.pop("_id", None)
-    return docs
+    docs = await db.orders.find().sort("created_at", -1).to_list(2000)
+    return [_admin_order(d) for d in docs]
+
+
+@api.get("/admin/orders/{order_number}")
+async def admin_order_detail(order_number: str, admin: dict = Depends(get_current_admin)):
+    doc = await db.orders.find_one({"order_number": order_number})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return _admin_order(doc)
 
 
 @api.patch("/admin/orders/{order_number}")
 async def admin_update_order(order_number: str, payload: OrderStatusUpdate, admin: dict = Depends(get_current_admin)):
-    updates = {k: v for k, v in payload.model_dump().items() if v is not None}
-    if not updates:
-        raise HTTPException(status_code=400, detail="No fields to update")
-    res = await db.orders.update_one({"order_number": order_number}, {"$set": updates})
-    if res.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Order not found")
     doc = await db.orders.find_one({"order_number": order_number})
-    doc.pop("_id", None)
-    return doc
+    if not doc:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    data = payload.model_dump()
+    note = (data.get("note") or "").strip()
+
+    # Validate enum values
+    if data.get("order_status") and data["order_status"] not in ORDER_STATUSES:
+        raise HTTPException(status_code=400, detail="Invalid order status")
+    if data.get("payment_status") and data["payment_status"] not in PAYMENT_STATUSES:
+        raise HTTPException(status_code=400, detail="Invalid payment status")
+
+    # Guardrail: 'paid' is only ever set by verified Razorpay signature/webhook — never manually.
+    if data.get("payment_status") == "paid" and doc.get("payment_status") != "paid":
+        raise HTTPException(status_code=400,
+            detail="An order can only be marked PAID by a verified Razorpay payment. Use 'COD collected' for cash orders.")
+
+    # Cancellation requires a recorded reason.
+    if data.get("order_status") == "cancelled":
+        if not (data.get("cancellation_reason") or "").strip():
+            raise HTTPException(status_code=400, detail="A cancellation reason is required to cancel an order.")
+
+    updates, history = {}, []
+    by, by_email = admin.get("name") or "Admin", admin.get("email") or ""
+    at = now_iso()
+
+    for field in ("order_status", "payment_status", "preparation_status", "dispatch_status"):
+        new_val = data.get(field)
+        if new_val is not None and new_val != doc.get(field):
+            updates[field] = new_val
+            history.append({"field": field, "from": doc.get(field), "to": new_val,
+                            "by": by, "by_email": by_email, "at": at, "note": note})
+
+    for field in ("tracking_reference", "courier_name", "cancellation_reason"):
+        new_val = data.get(field)
+        if new_val is not None:
+            updates[field] = new_val.strip()
+
+    if not updates:
+        raise HTTPException(status_code=400, detail="No changes to apply.")
+
+    ops = {"$set": updates}
+    if history:
+        ops["$push"] = {"status_history": {"$each": history}}
+    await db.orders.update_one({"order_number": order_number}, ops)
+    doc = await db.orders.find_one({"order_number": order_number})
+
+    # Best-effort customer email on meaningful transitions (shipped / delivered). Never blocks.
+    email_result = None
+    new_os = updates.get("order_status")
+    if new_os in ("shipped", "delivered") and doc.get("customer", {}).get("email"):
+        invoice_url = f"{doc.get('site_origin') or 'https://amyafoods.in'}/api/orders/{order_number}/invoice?token={doc['download_token']}"
+        res = await emailer.send_email(
+            to=doc["customer"]["email"],
+            subject=f"Your AMYA order {order_number} is {'on its way' if new_os == 'shipped' else 'delivered'}",
+            html=emailer.status_update_email_html(doc, new_os, invoice_url))
+        email_result = {"ok": res.get("ok"), "detail": res.get("id") or res.get("error")}
+        await db.orders.update_one({"order_number": order_number}, {"$push": {"notifications": {
+            "type": f"status_email_{new_os}", "to": doc["customer"]["email"],
+            "ok": res.get("ok"), "detail": res.get("id") or res.get("error"), "at": now_iso()}}})
+
+    out = _admin_order(doc)
+    out["email_result"] = email_result
+    return out
 
 
 @api.get("/admin/orders/{order_number}/invoice")

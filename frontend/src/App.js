@@ -23,6 +23,7 @@ import OrderConfirmation from "@/pages/OrderConfirmation";
 import NotFound from "@/pages/NotFound";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdminOrderDetail from "@/pages/admin/AdminOrderDetail";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -56,6 +57,7 @@ function App() {
               <Route path="/order/:orderNumber" element={withLayout(<OrderConfirmation />)} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/orders/:orderNumber" element={<AdminOrderDetail />} />
               <Route path="*" element={withLayout(<NotFound />)} />
             </Routes>
           </SmoothScroll>

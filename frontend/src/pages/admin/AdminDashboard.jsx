@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Plus, Trash2, Pencil, LogOut, Check, X } from "lucide-react";
-import { api, formatApiError, API } from "@/lib/api";
+import { api, formatApiError } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useConfig } from "@/context/ConfigContext";
 import Logo from "@/components/Logo";
@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import AdminOrders from "@/pages/admin/AdminOrders";
 
 const EMPTY = {
   name: "", category: "oils", slug: "", short_description: "", description: "", extraction_method: "",
@@ -197,7 +198,7 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="orders" className="mt-8">
-            <OrdersPanel orders={orders} reload={loadAll} />
+            <AdminOrders orders={orders} reload={loadAll} />
           </TabsContent>
 
           {/* SETTINGS */}
@@ -280,71 +281,6 @@ function SettingsPanel({ settings, setSettings, onSave }) {
   );
 }
 
-function OrdersPanel({ orders, reload }) {
-  const oinr = (n) => (n == null ? "To be confirmed" : `₹${Number(n).toLocaleString("en-IN")}`);
-  const sel = "border border-ink/15 rounded px-2 py-1 font-sans text-xs bg-white";
-  const setField = async (on, field, value) => {
-    try { await api.patch(`/admin/orders/${on}`, { [field]: value }); toast.success("Updated"); reload(); }
-    catch (e) { toast.error(formatApiError(e?.response?.data?.detail)); }
-  };
-  const resend = async (on) => {
-    try { const { data } = await api.post(`/admin/orders/${on}/resend-email`); toast.success("Invoice email sent"); }
-    catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Email failed"); }
-  };
-  if (!orders.length) return <p className="font-serif text-2xl text-ink/50">No orders yet.</p>;
-  return (
-    <div className="space-y-5" data-testid="orders-panel">
-      {orders.map((o) => (
-        <div key={o.order_number} className="bg-white border border-ink/10 p-5" data-testid={`order-${o.order_number}`}>
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <p className="font-serif text-xl text-ink">{o.order_number}</p>
-              <p className="font-sans text-xs text-ink-soft mt-0.5">{o.invoice_date} · {o.customer?.name} · {o.customer?.mobile}{o.customer?.email ? ` · ${o.customer.email}` : ""}</p>
-              <p className="font-sans text-xs text-ink-soft mt-0.5 whitespace-pre-line">{o.customer?.address}</p>
-            </div>
-            <div className="text-right">
-              <p className="font-serif text-lg text-terracotta">{o.total_pending ? "To be confirmed" : oinr(o.total)}</p>
-              <div className="flex gap-2 mt-2">
-                <a href={`${API}/admin/orders/${o.order_number}/invoice`} target="_blank" rel="noreferrer" data-testid={`order-invoice-${o.order_number}`} className="font-sans text-[10px] uppercase tracking-[0.14em] text-terracotta border border-terracotta rounded-full px-3 py-1.5 hover:bg-terracotta hover:text-ivory transition-colors">Invoice PDF</a>
-                <button onClick={() => resend(o.order_number)} data-testid={`order-resend-${o.order_number}`} className="font-sans text-[10px] uppercase tracking-[0.14em] text-ink border border-ink/20 rounded-full px-3 py-1.5 hover:border-terracotta hover:text-terracotta transition-colors">Resend email</button>
-              </div>
-            </div>
-          </div>
-          <div className="mt-3 border-t border-ink/10 pt-3 text-sm">
-            {o.items?.map((it, i) => (
-              <div key={i} className="flex justify-between font-sans text-xs text-ink-soft py-0.5">
-                <span>{it.name}{it.pack_label ? ` · ${it.pack_label}` : ""} × {it.qty}</span>
-                <span>{oinr(it.line_total)}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-3 flex flex-wrap gap-3 items-center">
-            <label className="font-sans text-[11px] text-ink-soft">Payment
-              <select className={`${sel} ml-1`} value={o.payment_status} onChange={(e) => setField(o.order_number, "payment_status", e.target.value)} data-testid={`order-payment-${o.order_number}`}>
-                <option value="cod_pending">COD / Pending</option><option value="pending">Payment Pending</option><option value="paid">Paid</option><option value="refunded">Refunded</option>
-              </select>
-            </label>
-            <label className="font-sans text-[11px] text-ink-soft">Order
-              <select className={`${sel} ml-1`} value={o.order_status} onChange={(e) => setField(o.order_number, "order_status", e.target.value)} data-testid={`order-status-${o.order_number}`}>
-                <option value="placed">Placed</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option>
-              </select>
-            </label>
-            <label className="font-sans text-[11px] text-ink-soft">Preparation
-              <select className={`${sel} ml-1`} value={o.preparation_status} onChange={(e) => setField(o.order_number, "preparation_status", e.target.value)}>
-                <option value="pending">Pending</option><option value="preparing">Preparing</option><option value="ready">Ready</option>
-              </select>
-            </label>
-            <label className="font-sans text-[11px] text-ink-soft">Dispatch
-              <select className={`${sel} ml-1`} value={o.dispatch_status} onChange={(e) => setField(o.order_number, "dispatch_status", e.target.value)}>
-                <option value="not_dispatched">Not dispatched</option><option value="dispatched">Dispatched</option><option value="delivered">Delivered</option>
-              </select>
-            </label>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function ToggleRow({ label, checked, onChange, testid }) {
   return (

@@ -187,3 +187,31 @@ def business_email_html(order, admin_url):
         f'<p style="margin:0"><a href="{admin_url}" style="background:#B5643C;color:#FBF3E9;text-decoration:none;'
         f'font-size:13px;letter-spacing:1px;padding:12px 22px;border-radius:999px;display:inline-block">VIEW IN ADMIN</a></p>')
     return _wrap(inner)
+
+
+def status_update_email_html(order, new_status, invoice_url):
+    cust = order.get("customer", {})
+    track = (order.get("tracking_reference") or "").strip()
+    courier = (order.get("courier_name") or "").strip()
+    if new_status == "shipped":
+        head = "Your order is on its way!"
+        msg = "Good news — your AMYA order has been dispatched."
+        if track:
+            tline = f'Tracking reference: <b>{escape(track)}</b>'
+            if courier:
+                tline = f'{escape(courier)} &middot; ' + tline
+            msg += f'<br/>{tline}'
+    else:  # delivered
+        head = "Your order has been delivered"
+        msg = "We hope you enjoy your AMYA products. Thank you for ordering with us!"
+    inner = (
+        f'<p style="font-size:15px;color:#3B2A20;margin:0 0 12px">Hi {escape(cust.get("name",""))},</p>'
+        f'<p style="font-size:16px;color:#B5643C;margin:0 0 10px"><b>{escape(head)}</b></p>'
+        f'<p style="font-size:14px;color:#6B5647;margin:0 0 16px">Order <b>{escape(order.get("order_number",""))}</b>. {msg}</p>'
+        f'<table role="presentation" width="100%" style="margin:0 0 16px">{_items_rows(order)}'
+        f'<tr><td style="padding:10px 0 0;font-size:15px;color:#3B2A20"><b>Total</b></td>'
+        f'<td style="padding:10px 0 0;font-size:15px;color:#B5643C;text-align:right"><b>{_inr(order.get("total"))}</b></td></tr></table>'
+        f'<p style="margin:0 0 6px"><a href="{invoice_url}" '
+        f'style="background:#B5643C;color:#FBF3E9;text-decoration:none;font-size:13px;letter-spacing:1px;'
+        f'padding:12px 22px;border-radius:999px;display:inline-block">VIEW YOUR INVOICE</a></p>')
+    return _wrap(inner)

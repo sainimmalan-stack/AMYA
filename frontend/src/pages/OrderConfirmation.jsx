@@ -47,7 +47,15 @@ export default function OrderConfirmation() {
         <div className="mt-8 rounded-xl border border-beige bg-ivory-warm p-5 sm:p-7">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="font-sans text-xs uppercase tracking-[0.2em] text-terracotta">Order summary</span>
-            <span className="font-sans text-[11px] uppercase tracking-[0.14em] rounded-full bg-terracotta text-ivory px-3 py-1" data-testid="confirm-payment-status">COD / Payment Pending</span>
+            <span className="font-sans text-[11px] uppercase tracking-[0.14em] rounded-full bg-terracotta text-ivory px-3 py-1" data-testid="confirm-payment-status">{{
+              paid: "Paid",
+              pending: "Payment Pending",
+              cod_pending: "COD / Payment Pending",
+              cod_collected: "COD Collected",
+              failed: "Payment Failed",
+              refund_processing: "Refund Processing",
+              refunded: "Refunded",
+            }[order.payment_status] || "Payment Pending"}}</span>
           </div>
           <div className="mt-4 space-y-3">
             {order.items.map((it, i) => (

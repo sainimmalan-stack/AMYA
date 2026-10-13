@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Loader2, ShoppingBag } from "lucide-react";
 import { api, formatApiError } from "@/lib/api";
@@ -12,7 +12,19 @@ export default function Checkout() {
   const { items, count, allPriced, grandTotal, orderRef, clear } = useCart();
   const [form, setForm] = useState({ name: "", mobile: "", email: "", address: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [method, setMethod] = useState("cod");
+  const [rzp, setRzp] = useState({ enabled: false, key_id: "" });
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  useEffect(() => { api.get("/payments/razorpay/config").then(({ data }) => setRzp(data)).catch(() => {}); }, []);
+
+  const loadRzpScript = () => new Promise((resolve) => {
+    if (window.Razorpay) return resolve(true);
+    const s = document.createElement("script");
+    s.src = "https://checkout.razorpay.com/v1/checkout.js";
+    s.onload = () => resolve(true); s.onerror = () => resolve(false);
+    document.body.appendChild(s);
+  });
 
   if (items.length === 0) {
     return (
@@ -23,6 +35,8 @@ export default function Checkout() {
       </div>
     );
   }
+
+  const goConfirm = (data) => { clear(); navigate(`/order/${data.order_number}?token=${encodeURIComponent(data.download_token)}`); };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -38,13 +52,35 @@ export default function Checkout() {
         customer_email: form.email.trim() || null,
         delivery_address: form.address.trim(),
         client_ref: orderRef,
+        payment_method: method,
         items: items.map((it) => ({ slug: it.slug, pack_label: it.packLabel, qty: it.qty })),
       });
-      clear();
-      navigate(`/order/${data.order_number}?token=${encodeURIComponent(data.download_token)}`);
+      if (method === "razorpay" && data.razorpay_order_id) {
+        const ok = await loadRzpScript();
+        if (!ok) { toast.error("Could not load the payment window. Please try Cash on Delivery."); setSubmitting(false); return; }
+        const rzpay = new window.Razorpay({
+          key: data.razorpay_key_id, amount: data.amount, currency: data.currency || "INR",
+          order_id: data.razorpay_order_id, name: "AMYA Artisanal Foods", description: `Order ${data.order_number}`,
+          prefill: { name: form.name.trim(), email: form.email.trim(), contact: form.mobile.trim() },
+          theme: { color: "#B5643C" },
+          handler: async (resp) => {
+            try {
+              await api.post("/payments/razorpay/verify", {
+                order_number: data.order_number, razorpay_order_id: resp.razorpay_order_id,
+                razorpay_payment_id: resp.razorpay_payment_id, razorpay_signature: resp.razorpay_signature,
+              });
+            } catch (_) { /* confirmation page shows Payment Pending if verify fails */ }
+            goConfirm(data);
+          },
+          modal: { ondismiss: () => { toast("Payment cancelled — your order is saved as Payment Pending."); goConfirm(data); } },
+        });
+        rzpay.on("payment.failed", () => toast.error("Payment failed — order saved as Payment Pending."));
+        rzpay.open();
+        return;
+      }
+      goConfirm(data);
     } catch (err) {
       toast.error(formatApiError(err?.response?.data?.detail) || "Could not place your order. Please try again.");
-    } finally {
       setSubmitting(false);
     }
   };
@@ -84,11 +120,30 @@ export default function Checkout() {
               <label className={labelCls} htmlFor="co-address">Delivery address *</label>
               <textarea id="co-address" rows={3} className={inputCls} value={form.address} onChange={set("address")} data-testid="checkout-address" autoComplete="street-address" />
             </div>
+            <div className="pt-1">
+              <p className={labelCls}>Payment method</p>
+              <div className="grid gap-2.5">
+                {rzp.enabled && allPriced && (
+                  <label data-testid="pay-razorpay" className={`flex items-center gap-3 border rounded-lg px-3.5 py-3 cursor-pointer transition-colors ${method === "razorpay" ? "border-terracotta bg-terracotta/[0.06]" : "border-ink/15"}`}>
+                    <input type="radio" name="pay" checked={method === "razorpay"} onChange={() => setMethod("razorpay")} className="accent-terracotta" />
+                    <span><span className="font-sans text-sm text-ink font-medium">Pay online (Razorpay)</span><span className="block font-sans text-xs text-ink-soft">UPI, cards &amp; netbanking · secure</span></span>
+                  </label>
+                )}
+                <label data-testid="pay-cod" className={`flex items-center gap-3 border rounded-lg px-3.5 py-3 cursor-pointer transition-colors ${method === "cod" ? "border-terracotta bg-terracotta/[0.06]" : "border-ink/15"}`}>
+                  <input type="radio" name="pay" checked={method === "cod"} onChange={() => setMethod("cod")} className="accent-terracotta" />
+                  <span><span className="font-sans text-sm text-ink font-medium">Cash on Delivery</span><span className="block font-sans text-xs text-ink-soft">Pay when we confirm / deliver your order</span></span>
+                </label>
+              </div>
+            </div>
             <button type="submit" disabled={submitting} data-testid="checkout-submit"
               className="w-full inline-flex items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full disabled:opacity-60">
-              {submitting ? <><Loader2 size={17} className="animate-spin" /> Placing order…</> : <>Place order &amp; get invoice</>}
+              {submitting ? <><Loader2 size={17} className="animate-spin" /> Processing…</> : (method === "razorpay" ? <>Pay &amp; place order</> : <>Place order &amp; get invoice</>)}
             </button>
-            <p className="font-sans text-[11px] text-ink-soft text-center">Payment status: <b>COD / Payment Pending</b>. No online payment is taken now.</p>
+            <p className="font-sans text-[11px] text-ink-soft text-center">
+              {method === "razorpay"
+                ? "You'll complete payment securely via Razorpay. Verified payments are marked PAID automatically."
+                : "Payment status: COD / Payment Pending. No online payment is taken now."}
+            </p>
           </form>
         </div>
 
