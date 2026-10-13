@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { api } from "@/lib/api";
 import PageHero from "@/components/PageHero";
 import ProductCard from "@/components/ProductCard";
+import OilRefillOffer from "@/components/OilRefillOffer";
 import { Reveal } from "@/components/Reveal";
 
 const CATEGORY_META = {
@@ -59,9 +60,12 @@ export default function Shop() {
             <p className="font-serif text-3xl text-ink/60">No products in this category yet.</p>
           </Reveal>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-            {products.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
-          </div>
+          <>
+            {category === "oils" && <OilRefillOffer />}
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+              {products.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+            </div>
+          </>
         )}
       </section>
     </div>

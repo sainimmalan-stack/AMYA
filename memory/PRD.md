@@ -18,7 +18,12 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Pickle jars standardised (2026-10-13d) — preview only, NOT yet published
+## Oil "Bring Your Own Bottle" offer (2026-10-13e) — preview only, NOT yet published
+- Added an elegant terracotta/ivory promo card (`OilRefillOffer.jsx`) at the top of the oils section on /shop/oils only: "Bring Your Own Bottle & Save ₹60" with two distinct blocks — Refill & Save (₹60 bottling-charge saving) and Return Your AMYA Bottle (₹60 refund), clearly separated.
+- Hyderabad-only; "Contact Us on WhatsApp" button → wa.me/919675334567 (pre-filled msg); fine print: message before visiting + not auto-applied to online orders. No business address shown.
+- Oil prices/availability unchanged; oils stay at bottom of catalogue; no other section/design changed. Verified desktop + mobile (390px).
+
+
 - Regenerated all 6 pickle images to ONE consistent amber jar using a master-jar + edit approach: a single straight-sided rich dark-amber glass jar, same glossy black screw cap, same terracotta AMYA square label (AMYA / ARTISANAL FOODS / divider / pickle name, no invented claims), same ivory-linen background, same straight-on angle and lighting. Only the contents + product-name differ per product.
 - Contents: Chicken (boneless chicken), Mutton, Prawn (curled prawns), Allam Sweet (ginger+jaggery), Avakai (mango cubes+mustard), Maagai (cut mango). Glass is clearly amber yet pickle remains visible.
 - Cache bumped to ?v=4 (seed loop). Availability/prices/descriptions/cart unchanged: Chicken/Mutton/Prawn/Allam available; Avakai/Maagai OUT OF STOCK (not orderable).
