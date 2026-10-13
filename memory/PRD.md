@@ -608,3 +608,7 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 - Both women (Amulya, Leela) fully visible, 3:2 proportions preserved (no cropping of the two). Naming rule honoured ("her mother-in-law, Leela").
 - Verified: image serves (200), renders correctly at desktop 1440 (two-column) and tablet/mobile 768 (stacked, image first). Preview only — redeploy needed for live.
 
+
+## Changelog — 2026-10-13 (Homepage "Meet Amulya & Leela" teaser)
+- Added a compact clickable teaser (data-testid home-meet-founders-teaser) in the homepage "The Heart Behind AMYA" (#our-family) section, after the Sourcing card: kitchen photo thumbnail (/products/our-story-kitchen.jpg) + "OUR STORY" eyebrow + "Meet Amulya & Leela" + "Read our story →", linking to /our-story. Terracotta/ivory palette, subtle hover. Verified render at desktop + href=/our-story. Preview only — redeploy for live.
+

@@ -230,6 +230,26 @@ export default function Home() {
               </div>
             </div>
           </Reveal>
+
+          {/* Meet the founders teaser → Our Story */}
+          <Reveal>
+            <Link
+              to="/our-story"
+              data-testid="home-meet-founders-teaser"
+              className="group mt-8 flex items-center gap-4 sm:gap-5 rounded-xl border border-terracotta/20 bg-ivory p-3 sm:p-3.5 max-w-xl hover:border-terracotta/50 transition-colors"
+            >
+              <div className="h-20 w-28 sm:h-24 sm:w-36 shrink-0 overflow-hidden rounded-lg">
+                <img src="/products/our-story-kitchen.jpg" alt="Amulya and her mother-in-law, Leela, in the AMYA kitchen" loading="lazy" decoding="async" className="h-full w-full object-cover object-center" />
+              </div>
+              <div className="min-w-0">
+                <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-terracotta">Our Story</span>
+                <h3 className="font-serif text-lg sm:text-xl text-ink mt-0.5 leading-tight">Meet Amulya &amp; Leela</h3>
+                <span className="inline-flex items-center gap-1.5 font-sans text-xs uppercase tracking-[0.18em] text-ink mt-1.5">
+                  Read our story <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </div>
+            </Link>
+          </Reveal>
         </div>
       </section>
 
