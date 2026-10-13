@@ -581,3 +581,13 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 - Existing recipe stories & attributions preserved (Chicken/Mutton/Prawn = Amulya; Avakai/Magai = Amulya's mother-in-law Leela; Allam = Amulya via ammamma's recipe). NOT added to podis/spices/cashew brittle/Kaju Bites. Prices, pack sizes, images and ordering unchanged. Used the trustworthy tagline (no unsubstantiated superlatives).
 - Verified via screenshots: Chicken Pickle detail (block + correct story + prices) and /shop/pickles (highlight strip). Preview only — redeploy needed for live.
 
+
+## Changelog — 2026-10-13 (Product detail page premium simplification)
+- Rewrote ProductDetail.jsx info column to a minimal/premium editorial order: category eyebrow + small signature pill + diet → prominent product NAME (now shown for Cashew Brittle too) → short description (line-clamp-2 on mobile) → Pack Size → Quantity + Total → Add to Cart (or Enquire/Coming soon/Out of stock) → compact "Made to order" note → secondary actions.
+- Moved ALL supporting content BELOW the purchase area into an 'Our Story & Ingredients' accordion (collapsed by default): Our Story (recipe_story), Serving Suggestion, Highlights, Description, Ingredients, Storage, Preparation & Dispatch, Delivery, Returns, Food-label. Removed the old between-image-and-pricing cards (highlights checklist, serving card, recipe-story card, big promo blocks). Location/origin already removed earlier.
+- Pickles: kept cold-pressed-oils message but as ONE compact line (droplet icon) BELOW the Add to Cart button: "Made with AMYA cold-pressed oils and traditional Andhra recipes, prepared in small batches with care." Correct per-pickle recipe attributions preserved (in the accordion Our Story).
+- Nuvvula Podi signature kept as a small pill next to the category (no large banner above pricing).
+- Cashew Brittle: REMOVED the 10 kg pack per new instruction (now only 500 g ₹500, 1 kg ₹900); no pre-order messaging. (Note: this reverses the earlier 'preserve 10 kg' decision — user explicitly asked to remove it this session.)
+- Verified by testing agent (iteration_18.json, frontend 100%): pack switching updates pd-total, qty +/- updates total, Add to Cart increments cart badge, pickle oil line below button, cashew brittle only 2 packs/no 10 kg/no pre-order, chilli shows Enquire, accordion expands, no 'India' text, pricing within fold, no new console errors. Preview only — redeploy needed for live.
+- Known pre-existing (not a regression): /api/admin/* ping returns 401 on public pages (console noise only).
+
