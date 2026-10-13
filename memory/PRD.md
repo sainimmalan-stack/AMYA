@@ -18,6 +18,11 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
+## Catalogue final-check round (2026-10-13b) — preview only, NOT yet published
+- **Pickle prices verified correct** on preview (no change needed; already matched): Chicken 400/750/1400 (in-stock), Avakai 200/300/500 (out-of-stock), Maagai 200/300/500 (out-of-stock), Allam 200/300/500 (in-stock), Mutton 500/900/1700 (in-stock), Prawn 600/1000/1900 (in-stock). "From ₹" and cart totals confirmed accurate (Prawn 1kg x2 = ₹3,800). NOTE: live amyafoods.in still shows old data until deployed.
+- **Oil images regenerated** as distinctly SQUARE amber glass bottles with black caps (previous versions looked tall/narrow). Cache bumped to ?v=2. Oils remain coming-soon / not orderable, kept at end.
+- Catalogue consistency re-checked: 20 products, no duplicates, correct order, all images 200 (Kaju Bites intentionally image-less placeholder).
+
 ## Brand-story & policy round (2026-10-13) — preview only, NOT yet published
 - **Made-to-order philosophy**: new homepage section "Prepared With Care, After You Order" (id `prepared-with-care`) + short "Made to order, with care" note near the order button on every orderable product page (third-day = prep+dispatch, distinct from carrier delivery).
 - **Family story**: homepage "The Heart Behind AMYA" (Amulya/Ammu + Leela) with closing line, honest/non-exaggerated copy.
