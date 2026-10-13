@@ -18,7 +18,14 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Mobile nav refinement (2026-10-13i) — preview only, NOT yet published
+## Homepage hero copy refinement (2026-10-13j) — preview only, NOT yet published
+- Top eyebrow line -> "Made to order · Prepared in small batches" (reduced mobile tracking 0.28em->0.16em for natural wrap).
+- Hero description replaced with the Andhra pickles/podis/spices/cashew "made to be shared" copy; mobile size 17px->15px to avoid excess height. Headline "Tradition You Can Taste." unchanged.
+- Primary CTA "Shop Our Collection" changed from Link to /shop -> button that smooth-scrolls to the on-page product collection (#collection). Secondary CTA "Our Story" unchanged (-> /our-story).
+- Brand strip -> "Traditional Recipes · Made to Order · Pan-India Delivery" (pan-India retained; domestic courier dispatch supports this).
+- Copy/behaviour only. Design, logo, colours, fonts, buttons, images and all other sections unchanged. Verified mobile incl. CTA scroll.
+
+
 - Renamed nav labels: "Cashew Brittle" -> "Artisanal Sweets", "Spices" -> "Spices & Podis" (Header NAV, homepage category chip, and cashew category page title). Links/category/URLs unchanged (still /shop/cashew-brittles, /shop/spices).
 - Nav order: Home, Our Story, Spices & Podis, Pickles, Artisanal Sweets, Oils, Contact.
 - Mobile menu made compact/premium: link font text-4xl->text-3xl, removed inter-item gap, subtler dividers (ivory/15->ivory/10), menu header h-20->h-16, Call/WhatsApp buttons py-3->py-2.5 pill rounded, added overflow-y-auto. Fits iPhone without scrolling. Serif/ivory/terracotta preserved.

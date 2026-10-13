@@ -20,19 +20,19 @@ function Hero() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 pt-6 pb-7 lg:pt-12 lg:pb-12 relative z-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
-              className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.28em] text-terracotta block mb-3">
-              Authentic Indian flavours · Made with care
+              className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.16em] sm:tracking-[0.28em] text-terracotta block mb-3">
+              Made to order · Prepared in small batches
             </motion.span>
             <h1 className="font-serif text-[2.625rem] sm:text-5xl lg:text-6xl leading-[1.08] sm:leading-[1.05] tracking-tight text-ink [text-wrap:balance]">
               <MaskedLines lines={["Tradition You Can Taste."]} delay={0.15} />
             </h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
-              className="font-sans text-[17px] sm:text-lg text-ink-soft max-w-md sm:max-w-xl mt-4 leading-[1.6] [text-wrap:pretty]">
-              From signature cashew brittles to traditional podis, spices and cooking essentials, discover familiar Indian flavours made with care.
+              className="font-sans text-[15px] sm:text-lg text-ink-soft max-w-md sm:max-w-xl mt-4 leading-[1.6] [text-wrap:pretty]">
+              From traditional Andhra pickles and flavourful podis to carefully selected spices and signature cashew brittles, every batch is prepared with care, rooted in tradition and made to be shared.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
               className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6">
-              <Btn to="/shop" variant="solid" className="py-[20px] w-full sm:w-auto justify-center" data-testid="hero-shop-btn">
+              <Btn as="button" variant="solid" onClick={() => document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" })} className="py-[20px] w-full sm:w-auto justify-center" data-testid="hero-shop-btn">
                 Shop Our Collection <ArrowRight size={15} />
               </Btn>
               <Link to="/our-story" data-testid="hero-story-btn"
@@ -150,9 +150,9 @@ export default function Home() {
           <p className="font-sans text-[8.5px] min-[400px]:text-[9.5px] sm:text-xs uppercase tracking-[0.08em] sm:tracking-[0.22em] text-ink-soft flex flex-nowrap sm:flex-wrap items-center justify-center gap-x-1.5 gap-y-1 whitespace-nowrap">
             <span className="whitespace-nowrap">Traditional Recipes</span>
             <span className="text-terracotta">·</span>
-            <span className="whitespace-nowrap">Small-Batch Preparation</span>
+            <span className="whitespace-nowrap">Made to Order</span>
             <span className="text-terracotta">·</span>
-            <span className="whitespace-nowrap">Made with Care</span>
+            <span className="whitespace-nowrap">Pan-India Delivery</span>
           </p>
         </div>
       </div>
