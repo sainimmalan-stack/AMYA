@@ -127,7 +127,7 @@ export default function AdminDashboard() {
                   <select value={p.availability} onChange={(e) => setAvailability(p.id, e.target.value)} data-testid={`avail-${p.slug}`}
                           className="h-9 px-2 border border-input bg-ivory font-sans text-xs">
                     <option value="in-stock">Available to Order</option>
-                    <option value="available">Available (pre-order)</option>
+                    <option value="available">Available to Order</option>
                     <option value="out-of-stock">Out of Stock</option>
                     <option value="coming-soon">Coming Soon</option>
                     <option value="unavailable">Temporarily Unavailable</option>
@@ -324,7 +324,7 @@ function ProductDialog({ product, onClose, onSave }) {
           <L label="Slug (optional)"><Input value={f.slug || ""} onChange={set("slug")} placeholder="auto from name" /></L>
           <L label="Availability">
             <select data-testid="pf-availability" value={f.availability} onChange={set("availability")} className="w-full h-10 px-3 border border-input bg-ivory text-sm">
-              <option value="in-stock">Available to Order</option><option value="available">Available (pre-order)</option><option value="out-of-stock">Out of Stock</option><option value="coming-soon">Coming Soon</option><option value="unavailable">Temporarily Unavailable</option>
+              <option value="in-stock">Available to Order</option><option value="available">Available to Order</option><option value="out-of-stock">Out of Stock</option><option value="coming-soon">Coming Soon</option><option value="unavailable">Temporarily Unavailable</option>
             </select>
           </L>
           <div className="sm:col-span-2"><L label="Short description"><Input value={f.short_description} onChange={set("short_description")} /></L></div>

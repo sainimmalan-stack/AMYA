@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, MapPin, Check, MessageCircle } from "lucide-react";
+import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, Check, MessageCircle } from "lucide-react";
 import { api, telHref, waLink } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { useCart } from "@/context/CartContext";
@@ -39,6 +39,10 @@ export default function ProductDetail() {
   const selected = product.pack_sizes?.[pack];
   const orderable = ["ready", "order", "available", "in-stock"].includes(product.availability);
   const outOfStock = product.availability === "out-of-stock";
+  // Sweets (Cashew Brittle, Kaju Bites) use a plain ordering experience — no availability/pre-order badge.
+  const isSweet = product.category === "cashew-brittles";
+  const showBadge = ["coming-soon", "out-of-stock"].includes(product.availability)
+    || (!isSweet && orderable);
   const total = selected?.price != null ? selected.price * qty : null;
   const hasConfirmedPrice = (product.pack_sizes || []).some((ps) => ps.price != null);
   // Orderable item with no confirmed pricing yet → route to a WhatsApp enquiry instead of the cart.
@@ -69,7 +73,7 @@ export default function ProductDetail() {
               <div className="h-full w-full flex items-center justify-center font-serif text-7xl text-terracotta/25">AMYA</div>
             )}
             {product.diet && <div className="absolute top-4 right-4"><DietMark diet={product.diet} /></div>}
-            {["coming-soon", "out-of-stock", "in-stock"].includes(product.availability) && (
+            {showBadge && (
               <div className="absolute top-4 left-4"><Availability status={product.availability} /></div>
             )}
           </motion.div>
@@ -94,9 +98,6 @@ export default function ProductDetail() {
             </div>
             {product.slug !== "cashew-brittle" && (
               <h1 className="font-serif text-3xl sm:text-4xl tracking-tight mt-2 leading-tight text-ink">{product.name}</h1>
-            )}
-            {product.origin && (
-              <p className="font-sans text-xs text-ink-soft mt-2 inline-flex items-center gap-1.5"><MapPin size={13} className="text-terracotta" /> {product.origin}</p>
             )}
             <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 leading-relaxed whitespace-pre-line">{product.short_description}</p>
           </Reveal>

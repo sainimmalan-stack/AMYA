@@ -518,7 +518,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Food-label details are added once finalised by AMYA.",
         "images": ["/products/amya-sesame-oil.jpg?v=3"],
         "pack_sizes": [{"label": "1 litre", "price": None}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 18,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 17,
     },
     {
         "slug": "coconut-oil", "name": "Coconut Oil", "category": "oils",
@@ -533,7 +533,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Food-label details are added once finalised by AMYA.",
         "images": ["/products/amya-coconut-oil.jpg?v=3"],
         "pack_sizes": [{"label": "1 litre", "price": None}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 19,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 18,
     },
     {
         "slug": "cashew-brittle", "name": "Cashew Brittle", "category": "cashew-brittles",
@@ -573,7 +573,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "AMYA Signature Spice. Pack sizes and pricing confirmed at launch.",
         "images": ["/products/guntur-sannam-chilli-powder.jpg?v=3"],
         "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 12,
+        "availability": "available", "live_press": False, "featured": True, "sort_order": 6,
     },
     {
         "slug": "amya-turmeric-powder", "name": "Turmeric Powder", "category": "spices",
@@ -589,7 +589,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "AMYA Signature Spice. Pack sizes and pricing confirmed on enquiry.",
         "images": ["/products/amya-turmeric-powder.jpg?v=3"],
         "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 13,
+        "availability": "available", "live_press": False, "featured": True, "sort_order": 7,
     },
     {
         "slug": "coriander-powder", "name": "Coriander Powder", "category": "spices",
@@ -605,7 +605,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "AMYA Signature Spice. Pack sizes shown; pricing confirmed on enquiry.",
         "images": ["/products/amya-coriander-powder.jpg?v=2"],
         "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
-        "availability": "available", "live_press": False, "featured": False, "sort_order": 15,
+        "availability": "available", "live_press": False, "featured": False, "sort_order": 9,
     },
     {
         "slug": "cumin-powder", "name": "Cumin Powder", "category": "spices",
@@ -621,7 +621,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "AMYA Signature Spice. Pack sizes shown; pricing confirmed on enquiry.",
         "images": ["/products/amya-cumin-powder.jpg?v=2"],
         "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
-        "availability": "available", "live_press": False, "featured": False, "sort_order": 14,
+        "availability": "available", "live_press": False, "featured": False, "sort_order": 8,
     },
     {
         "slug": "kaju-bites", "name": "Kaju Bites", "category": "cashew-brittles",
@@ -659,7 +659,7 @@ INITIAL_PRODUCTS = [
         "dispatch": "",
         "delivery_details": [],
         "recipe_story": {"heading": "LEELA'S TRADITIONAL RECIPE", "body": "Our Nuvvula Podi follows Leela's traditional family recipe, shaped by more than 30 years of cooking experience. Prepared with care and inspired by the flavours she has perfected over the years, this recipe brings a cherished family tradition to the AMYA kitchen."},
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 8,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 2,
     },
     {
         "slug": "amya-karivepaku-podi", "name": "Karivepaku Podi", "category": "spices",
@@ -683,7 +683,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 9,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 3,
     },
     {
         "slug": "amya-nallakaram", "name": "Nallakaram Podi", "category": "spices",
@@ -707,7 +707,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 10,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 4,
     },
     {
         "slug": "amya-garam-masala", "name": "Garam Masala", "category": "spices",
@@ -729,7 +729,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 11,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 5,
     },
     {
         "slug": "avakai-pickle", "name": "Avakai Pickle", "category": "pickles",
@@ -740,7 +740,7 @@ INITIAL_PRODUCTS = [
         "images": [],
         "pack_sizes": [],
         "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
-        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 6,
+        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 14,
     },
     {
         "slug": "maagai-pickle", "name": "Maagai Pickle", "category": "pickles",
@@ -751,7 +751,7 @@ INITIAL_PRODUCTS = [
         "images": [],
         "pack_sizes": [],
         "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
-        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 7,
+        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 15,
     },
     {
         "slug": "allam-sweet-pickle", "name": "Allam Sweet Pickle", "category": "pickles",
@@ -762,7 +762,7 @@ INITIAL_PRODUCTS = [
         "images": [],
         "pack_sizes": [],
         "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
-        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 5,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 13,
     },
     {
         "slug": "chicken-pickle", "name": "Chicken Pickle", "category": "pickles",
@@ -773,7 +773,7 @@ INITIAL_PRODUCTS = [
         "images": [],
         "pack_sizes": [],
         "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
-        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 2,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 10,
     },
     {
         "slug": "mutton-pickle", "name": "Mutton Pickle", "category": "pickles",
@@ -784,7 +784,7 @@ INITIAL_PRODUCTS = [
         "images": [],
         "pack_sizes": [],
         "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
-        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 3,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 11,
     },
     {
         "slug": "prawn-pickle", "name": "Prawn Pickle", "category": "pickles",
@@ -795,7 +795,7 @@ INITIAL_PRODUCTS = [
         "images": [],
         "pack_sizes": [],
         "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
-        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 4,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 12,
     },
 ]
 
