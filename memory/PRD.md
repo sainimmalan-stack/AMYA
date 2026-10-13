@@ -625,3 +625,9 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 - Verified NOT a code bug: preview audit = 0 broken images across 12 pages @1440. Live image URLs all return 200 image/jpeg with real sizes. No path/case/CSS/lazy-load/srcset issues found. No code changes required.
 - Resolution: the redeploy that ran at the start of this task published the current code + assets. Live audit now: amyafoods.in @ 1440/1280/768/390 across 7 pages (63 imgs each) = 0 broken images, 0 horizontal overflow; hero v3 composite loads. Issue resolved by deploy, confirmed on the rendered live site via a fresh headless browser (no cache).
 
+
+
+## Changelog — 2026-10-13 (Removed "Our Transparency Promise" section)
+- Removed the entire "Our Transparency Promise" section from the /transparency page component (Transparency.jsx): deleted the PageHero (eyebrow "Our transparency promise", title "Trust isn't a claim. It's a process.", subtitle) and all commitment cards (COMMITMENTS array incl. "Clear ingredient information") plus now-unused imports (PageHero, lucide icons). Removed from the component, not CSS-hidden.
+- Kept the separate "Traceable batches" (Batch information) section; header/nav/cart/WhatsApp/footer and all other pages unchanged.
+- Verified in preview @1440: target text fully absent, no horizontal overflow, no blank space (page flows header → Traceable batches → footer). Shared component → applies to all viewports. Preview only — redeploy for live.
