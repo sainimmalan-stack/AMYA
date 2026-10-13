@@ -18,7 +18,17 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Catalogue corrections (2026-10-13) — preview only, NOT yet published
+## Brand-story & policy round (2026-10-13) — preview only, NOT yet published
+- **Made-to-order philosophy**: new homepage section "Prepared With Care, After You Order" (id `prepared-with-care`) + short "Made to order, with care" note near the order button on every orderable product page (third-day = prep+dispatch, distinct from carrier delivery).
+- **Family story**: homepage "The Heart Behind AMYA" (Amulya/Ammu + Leela) with closing line, honest/non-exaggerated copy.
+- **Ingredient sourcing**: "Good Food Starts With Good Ingredients" block integrated into the family section (Leela sources raw materials across India; no invented suppliers/farms/certs).
+- **Recipes with a story**: homepage 3-card summary + per-product `recipe_story` (backend field) on detail pages with correct attribution — Leela: Nuvvula Podi, Avakai, Magai; Ammu: Chicken/Mutton/Prawn pickles; Ammu's Ammamma: Sweet Allam Pickle. Products without a story omit the block.
+- **Refund & Replacement Policy**: new page `/refund-policy` (AMYA Quality Guarantee — 24h window for damaged/incorrect, quality + food-safety concerns, 4-step resolution, WhatsApp CTA, consumer-law safe wording). New `RefundPolicy.jsx`, route in App.js.
+- **Quality Promise**: compact "The AMYA Quality Promise" block on every product page linking to /refund-policy (`pd-quality-promise` / `pd-refund-link`).
+- **Footer**: added Prepared with Care (`/#prepared-with-care`, hash-scroll in Home) and Refund & Replacement (`/refund-policy`); Our Story retained.
+- Logo, palette, prices, images, availability, cart/WhatsApp flow all preserved. Verified: frontend 100% (iteration_17.json, 56 assertions).
+
+
 - Renamed **Jeera Powder → Cumin Powder** (slug `cumin-powder`); no duplicate; pack sizes 250 g/500 g/1 kg, prices pending → "Enquire for price".
 - Added **Cumin Powder** & **Coriander Powder** premium kraft-pouch AI mockups (distinct powder colours) matching chilli/turmeric/podi style.
 - Regenerated all **6 pickle images** as AMBER glass jars + black cap (chicken, mutton, prawn, allam-sweet, avakai, maagai). Bumped cache `?v=3`.

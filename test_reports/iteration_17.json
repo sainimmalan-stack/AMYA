@@ -1,0 +1,21 @@
+{
+  "summary": "Frontend-only testing for AMYA brand-story round. Verified homepage new sections (prepared-with-care, heart-behind-amya, ingredient-sourcing, recipes-with-a-story), per-product recipe story attribution matrix (Leela/Ammu/Ammamma) across all 7 story products, absence of recipe story on products without stories (cashew-brittle, chilli, oil, garam masala), made-to-order block on orderable items and absence on non-orderable (oils=coming-soon, avakai/maagai=out-of-stock), AMYA Quality Promise + refund link on every product page, /refund-policy page content and WhatsApp CTA, footer links (prepared-with-care hash-scroll + refund-replacement route), and mobile responsiveness at 390px with no horizontal overflow. ALL 56 assertions passed.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_17.json"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "RefundPolicy.jsx bottom link to /policies/refund works but 'View cancellation & refund terms' may be confusing since both pages are refund-related — minor UX note, not a bug.",
+    "Console shows repeated 401s on /api/admin/* (ping/me) when visiting any public page — harmless but noisy; main agent could gate admin-config fetch to admin routes only."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (not tested per request)", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "All brand-story round features working end-to-end on preview URL. Recipe attribution matrix verified: amya-nuvvula-podi→LEELA'S TRADITIONAL RECIPE, avakai/maagai-pickle→A FAMILY RECIPE BY LEELA, chicken/mutton/prawn-pickle→AMMU'S PICKLE SPECIALITIES, allam-sweet-pickle→AMMU'S AMMAMMA'S ORIGINAL RECIPE. Products without stories (cashew-brittle, guntur-sannam-chilli-powder, groundnut-oil, amya-garam-masala) correctly omit pd-recipe-story. pd-made-to-order present on orderable (chicken, cashew-brittle, chilli) and absent on non-orderable (oils coming-soon, avakai/maagai out-of-stock). pd-quality-promise + pd-refund-link on every product page. /refund-policy loads, WhatsApp CTA → wa.me/919675334567. Footer links work. Mobile 390px: no overflow."
+}
