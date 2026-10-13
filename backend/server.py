@@ -861,7 +861,7 @@ async def seed():
                 {"label": "500 g", "price": prices[1]},
                 {"label": "1 kg", "price": prices[2]},
             ]
-            p["images"] = [f"/products/{p['slug']}.jpg?v=3"]
+            p["images"] = [f"/products/{p['slug']}.jpg?v=4"]
         images = p.pop("images", [])
         # `availability` is admin-managed inventory: set it only on first insert so
         # changes made in the admin panel (e.g. marking stock back in) persist across

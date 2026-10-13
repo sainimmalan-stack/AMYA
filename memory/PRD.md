@@ -18,7 +18,13 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Oil visuals + Sunflower removal (2026-10-13c) — preview only, NOT yet published
+## Pickle jars standardised (2026-10-13d) — preview only, NOT yet published
+- Regenerated all 6 pickle images to ONE consistent amber jar using a master-jar + edit approach: a single straight-sided rich dark-amber glass jar, same glossy black screw cap, same terracotta AMYA square label (AMYA / ARTISANAL FOODS / divider / pickle name, no invented claims), same ivory-linen background, same straight-on angle and lighting. Only the contents + product-name differ per product.
+- Contents: Chicken (boneless chicken), Mutton, Prawn (curled prawns), Allam Sweet (ginger+jaggery), Avakai (mango cubes+mustard), Maagai (cut mango). Glass is clearly amber yet pickle remains visible.
+- Cache bumped to ?v=4 (seed loop). Availability/prices/descriptions/cart unchanged: Chicken/Mutton/Prawn/Allam available; Avakai/Maagai OUT OF STOCK (not orderable).
+- Verified desktop + mobile (390px, 2-col grid): uniform jar size/shape/cap, correct gating (4 Add-to-Cart, 2 Currently Unavailable), correct From-prices (₹400/₹500/₹600/₹200). Oils and spice/podi packaging untouched.
+
+
 - **Oil bottles regenerated** from the user's actual bottle reference photo (IMG_9509): tall SQUARE amber-glass bottles with flat sides, defined corners, short neck and ribbed black screw cap, warm golden highlights — Groundnut, Sesame, Coconut. Clean warm-neutral studio backgrounds, AMYA terracotta label with correct oil name. Cache bumped to ?v=3.
 - **Sunflower Oil removed completely**: product block deleted from INITIAL_PRODUCTS, removed from FORCE_IMAGE_SLUGS, image file deleted; delete_many drops it from DB (total products 20 -> 19). GET /api/products/sunflower-oil = 404; no references anywhere in code/data; no broken links.
 - Oil section stays last; other oils' prices/capacities/availability unchanged (all coming-soon, not orderable). No checkout/payment changes.
