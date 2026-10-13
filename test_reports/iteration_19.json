@@ -1,0 +1,33 @@
+{
+  "summary": "End-to-end backend + frontend verification of the new Admin Order Management Dashboard. Created /app/backend/tests/test_admin_orders.py (22 tests, all passing) covering admin auth guards, legacy-order safe defaults, COD creation, manual-paid guardrail, cancel-requires-reason guardrail, invalid-enum rejection, full lifecycle (confirmed→preparing→ready_to_dispatch→shipped→delivered), audit trail (from/to/by/by_email/at), tracking persistence, COD→refund flow, Razorpay webhook signature enforcement, admin invoice PDF, business email notification, and public-catalog regression. Frontend Playwright run verified login, Orders tab with all 11 stat cards + filters + search + CSV export, order-row navigation to full-page detail at /admin/orders/{on}, lifecycle buttons, save-tracking, cancel dialog, invoice/WhatsApp links, mobile 390px responsive (no horizontal overflow). CSV download confirmed (amya-orders-2026-10-13.csv). Both existing orders AMYA-20261013-88QT and AMYA-20261013-EN97 preserved.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "AdminOrderDetail cancel dialog", "issue": "confirm-cancel button is NOT disabled when cancel-reason-input is empty — relies on backend 400 to reject. Backend rejects correctly (verified), but UX should disable the button client-side until a non-empty reason is entered to prevent an avoidable round-trip and give immediate feedback.", "selector": "[data-testid=\"confirm-cancel\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_admin_orders.py",
+    "/app/test_reports/pytest/admin_orders.xml"
+  ],
+  "action_items": [
+    "(Optional, LOW) Disable confirm-cancel button on AdminOrderDetail until cancel-reason-input has a non-empty value to improve UX. Backend guardrail already enforces this correctly (returns 400)."
+  ],
+  "critical_code_review_comments": [
+    "server.py line 1333 hardcodes fallback 'https://amyafoods.in' when site_origin missing — acceptable for current single-domain deploy but consider using an env var for multi-env.",
+    "Razorpay webhook returns 503 when RZP_WEBHOOK_SECRET is unset (currently the preview state). This is correct fail-safe behaviour; still worth logging a warning on backend start so admins know the webhook endpoint is effectively disabled until the secret is configured.",
+    "Resend provider rate-limited on back-to-back order creations (observed 'rate_limited' detail on one notification). Not a functional bug — recorded honestly in notifications array as per spec.",
+    "Minor: emailer sends customer status email on shipped/delivered transitions only; cancel/refund transitions do NOT notify the customer by email. Confirm with product whether that's desired."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_admin_orders.py (new)"
+  ],
+  "success_rate": {"backend": "100% (22/22)", "frontend": "100% (all data-testids present, flows working, no overflow)"},
+  "test_credentials": "admin: amulya@amayafoods.in / AmyaFounder@2026 (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "Created 5 additional TEST_* COD orders via POST /api/orders during the pytest run (TEST_Buyer, TEST_Pay, TEST_Cancel, TEST_Notify, plus the module-scoped TEST_Buyer). Existing orders AMYA-20261013-88QT and AMYA-20261013-EN97 NOT modified or deleted. Business email ok=true on at least one new order (confirmed Contactamyafoods@gmail.com delivery via Resend id).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Admin dashboard fully functional on preview URL. Pytest suite /app/backend/tests/test_admin_orders.py covers all admin/order endpoints and can be re-run after any admin-order changes. Frontend data-testids verified on list page (stat-verified-revenue, stat-total-orders, stat-new, stat-confirmed, stat-awaiting-payment, stat-paid, stat-preparing, stat-shipped, stat-delivered, stat-cancelled, stat-refunded, filter-from, filter-to, order-search, filter-order-status, filter-payment-status, filter-method, export-csv, orders-result-count, order-row-<on>) and detail page (detail-order-number, detail-total, detail-address, set-status-<status>, cancel-order-btn, cancel-reason-input, confirm-cancel, save-tracking, tracking-ref, tracking-courier, mark-cod-collected, detail-invoice, detail-whatsapp). mark-payment-failed / start-refund testids are state-conditional (only shown for razorpay/online orders — not seen on COD orders). cancel-order-btn is also state-conditional (hidden on already-cancelled orders). Razorpay webhook returns 503 (secret not configured) rather than 400 (bad signature) in this env — both prove it cannot be faked. Note: a stale '/api/admin/*' ping 401 noise still appears in console on public pages (carried from iteration_17/18)."
+}

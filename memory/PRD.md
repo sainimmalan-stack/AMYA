@@ -655,3 +655,30 @@ Verified: full E2E — add-to-cart→checkout→order (server prices ₹900+₹4
 - Frontend Checkout: payment method selector (Pay online Razorpay / Cash on Delivery); Razorpay Checkout.js opens on submit, success→verify→confirmation (PAID), dismiss/fail→confirmation (Payment Pending). Confirmation badge reflects real payment_status.
 - VERIFIED (no real charge): create razorpay order (live key, order_... created), valid signature→PAID, invalid signature→400, COD flow, admin list/status/invoice/resend, checkout UI shows both options.
 - IMPORTANT: user supplied LIVE keys (rzp_live_...) but asked to test in Test Mode first. Did NOT run a real charge in preview. TODO before go-live: (1) ROTATE the exposed live key secret, (2) use rzp_test_ keys for a full test-card run, (3) optionally set RAZORPAY_WEBHOOK_SECRET + register webhook URL /api/payments/razorpay/webhook, (4) don't announce live until Razorpay account approved. WhatsApp auto-send still NOT built (no provider) — manual handoff remains.
+
+## Changelog — 2026-07-11 (Admin Order Management Dashboard — forked session)
+Scope: Built the complete, secure Admin Order Management Dashboard on top of the existing checkout/invoice/email/Razorpay backend. Customer-facing website, products, prices, checkout and branding intentionally UNCHANGED (only 2 extra status labels added to OrderConfirmation.jsx for accuracy). LIVE Razorpay keys untouched; no real charges/refunds triggered.
+
+### Backend (server.py, emailer.py)
+- Status taxonomy constants: ORDER_STATUSES = placed, confirmed, preparing, ready_to_dispatch, shipped, delivered, cancelled. PAYMENT_STATUSES = cod_pending, cod_collected, pending, paid, failed, refund_processing, refunded. Payment status kept SEPARATE from order status.
+- Order docs now carry tracking_reference, courier_name, cancellation_reason, status_history[] (added in _build_order_doc; legacy orders get safe defaults via _admin_order()).
+- PATCH /api/admin/orders/{order_number} rewritten: enum validation; GUARDRAIL rejects manual payment_status='paid' (only verified Razorpay signature/webhook can set paid) → 400; cancellation requires a non-empty cancellation_reason → 400 otherwise; every order_status/payment_status change appends an audit entry {field, from, to, by, by_email, at, note}; best-effort customer email on shipped/delivered (result returned as email_result).
+- GET /api/admin/orders/{order_number} (new) — single order detail for admins.
+- Business new-order notifications now fall back to Contactamyafoods@gmail.com when settings.business_notify_email is blank (create_order + _send_order_emails). Verified Resend accepted (ok=true).
+- emailer.status_update_email_html() added for shipped/delivered customer emails (incl. tracking ref).
+- Refunds are MANUAL tracking only (refund_processing → refunded); no automatic Razorpay refund API call. Razorpay webhook/verify signature enforcement unchanged (webhook returns 503 until RZP_WEBHOOK_SECRET set in this env).
+
+### Frontend
+- New /app/frontend/src/lib/orders.js: status/tone maps, inr, paymentMethodLabel, isRevenueOrder/revenueOf (revenue = order_status != cancelled AND payment_status in {paid, cod_collected}), withinRange date filter, ordersToCSV/downloadCSV, itemsSummary, formatDateTime.
+- New AdminOrders.jsx (Orders tab): summary stat cards (Verified revenue accent + Total/New/Confirmed/Awaiting payment/Paid/Preparing/Shipped/Delivered/Cancelled/Refunded) with From/To date-range filter; search by order ID/name/phone; order-status + payment-status + method filters; Export CSV; responsive desktop table + mobile cards; row click → detail.
+- New full-page route /admin/orders/:orderNumber (AdminOrderDetail.jsx): items w/ pack/qty/unit/line + subtotal/delivery/GST/total; customer & delivery; Invoice/Print + WhatsApp customer; status-history timeline; lifecycle buttons; Save tracking (courier+ref); Cancel-with-reason dialog (confirm-cancel disabled until reason entered); payment panel w/ Razorpay refs + COD-collected / mark-failed / start-refund / confirm-refund + guardrail note.
+- Old inline OrdersPanel removed from AdminDashboard.jsx.
+
+### Testing
+- testing_agent iteration_19.json: backend 100% (22/22 pytest at /app/backend/tests/test_admin_orders.py), frontend 100%, no critical/minor issues. One LOW UX nit (confirm-cancel not disabled when reason empty) — FIXED.
+- Razorpay successful real payment NOT tested (LIVE keys only; forbidden to charge). Only structural signature enforcement verified. Online webhook requires RZP_WEBHOOK_SECRET in production to reconcile payments.
+
+### Remaining config for go-live
+- Set RAZORPAY_WEBHOOK_SECRET in production env + configure the webhook URL (/api/payments/razorpay/webhook, events payment.captured/order.paid) in the Razorpay dashboard so online payments reconcile automatically.
+- Optionally fill Admin → Settings business/invoice fields (FSSAI, address, GSTIN); business_notify_email already defaults to Contactamyafoods@gmail.com.
+- Resend managed sending may land in spam until a domain is verified.

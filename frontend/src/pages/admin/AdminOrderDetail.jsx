@@ -289,7 +289,7 @@ export default function AdminOrderDetail() {
           </div>
           <DialogFooter>
             <button onClick={() => setCancelOpen(false)} className={`${actBtn} border-ink/20 text-ink`}>Keep order</button>
-            <button onClick={doCancel} disabled={saving} data-testid="confirm-cancel"
+            <button onClick={doCancel} disabled={saving || !cancelReason.trim()} data-testid="confirm-cancel"
                     className={`${actBtn} bg-red-600 text-white border-red-600 hover:bg-red-700`}>Cancel order</button>
           </DialogFooter>
         </DialogContent>
