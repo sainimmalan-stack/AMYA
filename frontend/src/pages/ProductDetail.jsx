@@ -44,6 +44,8 @@ export default function ProductDetail() {
   // Orderable item with no confirmed pricing yet → route to a WhatsApp enquiry instead of the cart.
   const enquireOnly = orderable && !hasConfirmedPrice;
   const enquireHref = waLink("919675334567", `Hello AMYA, I would like to enquire about ${product.name} — please share pack sizes and pricing.`);
+  const PODI_SLUGS = ["amya-nuvvula-podi", "amya-karivepaku-podi", "amya-nallakaram"];
+  const showServingSuggestion = product.category === "pickles" || PODI_SLUGS.includes(product.slug);
 
   return (
     <div data-testid="product-detail">
@@ -109,18 +111,25 @@ export default function ProductDetail() {
             </ul>
           )}
 
-          {product.serving && (
+          {product.serving && !showServingSuggestion && (
             <div className="mt-4 rounded-lg border border-beige bg-ivory-warm px-4 py-3" data-testid="pd-serving">
               <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">How to enjoy</p>
               <p className="font-sans text-sm text-ink mt-1.5 leading-relaxed">{product.serving}</p>
             </div>
           )}
 
+          {showServingSuggestion && (
+            <div className="mt-4 rounded-lg border border-beige bg-ivory-warm px-4 py-3" data-testid="pd-serving-suggestion">
+              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Serving Suggestion</p>
+              <p className="font-sans text-sm text-ink mt-1.5 leading-relaxed">Best enjoyed with hot rice and a generous spoon of ghee.</p>
+            </div>
+          )}
+
           {product.recipe_story && (
-            <div className="mt-5 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-5 py-5" data-testid="pd-recipe-story">
+            <div className="mt-5 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-4 py-4" data-testid="pd-recipe-story">
               <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Recipes with a story</p>
-              <h2 className="font-serif text-xl sm:text-2xl text-ink mt-1.5 leading-tight">{product.recipe_story.heading}</h2>
-              <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">{product.recipe_story.body}</p>
+              <h2 className="font-serif text-lg sm:text-xl text-ink mt-1 leading-tight">{product.recipe_story.heading}</h2>
+              <p className="font-sans text-sm text-ink-soft mt-1.5 leading-relaxed">{product.recipe_story.body}</p>
             </div>
           )}
 

@@ -18,7 +18,14 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Pre-launch notice + oil claim cleanup (2026-10-13g) — preview only, NOT yet published
+## Compact oil offer + serving suggestions (2026-10-13h) — preview only, NOT yet published
+- TASK 1: Rewrote OilRefillOffer into ONE compact card (heading + two short icon lines for the ₹60 refill & ₹60 return benefits + combined "Hyderabad only — message before visiting" line + WhatsApp button). Much shorter on mobile; oil products appear sooner. Both benefits retained.
+- TASK 2: Oils show only "1 litre" (seed override already enforced; also cleaned dead 500ml refs in INITIAL_PRODUCTS). Verified API returns ['1 litre'] for all 3 oils.
+- TASK 3: Shortened the "AMMU'S PICKLE SPECIALITIES" recipe_story body (chicken/mutton/prawn) to the exact short copy; tightened pd-recipe-story padding (px-5 py-5 -> px-4 py-4, smaller heading).
+- TASK 4: Added a subtle "Serving Suggestion" section (exact sentence "Best enjoyed with hot rice and a generous spoon of ghee.") on all 6 pickles + 3 podis (Nuvvula/Karivepaku/Nallakaram) via frontend logic (category==='pickles' || podi slug). Suppressed the old "How to enjoy" block for those to avoid duplication. NOT shown on spices/garam masala/oils/cashew.
+- Strict change control respected: no new/changed images, logos, labels, prices, stock, checkout. Responsive verified (mobile).
+
+
 - ISSUE 1: Removed the entire "PRE-LAUNCH / Online checkout isn't active yet…" notice block from ProductDetail.jsx (gone on ALL product pages, no reserved gap). Also removed the now-unused `checkoutEnabled` var.
 - ISSUE 2: Cleaned oil descriptions/short-descriptions of unverified claims ("our own oil-/cold-extraction setup", "cold-extracted") for Groundnut, Sesame, Coconut; cleared each oil's `extraction_method` to "". Also fixed Shop.jsx oils hero eyebrow/sub ("cold-extracted … using our own setup" removed).
 - ISSUE 3: Removed the "Extraction method" accordion from ProductDetail.jsx (only oils populated it, so effectively oil-only). Description/Ingredients/Storage/Delivery/Returns/Food-Label sections preserved.

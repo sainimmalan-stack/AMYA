@@ -502,8 +502,7 @@ INITIAL_PRODUCTS = [
         "returns_info": "As a fresh-pressed food product, returns are limited. Contact AMYA for any issue with your order.",
         "food_label_info": "Food-label details are added once finalised by AMYA.",
         "images": ["/products/amya-groundnut-oil.jpg?v=3"],
-        "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"},
-                        {"label": "1 L", "price": None, "note": "Pricing confirmed at launch"}],
+        "pack_sizes": [{"label": "1 litre", "price": None}],
         "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 16,
     },
     {
@@ -518,7 +517,7 @@ INITIAL_PRODUCTS = [
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "Food-label details are added once finalised by AMYA.",
         "images": ["/products/amya-sesame-oil.jpg?v=3"],
-        "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
+        "pack_sizes": [{"label": "1 litre", "price": None}],
         "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 18,
     },
     {
@@ -533,7 +532,7 @@ INITIAL_PRODUCTS = [
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "Food-label details are added once finalised by AMYA.",
         "images": ["/products/amya-coconut-oil.jpg?v=3"],
-        "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
+        "pack_sizes": [{"label": "1 litre", "price": None}],
         "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 19,
     },
     {
@@ -773,7 +772,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Ammu prepares AMYA's non-vegetarian pickles, bringing her passion and skill for pickles and podis into every batch. Her focus is on creating deeply satisfying flavours through careful preparation and thoughtfully selected ingredients. These recipes reflect Ammu's love of cooking and her commitment to sharing food she is proud to serve."},
+        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Prepared in small batches by Ammu, our non-vegetarian pickles celebrate traditional flavours, carefully selected ingredients and a love for homemade food."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 2,
     },
     {
@@ -784,7 +783,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Ammu prepares AMYA's non-vegetarian pickles, bringing her passion and skill for pickles and podis into every batch. Her focus is on creating deeply satisfying flavours through careful preparation and thoughtfully selected ingredients. These recipes reflect Ammu's love of cooking and her commitment to sharing food she is proud to serve."},
+        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Prepared in small batches by Ammu, our non-vegetarian pickles celebrate traditional flavours, carefully selected ingredients and a love for homemade food."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 3,
     },
     {
@@ -795,7 +794,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Ammu prepares AMYA's non-vegetarian pickles, bringing her passion and skill for pickles and podis into every batch. Her focus is on creating deeply satisfying flavours through careful preparation and thoughtfully selected ingredients. These recipes reflect Ammu's love of cooking and her commitment to sharing food she is proud to serve."},
+        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Prepared in small batches by Ammu, our non-vegetarian pickles celebrate traditional flavours, carefully selected ingredients and a love for homemade food."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 4,
     },
 ]
