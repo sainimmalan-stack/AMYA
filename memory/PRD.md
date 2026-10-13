@@ -631,3 +631,21 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 - Removed the entire "Our Transparency Promise" section from the /transparency page component (Transparency.jsx): deleted the PageHero (eyebrow "Our transparency promise", title "Trust isn't a claim. It's a process.", subtitle) and all commitment cards (COMMITMENTS array incl. "Clear ingredient information") plus now-unused imports (PageHero, lucide icons). Removed from the component, not CSS-hidden.
 - Kept the separate "Traceable batches" (Batch information) section; header/nav/cart/WhatsApp/footer and all other pages unchanged.
 - Verified in preview @1440: target text fully absent, no horizontal overflow, no blank space (page flows header → Traceable batches → footer). Shared component → applies to all viewports. Preview only — redeploy for live.
+
+## Changelog — 2026-10-13 (Order confirmation + PDF invoice system — Phase 1)
+Backend (server.py + invoices.py + emailer.py):
+- Order model + POST /api/orders: server-side price/qty re-validation against DB (never trusts client totals), unique order_number (AMYA-YYYYMMDD-XXXX) + invoice_number, computes subtotal/delivery/GST(optional)/total. Idempotent on client_ref (cart ref) → no duplicate orders.
+- PDF invoice (ReportLab, invoices.py): AMYA logo (/brand/amya-logo-terracotta.png), terracotta/ivory, business legal block, order/customer/items/totals, payment method+status, thank-you. Clearly labelled "Order confirmation — not a tax invoice". Regenerated deterministically on demand (no disk dependency).
+- GET /api/orders/{order_number}/invoice?token= (tokenised, non-guessable) + GET /api/orders/{order_number}?token= (confirmation fetch).
+- Email (emailer.py, Emergent-managed Resend + full guardrail gate): customer confirmation (with secure invoice link) + business notification (if business_notify_email set). Best-effort, logged in order.notifications, never blocks the order. VERIFIED: send returns Resend message IDs.
+- Admin: GET /api/admin/orders, PATCH /api/admin/orders/{on} (payment/order/preparation/dispatch status), GET .../invoice, POST .../resend-email.
+- Settings extended with legal/business fields (legal_name, business_address, fssai_number, support_email, support_phone, business_notify_email, website, gst_enabled/gstin/gst_rate, delivery_charge, delivery_note) — admin-editable; blank => placeholders (NO invented legal data).
+Frontend:
+- /checkout (Checkout.jsx): name/mobile/email/address form + summary → POST /orders → redirect to confirmation. CartDrawer now "Proceed to Checkout" (primary) + "Order on WhatsApp instead" (hybrid).
+- /order/:orderNumber (OrderConfirmation.jsx): thank-you, summary, COD/Payment Pending badge, Download Invoice + Confirm on WhatsApp.
+- Admin Orders tab (OrdersPanel) + Settings invoice/business fields.
+- Routes added in App.js; env EMERGENT_EMAIL_KEY + EMAIL_FROM_NAME in backend/.env; reportlab + httpx in requirements.txt.
+Payment: no online gateway → default COD / Payment Pending; admin can set Paid/Refunded; cancellation via order_status (record preserved). Cashfree only when founder approves with keys.
+NOT built (needs founder input): automated WhatsApp PDF (needs WhatsApp Business API provider + creds) — kept manual hybrid handoff. Real FSSAI/address/GSTIN pending founder (admin Settings).
+Verified: full E2E — add-to-cart→checkout→order (server prices ₹900+₹400)→confirmation→invoice PDF (customer + admin, 200 application/pdf)→email (Resend ids)→admin list/status/resend; idempotency (no dup). Preview only — redeploy for live.
+

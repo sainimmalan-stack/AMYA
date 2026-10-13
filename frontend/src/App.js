@@ -18,6 +18,8 @@ import Transparency from "@/pages/Transparency";
 import Contact from "@/pages/Contact";
 import Policy from "@/pages/Policy";
 import RefundPolicy from "@/pages/RefundPolicy";
+import Checkout from "@/pages/Checkout";
+import OrderConfirmation from "@/pages/OrderConfirmation";
 import NotFound from "@/pages/NotFound";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -50,6 +52,8 @@ function App() {
               <Route path="/contact" element={withLayout(<Contact />)} />
               <Route path="/policies/:slug" element={withLayout(<Policy />)} />
               <Route path="/refund-policy" element={withLayout(<RefundPolicy />)} />
+              <Route path="/checkout" element={withLayout(<Checkout />)} />
+              <Route path="/order/:orderNumber" element={withLayout(<OrderConfirmation />)} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="*" element={withLayout(<NotFound />)} />

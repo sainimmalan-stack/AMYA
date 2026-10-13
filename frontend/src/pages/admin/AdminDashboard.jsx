@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Plus, Trash2, Pencil, LogOut, Check, X } from "lucide-react";
-import { api, formatApiError } from "@/lib/api";
+import { api, formatApiError, API } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useConfig } from "@/context/ConfigContext";
 import Logo from "@/components/Logo";
@@ -40,16 +40,17 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [enquiries, setEnquiries] = useState([]);
   const [batches, setBatches] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [settings, setSettings] = useState(null);
   const [editing, setEditing] = useState(null);
 
   const loadAll = useCallback(async () => {
-    const [p, b, e, ba, cfg] = await Promise.all([
+    const [p, b, e, ba, cfg, o] = await Promise.all([
       api.get("/products"), api.get("/admin/bookings"), api.get("/admin/enquiries"),
-      api.get("/batches"), api.get("/config"),
+      api.get("/batches"), api.get("/config"), api.get("/admin/orders"),
     ]);
     setProducts(p.data); setBookings(b.data); setEnquiries(e.data); setBatches(ba.data);
-    setSettings(cfg.data.settings);
+    setSettings(cfg.data.settings); setOrders(o.data);
   }, []);
 
   useEffect(() => {
@@ -88,6 +89,7 @@ export default function AdminDashboard() {
 
   const pendingBookings = bookings.filter((b) => b.status === "pending").length;
   const newEnquiries = enquiries.filter((e) => e.status === "new").length;
+  const newOrders = orders.filter((o) => o.order_status === "placed").length;
 
   return (
     <div className="min-h-screen bg-ivory">
@@ -107,6 +109,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="products" data-testid="tab-products">Products</TabsTrigger>
             <TabsTrigger value="bookings" data-testid="tab-bookings">Bookings {pendingBookings > 0 && <Badge className="ml-2 bg-terracotta">{pendingBookings}</Badge>}</TabsTrigger>
             <TabsTrigger value="enquiries" data-testid="tab-enquiries">Enquiries {newEnquiries > 0 && <Badge className="ml-2 bg-terracotta">{newEnquiries}</Badge>}</TabsTrigger>
+            <TabsTrigger value="orders" data-testid="tab-orders">Orders {newOrders > 0 && <Badge className="ml-2 bg-terracotta">{newOrders}</Badge>}</TabsTrigger>
             <TabsTrigger value="batches" data-testid="tab-batches">Batches</TabsTrigger>
             <TabsTrigger value="settings" data-testid="tab-settings">Settings</TabsTrigger>
           </TabsList>
@@ -193,6 +196,10 @@ export default function AdminDashboard() {
             <BatchManager batches={batches} reload={loadAll} />
           </TabsContent>
 
+          <TabsContent value="orders" className="mt-8">
+            <OrdersPanel orders={orders} reload={loadAll} />
+          </TabsContent>
+
           {/* SETTINGS */}
           <TabsContent value="settings" className="mt-8">
             {settings && <SettingsPanel settings={settings} setSettings={setSettings} onSave={saveSettings} />}
@@ -240,6 +247,27 @@ function SettingsPanel({ settings, setSettings, onSave }) {
       </div>
 
       <div className="bg-white border border-ink/10 p-5 space-y-4">
+        <p className="font-sans text-xs uppercase tracking-[0.15em] text-ink-soft">Invoice &amp; business details (printed on invoices — leave blank if not available yet)</p>
+        <div><Label className="text-xs text-ink-soft">Registered / legal business name</Label><Input data-testid="set-legal-name" value={s.legal_name || ""} onChange={(e) => upd("legal_name", e.target.value)} placeholder="e.g. AMYA Artisanal Foods" /></div>
+        <div><Label className="text-xs text-ink-soft">Registered business address</Label><Textarea data-testid="set-address" value={s.business_address || ""} onChange={(e) => upd("business_address", e.target.value)} rows={2} /></div>
+        <div className="grid sm:grid-cols-2 gap-3">
+          <div><Label className="text-xs text-ink-soft">FSSAI registration number</Label><Input data-testid="set-fssai" value={s.fssai_number || ""} onChange={(e) => upd("fssai_number", e.target.value)} /></div>
+          <div><Label className="text-xs text-ink-soft">Website</Label><Input data-testid="set-website" value={s.website || ""} onChange={(e) => upd("website", e.target.value)} /></div>
+          <div><Label className="text-xs text-ink-soft">Support email (on invoice)</Label><Input data-testid="set-support-email" value={s.support_email || ""} onChange={(e) => upd("support_email", e.target.value)} /></div>
+          <div><Label className="text-xs text-ink-soft">Support phone (on invoice)</Label><Input data-testid="set-support-phone" value={s.support_phone || ""} onChange={(e) => upd("support_phone", e.target.value)} /></div>
+          <div><Label className="text-xs text-ink-soft">Business notification email (receives orders)</Label><Input data-testid="set-notify-email" value={s.business_notify_email || ""} onChange={(e) => upd("business_notify_email", e.target.value)} /></div>
+          <div><Label className="text-xs text-ink-soft">Delivery charge (₹, 0 = confirm later)</Label><Input data-testid="set-delivery" type="number" value={s.delivery_charge ?? 0} onChange={(e) => upd("delivery_charge", Number(e.target.value) || 0)} /></div>
+        </div>
+        <ToggleRow label="GST applicable (adds a tax line to invoices)" checked={!!s.gst_enabled} onChange={(v) => upd("gst_enabled", v)} testid="toggle-gst" />
+        {s.gst_enabled && (
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div><Label className="text-xs text-ink-soft">GSTIN</Label><Input data-testid="set-gstin" value={s.gstin || ""} onChange={(e) => upd("gstin", e.target.value)} /></div>
+            <div><Label className="text-xs text-ink-soft">GST rate (%)</Label><Input data-testid="set-gst-rate" type="number" value={s.gst_rate ?? 0} onChange={(e) => upd("gst_rate", Number(e.target.value) || 0)} /></div>
+          </div>
+        )}
+      </div>
+
+      <div className="bg-white border border-ink/10 p-5 space-y-4">
         <p className="font-sans text-xs uppercase tracking-[0.15em] text-ink-soft">Editable policies</p>
         {[["terms", "Terms & Conditions"], ["privacy", "Privacy Policy"], ["shipping", "Shipping Policy"], ["refund", "Cancellation & Refund"], ["food_disclosure", "Food-business disclosures"]].map(([k, l]) => (
           <div key={k}>
@@ -248,6 +276,72 @@ function SettingsPanel({ settings, setSettings, onSave }) {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function OrdersPanel({ orders, reload }) {
+  const oinr = (n) => (n == null ? "To be confirmed" : `₹${Number(n).toLocaleString("en-IN")}`);
+  const sel = "border border-ink/15 rounded px-2 py-1 font-sans text-xs bg-white";
+  const setField = async (on, field, value) => {
+    try { await api.patch(`/admin/orders/${on}`, { [field]: value }); toast.success("Updated"); reload(); }
+    catch (e) { toast.error(formatApiError(e?.response?.data?.detail)); }
+  };
+  const resend = async (on) => {
+    try { const { data } = await api.post(`/admin/orders/${on}/resend-email`); toast.success("Invoice email sent"); }
+    catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Email failed"); }
+  };
+  if (!orders.length) return <p className="font-serif text-2xl text-ink/50">No orders yet.</p>;
+  return (
+    <div className="space-y-5" data-testid="orders-panel">
+      {orders.map((o) => (
+        <div key={o.order_number} className="bg-white border border-ink/10 p-5" data-testid={`order-${o.order_number}`}>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="font-serif text-xl text-ink">{o.order_number}</p>
+              <p className="font-sans text-xs text-ink-soft mt-0.5">{o.invoice_date} · {o.customer?.name} · {o.customer?.mobile}{o.customer?.email ? ` · ${o.customer.email}` : ""}</p>
+              <p className="font-sans text-xs text-ink-soft mt-0.5 whitespace-pre-line">{o.customer?.address}</p>
+            </div>
+            <div className="text-right">
+              <p className="font-serif text-lg text-terracotta">{o.total_pending ? "To be confirmed" : oinr(o.total)}</p>
+              <div className="flex gap-2 mt-2">
+                <a href={`${API}/admin/orders/${o.order_number}/invoice`} target="_blank" rel="noreferrer" data-testid={`order-invoice-${o.order_number}`} className="font-sans text-[10px] uppercase tracking-[0.14em] text-terracotta border border-terracotta rounded-full px-3 py-1.5 hover:bg-terracotta hover:text-ivory transition-colors">Invoice PDF</a>
+                <button onClick={() => resend(o.order_number)} data-testid={`order-resend-${o.order_number}`} className="font-sans text-[10px] uppercase tracking-[0.14em] text-ink border border-ink/20 rounded-full px-3 py-1.5 hover:border-terracotta hover:text-terracotta transition-colors">Resend email</button>
+              </div>
+            </div>
+          </div>
+          <div className="mt-3 border-t border-ink/10 pt-3 text-sm">
+            {o.items?.map((it, i) => (
+              <div key={i} className="flex justify-between font-sans text-xs text-ink-soft py-0.5">
+                <span>{it.name}{it.pack_label ? ` · ${it.pack_label}` : ""} × {it.qty}</span>
+                <span>{oinr(it.line_total)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-3 items-center">
+            <label className="font-sans text-[11px] text-ink-soft">Payment
+              <select className={`${sel} ml-1`} value={o.payment_status} onChange={(e) => setField(o.order_number, "payment_status", e.target.value)} data-testid={`order-payment-${o.order_number}`}>
+                <option value="cod_pending">COD / Pending</option><option value="pending">Payment Pending</option><option value="paid">Paid</option><option value="refunded">Refunded</option>
+              </select>
+            </label>
+            <label className="font-sans text-[11px] text-ink-soft">Order
+              <select className={`${sel} ml-1`} value={o.order_status} onChange={(e) => setField(o.order_number, "order_status", e.target.value)} data-testid={`order-status-${o.order_number}`}>
+                <option value="placed">Placed</option><option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option>
+              </select>
+            </label>
+            <label className="font-sans text-[11px] text-ink-soft">Preparation
+              <select className={`${sel} ml-1`} value={o.preparation_status} onChange={(e) => setField(o.order_number, "preparation_status", e.target.value)}>
+                <option value="pending">Pending</option><option value="preparing">Preparing</option><option value="ready">Ready</option>
+              </select>
+            </label>
+            <label className="font-sans text-[11px] text-ink-soft">Dispatch
+              <select className={`${sel} ml-1`} value={o.dispatch_status} onChange={(e) => setField(o.order_number, "dispatch_status", e.target.value)}>
+                <option value="not_dispatched">Not dispatched</option><option value="dispatched">Dispatched</option><option value="delivered">Delivered</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

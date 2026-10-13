@@ -16,6 +16,12 @@ from bson import ObjectId
 import bcrypt
 import jwt
 import re
+import secrets
+from urllib.parse import urlparse
+from pydantic import EmailStr
+from fastapi import Query
+from invoices import build_invoice_pdf
+import emailer
 
 # ---------------------------------------------------------------------------
 # DB
@@ -283,6 +289,19 @@ class Settings(BaseModel):
     upi_id: str = ""
     oils_video_url: str = ""
     policies: dict = {}
+    # Invoice / business identity (admin-editable; blank => shown as placeholder, never invented)
+    legal_name: str = ""
+    business_address: str = ""
+    fssai_number: str = ""
+    support_email: str = ""
+    support_phone: str = ""
+    business_notify_email: str = ""
+    website: str = "amyafoods.in"
+    gst_enabled: bool = False
+    gstin: str = ""
+    gst_rate: float = 0.0
+    delivery_charge: float = 0.0
+    delivery_note: str = "Delivery charges, if any, will be confirmed with you when we confirm your order."
 
 
 class LoginIn(BaseModel):
@@ -292,6 +311,28 @@ class LoginIn(BaseModel):
 
 class StatusUpdate(BaseModel):
     status: str
+
+
+class OrderItemIn(BaseModel):
+    slug: str
+    pack_label: Optional[str] = None
+    qty: int = 1
+
+
+class OrderCreate(BaseModel):
+    customer_name: str
+    customer_mobile: str
+    customer_email: Optional[EmailStr] = None
+    delivery_address: str
+    items: List[OrderItemIn]
+    client_ref: Optional[str] = None
+
+
+class OrderStatusUpdate(BaseModel):
+    payment_status: Optional[str] = None
+    order_status: Optional[str] = None
+    preparation_status: Optional[str] = None
+    dispatch_status: Optional[str] = None
 
 
 # ---------------------------------------------------------------------------
@@ -913,6 +954,214 @@ async def seed():
 @app.on_event("startup")
 async def on_startup():
     await seed()
+
+
+# ---------------------------------------------------------------------------
+# Orders + PDF invoices
+# ---------------------------------------------------------------------------
+async def _settings_dict() -> dict:
+    s = await db.settings.find_one({"_id": "site"})
+    if not s:
+        s = Settings().model_dump()
+    s.pop("_id", None)
+    return s
+
+
+def _gen_order_number() -> str:
+    day = datetime.now(timezone.utc).strftime("%Y%m%d")
+    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    suffix = "".join(secrets.choice(alphabet) for _ in range(4))
+    return f"AMYA-{day}-{suffix}"
+
+
+def _site_origin(request: Request) -> str:
+    origin = request.headers.get("origin") or ""
+    if origin.startswith("https://"):
+        return origin.rstrip("/")
+    ref = request.headers.get("referer") or ""
+    if ref.startswith("https://"):
+        p = urlparse(ref)
+        return f"{p.scheme}://{p.netloc}"
+    return (os.environ.get("PUBLIC_BASE_URL") or "https://amyafoods.in").rstrip("/")
+
+
+async def _build_order_doc(payload: OrderCreate, request: Request) -> dict:
+    if not payload.items:
+        raise HTTPException(status_code=400, detail="Your cart is empty.")
+    cfg = await _settings_dict()
+    items, subtotal, any_unpriced = [], 0.0, False
+    for raw in payload.items:
+        product = await db.products.find_one({"slug": raw.slug})
+        if not product:
+            raise HTTPException(status_code=400, detail=f"Product not found: {raw.slug}")
+        qty = max(1, int(raw.qty))
+        unit_price, note = None, None
+        packs = product.get("pack_sizes") or []
+        if raw.pack_label:
+            match = next((p for p in packs if p.get("label") == raw.pack_label), None)
+            if not match:
+                raise HTTPException(status_code=400, detail=f"Invalid pack size for {product.get('name')}")
+            unit_price = match.get("price")
+            note = match.get("note")
+        elif packs:
+            unit_price = packs[0].get("price")
+            note = packs[0].get("note")
+        line_total = round(unit_price * qty, 2) if unit_price is not None else None
+        if line_total is None:
+            any_unpriced = True
+        else:
+            subtotal += line_total
+        items.append({"slug": raw.slug, "name": product.get("name"),
+                      "pack_label": raw.pack_label, "unit_price": unit_price,
+                      "qty": qty, "line_total": line_total, "note": note})
+    subtotal = round(subtotal, 2)
+    delivery_charge = round(float(cfg.get("delivery_charge") or 0), 2)
+    discount = 0.0
+    gst_amount = None
+    total = None if any_unpriced else round(subtotal + delivery_charge - discount, 2)
+    if not any_unpriced and cfg.get("gst_enabled") and cfg.get("gst_rate"):
+        gst_amount = round(subtotal * float(cfg["gst_rate"]) / 100.0, 2)
+        total = round(total + gst_amount, 2)
+
+    order_number = _gen_order_number()
+    while await db.orders.find_one({"order_number": order_number}):
+        order_number = _gen_order_number()
+    suffix = order_number.split("-")[-1]
+    now = datetime.now(timezone.utc)
+    doc = {
+        "order_number": order_number,
+        "invoice_number": f"INV-{now.strftime('%Y%m%d')}-{suffix}",
+        "created_at": now.isoformat(),
+        "invoice_date": now.strftime("%d %b %Y"),
+        "customer": {"name": payload.customer_name.strip(), "mobile": payload.customer_mobile.strip(),
+                     "email": (payload.customer_email or "").strip() or None,
+                     "address": payload.delivery_address.strip()},
+        "items": items,
+        "subtotal": subtotal, "delivery_charge": delivery_charge, "discount": discount,
+        "gst_amount": gst_amount, "total": total, "total_pending": any_unpriced,
+        "payment_method": "cod", "payment_status": "cod_pending",
+        "order_status": "placed", "preparation_status": "pending", "dispatch_status": "not_dispatched",
+        "download_token": secrets.token_urlsafe(24),
+        "invoice_generated": True,
+        "site_origin": _site_origin(request),
+        "client_ref": payload.client_ref,
+        "notifications": [],
+    }
+    return doc
+
+
+def _public_order(doc: dict) -> dict:
+    d = {k: v for k, v in doc.items() if k not in ("_id", "download_token", "notifications", "site_origin")}
+    d["download_token"] = doc.get("download_token")  # returned to the order owner only (fresh creation / token match)
+    return d
+
+
+@api.post("/orders")
+async def create_order(payload: OrderCreate, request: Request):
+    # Idempotency: same client cart reference returns the existing order (no duplicates)
+    if payload.client_ref:
+        existing = await db.orders.find_one({"client_ref": payload.client_ref})
+        if existing:
+            return _public_order(existing)
+    doc = await _build_order_doc(payload, request)
+    await db.orders.insert_one(dict(doc))
+
+    # Best-effort notifications (customer + business). Never block the order.
+    invoice_url = f"{doc['site_origin']}/api/orders/{doc['order_number']}/invoice?token={doc['download_token']}"
+    admin_url = f"{doc['site_origin']}/admin"
+    logs = []
+    if doc["customer"]["email"]:
+        res = await emailer.send_email(
+            to=doc["customer"]["email"],
+            subject=f"Your AMYA order {doc['order_number']} is confirmed",
+            html=emailer.customer_email_html(doc, invoice_url))
+        logs.append({"type": "customer_email", "to": doc["customer"]["email"],
+                     "ok": res.get("ok"), "detail": res.get("id") or res.get("error"), "at": now_iso()})
+    cfg = await _settings_dict()
+    biz_email = cfg.get("business_notify_email")
+    if biz_email:
+        res = await emailer.send_email(
+            to=biz_email, subject=f"New AMYA order {doc['order_number']} — {doc['customer']['name']}",
+            html=emailer.business_email_html(doc, admin_url))
+        logs.append({"type": "business_email", "to": biz_email,
+                     "ok": res.get("ok"), "detail": res.get("id") or res.get("error"), "at": now_iso()})
+    if logs:
+        await db.orders.update_one({"order_number": doc["order_number"]},
+                                   {"$push": {"notifications": {"$each": logs}}})
+        doc["notifications"] = logs
+    return _public_order(doc)
+
+
+@api.get("/orders/{order_number}")
+async def get_order_public(order_number: str, token: str = Query(...)):
+    doc = await db.orders.find_one({"order_number": order_number})
+    if not doc or doc.get("download_token") != token:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return _public_order(doc)
+
+
+def _invoice_response(doc: dict, cfg: dict) -> Response:
+    pdf = build_invoice_pdf(doc, cfg)
+    return Response(content=pdf, media_type="application/pdf", headers={
+        "Content-Disposition": f'inline; filename="AMYA-{doc["order_number"]}.pdf"'})
+
+
+@api.get("/orders/{order_number}/invoice")
+async def download_invoice(order_number: str, token: str = Query(...)):
+    doc = await db.orders.find_one({"order_number": order_number})
+    if not doc or doc.get("download_token") != token:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+    return _invoice_response(doc, await _settings_dict())
+
+
+# -------------------- Admin: orders --------------------
+@api.get("/admin/orders")
+async def admin_orders(admin: dict = Depends(get_current_admin)):
+    docs = await db.orders.find().sort("created_at", -1).to_list(500)
+    for d in docs:
+        d.pop("_id", None)
+    return docs
+
+
+@api.patch("/admin/orders/{order_number}")
+async def admin_update_order(order_number: str, payload: OrderStatusUpdate, admin: dict = Depends(get_current_admin)):
+    updates = {k: v for k, v in payload.model_dump().items() if v is not None}
+    if not updates:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    res = await db.orders.update_one({"order_number": order_number}, {"$set": updates})
+    if res.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Order not found")
+    doc = await db.orders.find_one({"order_number": order_number})
+    doc.pop("_id", None)
+    return doc
+
+
+@api.get("/admin/orders/{order_number}/invoice")
+async def admin_download_invoice(order_number: str, admin: dict = Depends(get_current_admin)):
+    doc = await db.orders.find_one({"order_number": order_number})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return _invoice_response(doc, await _settings_dict())
+
+
+@api.post("/admin/orders/{order_number}/resend-email")
+async def admin_resend_email(order_number: str, admin: dict = Depends(get_current_admin)):
+    doc = await db.orders.find_one({"order_number": order_number})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Order not found")
+    email = doc.get("customer", {}).get("email")
+    if not email:
+        raise HTTPException(status_code=400, detail="This order has no customer email on file.")
+    invoice_url = f"{doc.get('site_origin') or 'https://amyafoods.in'}/api/orders/{order_number}/invoice?token={doc['download_token']}"
+    res = await emailer.send_email(to=email,
+                                   subject=f"Your AMYA order {order_number} — invoice",
+                                   html=emailer.customer_email_html(doc, invoice_url))
+    log = {"type": "customer_email_resend", "to": email, "ok": res.get("ok"),
+           "detail": res.get("id") or res.get("error"), "at": now_iso()}
+    await db.orders.update_one({"order_number": order_number}, {"$push": {"notifications": log}})
+    if not res.get("ok"):
+        raise HTTPException(status_code=502, detail=f"Email not sent: {res.get('error')}")
+    return {"ok": True, "detail": res.get("id")}
 
 
 app.include_router(api)

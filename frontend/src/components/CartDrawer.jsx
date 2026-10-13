@@ -1,11 +1,13 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Minus, Plus, Trash2, MessageCircle, ShoppingBag } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 
 const inr = (n) => `₹${Number(n).toLocaleString("en-IN")}`;
 
 export default function CartDrawer() {
   const { items, open, setOpen, setQty, removeItem, clear, count, allPriced, grandTotal, whatsappUrl, orderRef, newOrderRef } = useCart();
+  const navigate = useNavigate();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -63,12 +65,19 @@ export default function CartDrawer() {
                   Some items need pricing confirmation — the final total will be confirmed with you on WhatsApp.
                 </p>
               )}
+              <button
+                onClick={() => { setOpen(false); navigate("/checkout"); }}
+                className="w-full flex items-center justify-center gap-2 bg-terracotta text-ivory rounded-full py-3 font-sans text-xs uppercase tracking-[0.14em] hover:bg-terracotta-deep transition-colors"
+                data-testid="cart-checkout"
+              >
+                <ShoppingBag size={15} /> Proceed to Checkout
+              </button>
               <a
                 href={whatsappUrl()} target="_blank" rel="noreferrer" onClick={() => { setOpen(false); newOrderRef(); }}
-                className="flex items-center justify-center gap-2 bg-terracotta text-ivory rounded-full py-3 font-sans text-xs uppercase tracking-[0.14em] hover:bg-terracotta-deep transition-colors"
+                className="flex items-center justify-center gap-2 border border-terracotta text-terracotta-deep rounded-full py-3 font-sans text-xs uppercase tracking-[0.14em] hover:bg-terracotta hover:text-ivory transition-colors"
                 data-testid="cart-send-whatsapp"
               >
-                <MessageCircle size={15} /> Send Order on WhatsApp
+                <MessageCircle size={15} /> Order on WhatsApp instead
               </a>
               <button onClick={clear} className="w-full text-center font-sans text-[11px] uppercase tracking-[0.14em] text-ink-soft hover:text-terracotta transition-colors" data-testid="cart-clear">
                 Clear cart
