@@ -561,3 +561,16 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 - 10 kg Kaju Bites: Kaju Bites has NO pack sizes at all (empty []), so there is no 10 kg (or any) variant to remove — confirmed in data + UI. The only 10 kg is on Cashew Brittle (preserved per instruction).
 - Verified: API product order/packs correct; screenshots of homepage (badges on podis, none on sweets), Chilli Powder detail (badge + no location) and Kaju Bites detail (no badge, no location, no pack sizes). Preview only — redeploy needed for live.
 
+
+## Changelog — 2026-10-13 (Recipe stories + ownership attribution + Nuvvula signature)
+- Rewrote recipe_story (heading + body) for all 9 relevant products using founder's exact copy, honouring the naming rule ("Amulya's mother-in-law, Leela" on first mention, "Amulya's mother-in-law" after):
+  - Chicken / Mutton / Prawn Pickle → heading "PREPARED BY AMULYA" (attributed to Amulya, NOT Leela).
+  - Allam Sweet Pickle → "A RECIPE FROM AMULYA'S AMMAMMA" (prepared by Amulya from her ammamma's recipe).
+  - Avakai & Maagai → "A CHERISHED FAMILY RECIPE" (traditional recipe of Amulya's mother-in-law, Leela).
+  - Nuvvula Podi → "AMYA SIGNATURE PODI" (signature hero; prepared by Amulya's mother-in-law, Leela).
+  - Karivepaku & Nallakaram Podi → added new "A TRADITIONAL FAMILY RECIPE" stories (by Amulya's mother-in-law, Leela).
+- Fixed contradicting attributions: podi description + highlights "Prepared by Amulya" → "Prepared by Amulya's mother-in-law, Leela" (Nuvvula, Karivepaku, Nallakaram).
+- Nuvvula Podi "AMYA SIGNATURE": added signature:bool field to Product model + signature:True in seed; tasteful terracotta "AMYA SIGNATURE" eyebrow (Sparkles icon) on ProductCard (above name) and ProductDetail (next to category), rendered only when product.signature. No exaggerated/award claims.
+- Homepage (Home.jsx) heritage text updated to naming rule: RECIPE_CREDITS "By Leela" → "By Amulya's Mother-in-Law" with relationship in body; "Ammu and Leela" → "Amulya and her mother-in-law"; sourcing "Leela helps..." → "Amulya's mother-in-law helps...". No standalone "Leela" left in body copy.
+- Verified: API returns all 9 stories correctly + Nuvvula signature=True; screenshots of Nuvvula detail (signature badge + story + correct attribution) and spices grid (signature eyebrow on Nuvvula card only). Preview only — redeploy needed for live.
+

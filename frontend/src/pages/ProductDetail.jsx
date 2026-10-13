@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, Check, MessageCircle } from "lucide-react";
+import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, Check, MessageCircle, Sparkles } from "lucide-react";
 import { api, telHref, waLink } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { useCart } from "@/context/CartContext";
@@ -89,8 +89,13 @@ export default function ProductDetail() {
         {/* Info */}
         <div>
           <Reveal>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="font-sans text-xs uppercase tracking-[0.25em] text-terracotta">{product.category.replace("-", " ")}</span>
+              {product.signature && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-terracotta text-ivory px-2.5 py-0.5 font-sans text-[10px] uppercase tracking-[0.18em]" data-testid="pd-signature-label">
+                  <Sparkles size={11} className="shrink-0" /> AMYA Signature
+                </span>
+              )}
               {product.diet && <DietMark diet={product.diet} />}
             </div>
             {product.slug !== "cashew-brittle" && (

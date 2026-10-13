@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ShoppingBag, MessageCircle } from "lucide-react";
+import { ArrowUpRight, ShoppingBag, MessageCircle, Sparkles } from "lucide-react";
 import Availability from "@/components/Availability";
 import PicklePackMock from "@/components/PicklePackMock";
 import { useCart } from "@/context/CartContext";
@@ -58,6 +58,11 @@ export default function ProductCard({ product, index = 0 }) {
           </div>
         </div>
         <div className="pt-2.5 pb-2.5">
+          {product.signature && (
+            <p className="flex items-center gap-1 font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-terracotta-deep font-semibold mb-0.5" data-testid={`signature-label-${product.slug}`}>
+              <Sparkles size={11} className="shrink-0" /> AMYA Signature
+            </p>
+          )}
           <h3 className="font-serif text-base sm:text-xl lg:text-2xl text-ink leading-tight">{product.name}</h3>
           {enquireOnly ? (
             <>

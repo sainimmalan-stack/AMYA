@@ -120,7 +120,7 @@ const ORDER_STEPS = [
 ];
 
 const RECIPE_CREDITS = [
-  { eyebrow: "By Leela", title: "Traditional Family Recipes", body: "Nuvvula Podi, Avakai and Magai follow Leela's family recipes, shaped by more than 30 years of cooking experience." },
+  { eyebrow: "By Amulya's Mother-in-Law", title: "Traditional Family Recipes", body: "Nuvvula Podi, Avakai and Magai follow the traditional family recipes of Amulya's mother-in-law, Leela, shaped by more than 30 years of cooking experience." },
   { eyebrow: "By Ammu", title: "Pickle Specialities", body: "Our non-vegetarian pickles — chicken, mutton and prawn — are prepared by Ammu, with a passion for deep, satisfying flavours." },
   { eyebrow: "Ammu's Ammamma", title: "A Recipe Passed Down", body: "Sweet Allam Pickle comes from Ammu's Ammamma's family recipe — a much-loved taste passed down through generations." },
 ];
@@ -210,7 +210,7 @@ export default function Home() {
             <Reveal delay={0.08}>
               <div className="space-y-4 font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
                 <p>Her mother-in-law, Leela, shares the same passion for cooking. She supports AMYA by helping source quality raw materials from across India and by bringing decades of cooking experience and traditional recipes to the kitchen.</p>
-                <p>Together, Ammu and Leela bring different strengths to AMYA: a passion for preparing delicious food, an appreciation for traditional recipes, and a commitment to selecting ingredients carefully.</p>
+                <p>Together, Amulya and her mother-in-law bring different strengths to AMYA: a passion for preparing delicious food, an appreciation for traditional recipes, and a commitment to selecting ingredients carefully.</p>
                 <p>AMYA is our way of sharing this family passion with your home.</p>
               </div>
             </Reveal>
@@ -225,7 +225,7 @@ export default function Home() {
               <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Sourcing</span>
               <h3 className="font-serif text-2xl sm:text-3xl text-ink mt-2 leading-tight [text-wrap:balance]">Good Food Starts With Good Ingredients</h3>
               <div className="mt-3 space-y-3 font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
-                <p>Behind every memorable recipe is the care taken in choosing its ingredients. Leela helps AMYA source quality raw materials from across India, bringing her experience and attention to ingredient selection into the process.</p>
+                <p>Behind every memorable recipe is the care taken in choosing its ingredients. Amulya's mother-in-law helps AMYA source quality raw materials from across India, bringing her experience and attention to ingredient selection into the process.</p>
                 <p>We believe that thoughtful sourcing is an important part of preparing food we are proud to share.</p>
               </div>
             </div>

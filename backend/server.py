@@ -162,6 +162,7 @@ class Product(BaseDocument):
     availability: str = "coming-soon"  # ready | order | available | coming-soon | enquire | unavailable
     live_press: bool = False
     featured: bool = False
+    signature: bool = False
     sort_order: int = 0
     created_at: str = Field(default_factory=now_iso)
 
@@ -643,9 +644,9 @@ INITIAL_PRODUCTS = [
     {
         "slug": "amya-nuvvula-podi", "name": "Nuvvula Podi", "category": "spices",
         "short_description": "Bring home the comforting taste of traditional Andhra cooking with AMYA Nuvvula Podi. This sesame-based podi pairs beautifully with hot rice and ghee, making everyday meals feel special.",
-        "description": "AMYA Nuvvula Podi is a traditional sesame podi, prepared by Amulya in small batches for an authentic, home-style flavour.",
+        "description": "AMYA Nuvvula Podi is a traditional sesame podi, prepared by Amulya's mother-in-law, Leela, in small batches for an authentic, home-style flavour.",
         "origin": "Andhra Pradesh, India",
-        "highlights": ["Traditional Andhra-style sesame podi", "Prepared by Amulya in small batches", "A familiar, home-style flavour"],
+        "highlights": ["Traditional Andhra-style sesame podi", "Prepared by Amulya's mother-in-law, Leela", "A familiar, home-style flavour"],
         "diet": "veg",
         "serving": "Enjoy with hot rice and ghee, or serve alongside idli and dosa.",
         "serving_highlight": "",
@@ -658,15 +659,16 @@ INITIAL_PRODUCTS = [
         "preparation": "",
         "dispatch": "",
         "delivery_details": [],
-        "recipe_story": {"heading": "LEELA'S TRADITIONAL RECIPE", "body": "Our Nuvvula Podi follows Leela's traditional family recipe, shaped by more than 30 years of cooking experience. Prepared with care and inspired by the flavours she has perfected over the years, this recipe brings a cherished family tradition to the AMYA kitchen."},
+        "recipe_story": {"heading": "AMYA SIGNATURE PODI", "body": "Meet AMYA's signature Nuvvula Podi, lovingly prepared by Amulya's mother-in-law, Leela. Rooted in traditional Andhra cooking, this sesame-based podi brings a distinctive, nutty flavour to everyday meals. Enjoy it with hot rice and ghee or alongside your favourite traditional dishes."},
+        "signature": True,
         "availability": "order", "live_press": False, "featured": True, "sort_order": 2,
     },
     {
         "slug": "amya-karivepaku-podi", "name": "Karivepaku Podi", "category": "spices",
         "short_description": "A traditional curry leaf podi made to bring a familiar, comforting taste to everyday meals.",
-        "description": "AMYA Karivepaku Podi is a traditional curry leaf podi, prepared by Amulya in small batches to bring a familiar, comforting taste to everyday meals.",
+        "description": "AMYA Karivepaku Podi is a traditional curry leaf podi, prepared by Amulya's mother-in-law, Leela, in small batches to bring a familiar, comforting taste to everyday meals.",
         "origin": "Andhra Pradesh, India",
-        "highlights": ["Traditional Andhra-style curry leaf podi", "Prepared by Amulya in small batches", "Familiar, comforting everyday flavour"],
+        "highlights": ["Traditional Andhra-style curry leaf podi", "Prepared by Amulya's mother-in-law, Leela", "Familiar, comforting everyday flavour"],
         "diet": "veg",
         "serving": "Best enjoyed mixed with piping-hot rice and ghee.",
         "serving_highlight": "Best enjoyed with very hot rice + ghee",
@@ -683,14 +685,15 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
+        "recipe_story": {"heading": "A TRADITIONAL FAMILY RECIPE", "body": "Our Karivepaku Podi is prepared by Amulya's mother-in-law, Leela, with a love for traditional Andhra flavours. Made in small batches, this familiar curry-leaf podi brings a comforting homemade touch to everyday meals."},
         "availability": "order", "live_press": False, "featured": True, "sort_order": 3,
     },
     {
         "slug": "amya-nallakaram", "name": "Nallakaram Podi", "category": "spices",
         "short_description": "A traditional Andhra-style podi made for those who love bold, comforting flavours.",
-        "description": "AMYA Nallakaram Podi is a traditional Andhra-style podi, prepared by Amulya in small batches for those who love bold, comforting flavours.",
+        "description": "AMYA Nallakaram Podi is a traditional Andhra-style podi, prepared by Amulya's mother-in-law, Leela, in small batches for those who love bold, comforting flavours.",
         "origin": "Andhra Pradesh, India",
-        "highlights": ["Traditional Andhra-style nallakaram podi", "Prepared by Amulya in small batches", "Bold, comforting flavour"],
+        "highlights": ["Traditional Andhra-style nallakaram podi", "Prepared by Amulya's mother-in-law, Leela", "Bold, comforting flavour"],
         "diet": "veg",
         "serving": "Enjoy with dosa, or mix with piping-hot rice and ghee.",
         "serving_highlight": "Best enjoyed with very hot rice + ghee",
@@ -707,6 +710,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
+        "recipe_story": {"heading": "A TRADITIONAL FAMILY RECIPE", "body": "Our Nallakaram Podi is prepared by Amulya's mother-in-law, Leela, drawing on traditional Andhra cooking. Made in small batches, it brings a distinctive, savoury flavour to meals and celebrates the taste of a traditional home kitchen."},
         "availability": "order", "live_press": False, "featured": True, "sort_order": 4,
     },
     {
@@ -739,7 +743,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
+        "recipe_story": {"heading": "A CHERISHED FAMILY RECIPE", "body": "Our Avakai follows the traditional recipe of Amulya's mother-in-law, Leela, bringing the much-loved flavours of Andhra mango pickle to your table. Rooted in family tradition and prepared with care, it celebrates a cherished taste of home."},
         "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 14,
     },
     {
@@ -750,7 +754,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
+        "recipe_story": {"heading": "A CHERISHED FAMILY RECIPE", "body": "Our Magai follows the traditional recipe of Amulya's mother-in-law, Leela, preserving a cherished Andhra preparation shaped by years of cooking experience. Each batch reflects the care, patience and familiar flavours of a traditional family kitchen."},
         "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 15,
     },
     {
@@ -761,7 +765,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
+        "recipe_story": {"heading": "A RECIPE FROM AMULYA'S AMMAMMA", "body": "Our Allam Sweet Pickle is prepared by Amulya using a cherished recipe passed down by her ammamma. Its distinctive sweet-and-ginger character brings a treasured family tradition to the AMYA kitchen."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 13,
     },
     {
@@ -772,7 +776,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
+        "recipe_story": {"heading": "PREPARED BY AMULYA", "body": "Prepared by Amulya in small batches, our Chicken Pickle celebrates the bold, authentic flavours of traditional Andhra home cooking. Carefully prepared with attention to taste and texture, it brings a much-loved homemade favourite to your table."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 10,
     },
     {
@@ -783,7 +787,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
+        "recipe_story": {"heading": "PREPARED BY AMULYA", "body": "Crafted by Amulya in small batches, our Mutton Pickle brings together rich, traditional Andhra flavours and the care of homemade preparation. Every batch is prepared with attention to flavour, texture and tradition."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 11,
     },
     {
@@ -794,7 +798,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
+        "recipe_story": {"heading": "PREPARED BY AMULYA", "body": "Prepared by Amulya in small batches, our Prawn Pickle captures the distinctive, bold flavours of Andhra-style seafood pickles. Made with care, it is a traditional favourite for those who love authentic homemade taste."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 12,
     },
 ]
