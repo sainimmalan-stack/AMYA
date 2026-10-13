@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, Check, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, Minus, Plus, ShoppingBag, Video, Phone, Check, MessageCircle, Sparkles, Droplets } from "lucide-react";
 import { api, telHref, waLink } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
 import { useCart } from "@/context/CartContext";
@@ -133,6 +133,17 @@ export default function ProductDetail() {
               <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Recipes with a story</p>
               <h2 className="font-serif text-base sm:text-lg text-ink mt-1 leading-snug [text-wrap:balance]">{product.recipe_story.heading}</h2>
               <p className="font-sans text-sm text-ink-soft mt-1.5 leading-relaxed">{product.recipe_story.body}</p>
+            </div>
+          )}
+
+          {product.category === "pickles" && (
+            <div className="mt-4 rounded-lg border border-terracotta/30 bg-terracotta/[0.06] px-4 py-3.5" data-testid="pd-cold-pressed-oil">
+              <p className="flex items-center gap-1.5 font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta-deep font-semibold">
+                <Droplets size={13} className="shrink-0" /> Made with AMYA Cold-Pressed Oils
+              </p>
+              <p className="font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-terracotta mt-1.5">AMYA Cold-Pressed Oils · Traditional Recipes · Small-Batch Preparation</p>
+              <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">Prepared in small batches with AMYA cold-pressed oils, our pickles bring together traditional Andhra recipes, carefully selected ingredients and the rich taste of homemade food. From our kitchen to yours, every jar is crafted with care for a flavourful, authentic experience.</p>
+              <p className="font-serif text-sm sm:text-base text-terracotta-deep mt-2.5 [text-wrap:balance]">Clean Ingredients. Authentic Flavours. Made with Care.</p>
             </div>
           )}
 

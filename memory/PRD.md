@@ -574,3 +574,10 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 - Homepage (Home.jsx) heritage text updated to naming rule: RECIPE_CREDITS "By Leela" → "By Amulya's Mother-in-Law" with relationship in body; "Ammu and Leela" → "Amulya and her mother-in-law"; sourcing "Leela helps..." → "Amulya's mother-in-law helps...". No standalone "Leela" left in body copy.
 - Verified: API returns all 9 stories correctly + Nuvvula signature=True; screenshots of Nuvvula detail (signature badge + story + correct attribution) and spices grid (signature eyebrow on Nuvvula card only). Preview only — redeploy needed for live.
 
+
+## Changelog — 2026-10-13 (Pickles: AMYA cold-pressed oils messaging)
+- Added a subtle premium "Made with AMYA Cold-Pressed Oils" block to ALL pickle detail pages — rendered conditionally in ProductDetail.jsx when product.category === "pickles" (single source, no per-product data duplication). Contains: droplet-icon heading "Made with AMYA Cold-Pressed Oils", short highlight "AMYA Cold-Pressed Oils · Traditional Recipes · Small-Batch Preparation", the full supporting paragraph, and tagline "Clean Ingredients. Authentic Flavours. Made with Care." Styled in terracotta/ivory.
+- Added a short highlight strip (same tagline line) above the Pickles collection grid in Shop.jsx (category === "pickles" only) — not repeated on each card.
+- Existing recipe stories & attributions preserved (Chicken/Mutton/Prawn = Amulya; Avakai/Magai = Amulya's mother-in-law Leela; Allam = Amulya via ammamma's recipe). NOT added to podis/spices/cashew brittle/Kaju Bites. Prices, pack sizes, images and ordering unchanged. Used the trustworthy tagline (no unsubstantiated superlatives).
+- Verified via screenshots: Chicken Pickle detail (block + correct story + prices) and /shop/pickles (highlight strip). Preview only — redeploy needed for live.
+

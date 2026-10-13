@@ -62,6 +62,13 @@ export default function Shop() {
         ) : (
           <>
             {category === "oils" && <OilRefillOffer />}
+            {category === "pickles" && (
+              <Reveal>
+                <div className="mb-6 sm:mb-8 flex items-center justify-center rounded-full border border-terracotta/30 bg-ivory px-5 py-2.5 text-center" data-testid="pickle-oil-highlight">
+                  <span className="font-sans text-[10px] sm:text-xs uppercase tracking-[0.16em] text-terracotta-deep font-medium">AMYA Cold-Pressed Oils · Traditional Recipes · Small-Batch Preparation</span>
+                </div>
+              </Reveal>
+            )}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
               {products.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
