@@ -635,7 +635,7 @@ INITIAL_PRODUCTS = [
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "Details coming soon. Enquire for details.",
-        "images": ["/products/kaju-bites.jpg?v=1"],
+        "images": ["/products/kaju-bites.jpg?v=2"],
         "pack_sizes": [],
         "availability": "available", "live_press": False, "featured": False, "sort_order": 1,
     },
