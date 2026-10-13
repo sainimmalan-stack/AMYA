@@ -39,10 +39,7 @@ export default function ProductDetail() {
   const selected = product.pack_sizes?.[pack];
   const orderable = ["ready", "order", "available", "in-stock"].includes(product.availability);
   const outOfStock = product.availability === "out-of-stock";
-  // Sweets (Cashew Brittle, Kaju Bites) use a plain ordering experience — no availability/pre-order badge.
-  const isSweet = product.category === "cashew-brittles";
-  const showBadge = ["coming-soon", "out-of-stock"].includes(product.availability)
-    || (!isSweet && orderable);
+  const showBadge = ["coming-soon", "out-of-stock"].includes(product.availability);
   const total = selected?.price != null ? selected.price * qty : null;
   const hasConfirmedPrice = (product.pack_sizes || []).some((ps) => ps.price != null);
   // Orderable item with no confirmed pricing yet → route to a WhatsApp enquiry instead of the cart.

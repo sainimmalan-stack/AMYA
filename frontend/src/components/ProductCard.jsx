@@ -16,10 +16,7 @@ export default function ProductCard({ product, index = 0 }) {
   const showImg = img && !imgError;
   const comingSoon = product.availability === "coming-soon";
   const outOfStock = product.availability === "out-of-stock";
-  // Sweets (Cashew Brittle, Kaju Bites) use a plain ordering experience — no availability/pre-order badge.
-  const isSweet = product.category === "cashew-brittles";
-  const orderable = ["ready", "order", "available", "in-stock"].includes(product.availability);
-  const showBadge = comingSoon || outOfStock || (!isSweet && orderable);
+  const showBadge = comingSoon || outOfStock;
   const firstPack = product.pack_sizes?.[0];
   const prices = (product.pack_sizes || []).map((s) => s.price).filter((p) => p != null);
   const fromPrice = prices.length ? Math.min(...prices) : null;
