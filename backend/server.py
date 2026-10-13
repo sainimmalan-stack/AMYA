@@ -495,10 +495,10 @@ INITIAL_PRODUCTS = [
         "delivery_info": "Dispatched after preparation. Delivery timeline shared on confirmation.",
         "returns_info": "As a fresh-pressed food product, returns are limited. Contact AMYA for any issue with your order.",
         "food_label_info": "Food-label details are added once finalised by AMYA.",
-        "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/b41788359d4289ac589981e8d5fa8b87c1507b776d5d7ab012b32b3f968e6e26.jpeg"],
+        "images": ["/products/amya-groundnut-oil.jpg?v=1"],
         "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"},
                         {"label": "1 L", "price": None, "note": "Pricing confirmed at launch"}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 7,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 16,
     },
     {
         "slug": "sunflower-oil", "name": "Sunflower Oil", "category": "oils",
@@ -511,9 +511,9 @@ INITIAL_PRODUCTS = [
         "delivery_info": "Dispatched after preparation. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "Food-label details are added once finalised by AMYA.",
-        "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/ef96b70740edd217319255f7967baff4c4dd26d527f22dfae28c93a0aa108a1e.jpeg"],
+        "images": ["/products/amya-sunflower-oil.jpg?v=1"],
         "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 10,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 17,
     },
     {
         "slug": "sesame-oil", "name": "Sesame Oil", "category": "oils",
@@ -526,9 +526,9 @@ INITIAL_PRODUCTS = [
         "delivery_info": "Dispatched after preparation. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "Food-label details are added once finalised by AMYA.",
-        "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/3f1d901f274afb9df3339da23892b343c1aafe49019ce9fbba74b907c80a2101.jpeg"],
+        "images": ["/products/amya-sesame-oil.jpg?v=1"],
         "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 8,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 18,
     },
     {
         "slug": "coconut-oil", "name": "Coconut Oil", "category": "oils",
@@ -541,9 +541,9 @@ INITIAL_PRODUCTS = [
         "delivery_info": "Dispatched after preparation. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "Food-label details are added once finalised by AMYA.",
-        "images": ["https://static.prod-images.emergentagent.com/jobs/c0402d02-f82c-4c87-9632-5729cd09b0fd/images/6a581d418ed7498e36efa91dbde9de25b3155fd6b37bc340c9389a22dbfe2577.jpeg"],
+        "images": ["/products/amya-coconut-oil.jpg?v=1"],
         "pack_sizes": [{"label": "500 ml", "price": None, "note": "Pricing confirmed at launch"}],
-        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 9,
+        "availability": "coming-soon", "live_press": True, "featured": False, "sort_order": 19,
     },
     {
         "slug": "cashew-brittle", "name": "Cashew Brittle", "category": "cashew-brittles",
@@ -582,8 +582,8 @@ INITIAL_PRODUCTS = [
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Pack sizes and pricing confirmed at launch.",
         "images": ["/products/guntur-sannam-chilli-powder.jpg?v=3"],
-        "pack_sizes": [],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 5,
+        "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
+        "availability": "available", "live_press": False, "featured": True, "sort_order": 12,
     },
     {
         "slug": "amya-turmeric-powder", "name": "Turmeric Powder", "category": "spices",
@@ -598,8 +598,8 @@ INITIAL_PRODUCTS = [
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Pack sizes and pricing confirmed on enquiry.",
         "images": ["/products/amya-turmeric-powder.jpg?v=3"],
-        "pack_sizes": [],
-        "availability": "available", "live_press": False, "featured": True, "sort_order": 6,
+        "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
+        "availability": "available", "live_press": False, "featured": True, "sort_order": 13,
     },
     {
         "slug": "coriander-powder", "name": "Coriander Powder", "category": "spices",
@@ -613,25 +613,25 @@ INITIAL_PRODUCTS = [
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Pack sizes shown; pricing confirmed on enquiry.",
-        "images": [],
+        "images": ["/products/amya-coriander-powder.jpg?v=1"],
         "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
-        "availability": "available", "live_press": False, "featured": False, "sort_order": 17,
+        "availability": "available", "live_press": False, "featured": False, "sort_order": 15,
     },
     {
-        "slug": "jeera-powder", "name": "Jeera Powder", "category": "spices",
-        "short_description": "Freshly ground cumin (jeera) powder, prepared in small batches.",
-        "description": "AMYA Jeera Powder (Cumin Powder) is prepared in small batches with hygienic handling, delivering the warm, earthy aroma of freshly ground cumin for everyday Indian cooking.",
+        "slug": "cumin-powder", "name": "Cumin Powder", "category": "spices",
+        "short_description": "Freshly ground cumin powder, prepared in small batches.",
+        "description": "AMYA Cumin Powder is prepared in small batches with hygienic handling, delivering the warm, earthy aroma of freshly ground cumin for everyday Indian cooking.",
         "origin": "India",
         "highlights": ["Prepared in small batches", "Hygienic handling and processing", "Warm, earthy cumin aroma", "Suitable for everyday cooking and traditional recipes"],
         "diet": "veg",
-        "ingredients": "Cumin (Jeera).",
+        "ingredients": "Cumin.",
         "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
         "delivery_info": "Dispatched after the order is confirmed. Delivery timeline shared on confirmation.",
         "returns_info": "Contact AMYA for any issue with your order.",
         "food_label_info": "AMYA Signature Spice. Pack sizes shown; pricing confirmed on enquiry.",
-        "images": [],
+        "images": ["/products/amya-cumin-powder.jpg?v=1"],
         "pack_sizes": [{"label": "250 g", "price": None}, {"label": "500 g", "price": None}, {"label": "1 kg", "price": None}],
-        "availability": "available", "live_press": False, "featured": False, "sort_order": 18,
+        "availability": "available", "live_press": False, "featured": False, "sort_order": 14,
     },
     {
         "slug": "kaju-bites", "name": "Kaju Bites", "category": "cashew-brittles",
@@ -647,7 +647,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Details coming soon. Enquire for details.",
         "images": [],
         "pack_sizes": [],
-        "availability": "available", "live_press": False, "featured": False, "sort_order": 19,
+        "availability": "available", "live_press": False, "featured": False, "sort_order": 1,
     },
 
     {
@@ -668,7 +668,7 @@ INITIAL_PRODUCTS = [
         "preparation": "",
         "dispatch": "",
         "delivery_details": [],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 1,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 8,
     },
     {
         "slug": "amya-karivepaku-podi", "name": "Karivepaku Podi", "category": "spices",
@@ -692,7 +692,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 2,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 9,
     },
     {
         "slug": "amya-nallakaram", "name": "Nallakaram Podi", "category": "spices",
@@ -716,7 +716,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 3,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 10,
     },
     {
         "slug": "amya-garam-masala", "name": "Garam Masala", "category": "spices",
@@ -738,7 +738,7 @@ INITIAL_PRODUCTS = [
             {"region": "Other locations in India", "text": "Dispatched through courier on the 3rd day. A delivery date is not guaranteed."},
             {"region": "USA & UK", "text": "International courier dispatch is available, subject to confirmation of shipping arrangements, charges and delivery timelines."},
         ],
-        "availability": "order", "live_press": False, "featured": True, "sort_order": 4,
+        "availability": "order", "live_press": False, "featured": True, "sort_order": 11,
     },
     {
         "slug": "avakai-pickle", "name": "Avakai Pickle", "category": "pickles",
@@ -748,7 +748,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 11,
+        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 6,
     },
     {
         "slug": "maagai-pickle", "name": "Maagai Pickle", "category": "pickles",
@@ -758,7 +758,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 12,
+        "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 7,
     },
     {
         "slug": "allam-sweet-pickle", "name": "Allam Sweet Pickle", "category": "pickles",
@@ -768,7 +768,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 13,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 5,
     },
     {
         "slug": "chicken-pickle", "name": "Chicken Pickle", "category": "pickles",
@@ -778,7 +778,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 14,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 2,
     },
     {
         "slug": "mutton-pickle", "name": "Mutton Pickle", "category": "pickles",
@@ -788,7 +788,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 15,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 3,
     },
     {
         "slug": "prawn-pickle", "name": "Prawn Pickle", "category": "pickles",
@@ -798,7 +798,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 16,
+        "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 4,
     },
 ]
 
@@ -836,6 +836,8 @@ async def seed():
     FORCE_IMAGE_SLUGS = {
         "cashew-brittle", "guntur-sannam-chilli-powder", "amya-turmeric-powder",
         "amya-nuvvula-podi", "amya-karivepaku-podi", "amya-nallakaram", "amya-garam-masala",
+        "coriander-powder", "cumin-powder",
+        "groundnut-oil", "sunflower-oil", "sesame-oil", "coconut-oil",
         "chicken-pickle", "avakai-pickle", "maagai-pickle",
         "allam-sweet-pickle", "mutton-pickle", "prawn-pickle",
     }
@@ -861,7 +863,7 @@ async def seed():
                 {"label": "500 g", "price": prices[1]},
                 {"label": "1 kg", "price": prices[2]},
             ]
-            p["images"] = [f"/products/{p['slug']}.jpg?v=2"]
+            p["images"] = [f"/products/{p['slug']}.jpg?v=3"]
         images = p.pop("images", [])
         # `availability` is admin-managed inventory: set it only on first insert so
         # changes made in the admin panel (e.g. marking stock back in) persist across
