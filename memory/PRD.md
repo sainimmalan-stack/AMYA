@@ -18,6 +18,18 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
+## Catalogue corrections (2026-10-13) — preview only, NOT yet published
+- Renamed **Jeera Powder → Cumin Powder** (slug `cumin-powder`); no duplicate; pack sizes 250 g/500 g/1 kg, prices pending → "Enquire for price".
+- Added **Cumin Powder** & **Coriander Powder** premium kraft-pouch AI mockups (distinct powder colours) matching chilli/turmeric/podi style.
+- Regenerated all **6 pickle images** as AMBER glass jars + black cap (chicken, mutton, prawn, allam-sweet, avakai, maagai). Bumped cache `?v=3`.
+- Regenerated all **4 oil images** as AMBER square 1L glass bottles + black cap (groundnut, sunflower, sesame, coconut); now local `/products/amya-*-oil.jpg`, added to FORCE_IMAGE_SLUGS.
+- **Reordered** homepage grid via sort_order 0..19: Cashew Brittle, Kaju Bites, Pickles (Chicken, Mutton, Prawn, Allam, Avakai, Maagai), Podis/spices (Nuvvula, Karivepaku, Nallakaram, Garam Masala, Chilli, Turmeric, Cumin, Coriander), **Oils last**.
+- Added pack sizes 250 g/500 g/1 kg (pending prices) to **Chilli & Turmeric** → enquire-only.
+- Pickle availability preserved: Chicken/Mutton/Prawn/Allam = in-stock; Avakai/Maagai = out-of-stock (not orderable).
+- Kaju Bites kept separate (transparent-jar copy retained; no invented weight/price/image).
+- Verified: frontend testing 100% pass (iteration_16.json); all /products images 200; no "Jeera" remnants.
+- PENDING user input: real prices for Chilli/Turmeric/Cumin/Coriander; real photos for Cumin/Coriander/pickles/oils; Kaju Bites final photo+weight+price. Cashfree NOT integrated (WhatsApp-only, per user).
+
 ## Implemented (2026-06)
 - Homepage: kinetic terracotta hero with masked line reveal, parallax oil image, editorial marquee, brand intro, Live Press feature, featured products, transparency band.
 - Shop + category pages (oils/pickles/cashew-brittles) with availability badges (Available / Coming Soon / Temporarily Unavailable).

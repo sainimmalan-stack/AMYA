@@ -1,0 +1,41 @@
+{
+  "summary": "Frontend-only verification of AMYA catalogue corrections round: homepage sort order, Cumin Powder rename (no Jeera remnants), image loading on grid + all 20 product detail pages, out-of-stock gating for Avakai/Maagai, add-to-cart for available pickles and Cashew Brittle, enquire-only WhatsApp CTAs for the 4 spices, coming-soon for 4 oils, WhatsApp link numbers, 390px mobile grid, and nav/category links. All tests PASS.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "verified_items": [
+    "Homepage grid order matches expected 20-item sequence exactly (Cashew Brittle → Kaju Bites → 6 pickles → 4 podis/garam masala → 4 spice powders → 4 oils).",
+    "'Jeera' string absent from homepage and /product/cumin-powder page body.",
+    "/product/cumin-powder loads, shows pack sizes 250 g / 500 g / 1 kg, 'Enquire' labels (no numeric price, no pd-add-cart), pd-enquire-whatsapp links to wa.me/919675334567.",
+    "All referenced images return HTTP 200 (cashew-brittle.jpg, amya-garam-masala.jpg, amya-cumin-powder.jpg, amya-coriander-powder.jpg, 6 pickle jar images, 4 oil bottle images, podis, chilli, turmeric).",
+    "No broken images (naturalWidth==0) on homepage or on any of the 20 product detail pages.",
+    "Avakai Pickle & Maagai Pickle: out-of-stock-cta present on grid; pd-out-of-stock present on detail; no add-cart buttons present anywhere.",
+    "Chicken/Mutton/Prawn/Allam Sweet pickles have add-cart-<slug> buttons on grid and show 'Available to Order' badge.",
+    "Spices (chilli/turmeric/cumin/coriander): enquire-cta-<slug> on grid links to wa.me/919675334567; no add-cart buttons; no numeric prices shown.",
+    "Oils (groundnut/sunflower/sesame/coconut): coming-soon-cta on grid and pd-coming-soon on detail; not orderable.",
+    "Cashew Brittle: add-to-cart succeeds; cart drawer opens showing 'Cashew Brittle 500 g ₹500' with ORDER total and SEND ORDER ON WHATSAPP button.",
+    "home-contact-whatsapp href = https://wa.me/919675334567?text=... (correct number).",
+    "Header nav links SPICES/PICKLES/CASHEW BRITTLE/OILS/CONTACT resolve to /shop/<cat> and /contact; four category quick-links present on homepage.",
+    "Mobile 390px: exact 2-column grid confirmed by matching card top offsets (pairs share rows), no horizontal overflow, no broken images."
+  ],
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py has grown to 930+ lines mixing models, auth, routes, and a large INITIAL_PRODUCTS seed; recommend splitting into routers/, models/, seeds/ modules (>700 line threshold).",
+    "Harmless but noisy: on every public page load the browser hits /api/auth/me and the server returns 401 (expected for unauthenticated storefront). Consider suppressing the request on public routes to keep the console clean.",
+    "ProductCard mock-image fallback branch is unreachable for pickles now that seed force-syncs pickle images (dead branch for current catalog, but fine as defensive fallback).",
+    "DialogContent accessibility warning: Cart drawer / dialog is missing a Description or aria-describedby — add DialogDescription to the shadcn cart drawer for a11y compliance.",
+    "sort_order change requires re-seed on every env; the current $set in seed() handles it, but note that admins editing sort_order via a future admin UI will be overwritten on restart."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped per request)", "frontend": "100%"},
+  "test_credentials": "N/A — storefront is public; admin creds in /app/memory/test_credentials.md not needed.",
+  "seed_data_creation": "None — read-only verification against existing seed.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Catalogue-only round complete and clean. Backend GET /api/products returns 20 products in sort_order 0..19. All image assets under /products/*.jpg return 200. If future rounds change pickle pricing status, note that pickle_stock_v1 migration is one-time and after that availability is DB-managed. The /api/auth/me 401 noise on every page load is harmless but visible in console.",
+  "rca of the issue": "No issues found this round."
+}
