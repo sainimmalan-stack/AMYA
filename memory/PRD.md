@@ -601,3 +601,10 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 - Not independently re-verified: true mobile pixel rendering via screenshot tool (it min-renders ~1568px); mitigated by scrollWidth overflow checks at 375/768 (all ok) and tablet-768 render confirming 2-col aligned grid.
 - Preview only — redeploy needed for live.
 
+
+## Changelog — 2026-10-13 (Our Story — real kitchen photo + Two Generations section)
+- Used the founder's uploaded real kitchen photograph ("Rustic Kitchen Food Preparation Team.png") as-is: converted to web-optimized JPEG at original 3:2 proportions (1536x1024, 254 KB, quality 85 progressive) with NO colour/face alteration. Saved to /app/frontend/public/products/our-story-kitchen.jpg.
+- Added a new "Our Story — Two Generations" editorial section to OurStory.jsx (/our-story), below the existing founder section: image-left/story-right on desktop (lg:grid-cols-2), image-first then story on mobile/tablet. Eyebrow "OUR STORY", heading "Two Generations. One Love for Homemade Food.", exact 4-paragraph body copy. Alt text: "Amulya and her mother-in-law, Leela, preparing traditional homemade food in a kitchen." Subtle rounded-xl, no heavy shadows/frames/animation; terracotta/ivory palette.
+- Both women (Amulya, Leela) fully visible, 3:2 proportions preserved (no cropping of the two). Naming rule honoured ("her mother-in-law, Leela").
+- Verified: image serves (200), renders correctly at desktop 1440 (two-column) and tablet/mobile 768 (stacked, image first). Preview only — redeploy needed for live.
+
