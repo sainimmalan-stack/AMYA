@@ -18,7 +18,13 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Oil "Bring Your Own Bottle" offer (2026-10-13e) — preview only, NOT yet published
+## Three targeted fixes (2026-10-13f) — preview only, NOT yet published
+- ISSUE 1: Compacted the OilRefillOffer promo card on mobile — reduced outer padding (py-7->py-5), heading/desc margins (mt-2->1.5), grid gap/margin (gap-4 mt-6 -> gap-3 mt-4), sub-card padding (py-5->py-4), bottom margin (mb-8->mb-6). Wording/colours/offers unchanged.
+- ISSUE 2: Oils now show ONLY "1 litre" — seed oil pack override (server.py ~L856) changed from [500 ml, 1 litre] to [1 litre]. Affects cards, detail pages and selectors. Pickle/spice/podi quantities untouched.
+- ISSUE 3: Pickle glass was reading as CLEAR (amber came only from contents). Regenerated all 6 with a new master jar that has thick DARK GOLDEN-BROWN AMBER GLASS visible in the empty headspace/neck/shoulders/walls (not just contents). master+edit approach for consistency; cache bumped to ?v=5. Availability/prices preserved (Avakai/Maagai out-of-stock). Spice pouches, podi, oils, cashew images untouched.
+- Verified on mobile (390px): compact card, "1 litre" only (no "500 ml"), six consistent amber jars.
+
+
 - Added an elegant terracotta/ivory promo card (`OilRefillOffer.jsx`) at the top of the oils section on /shop/oils only: "Bring Your Own Bottle & Save ₹60" with two distinct blocks — Refill & Save (₹60 bottling-charge saving) and Return Your AMYA Bottle (₹60 refund), clearly separated.
 - Hyderabad-only; "Contact Us on WhatsApp" button → wa.me/919675334567 (pre-filled msg); fine print: message before visiting + not auto-applied to online orders. No business address shown.
 - Oil prices/availability unchanged; oils stay at bottom of catalogue; no other section/design changed. Verified desktop + mobile (390px).

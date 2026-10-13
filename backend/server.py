@@ -853,7 +853,7 @@ async def seed():
         p = dict(p)
         # Standard pack-size options by category (fixed set for coming-soon ranges).
         if p.get("category") == "oils":
-            p["pack_sizes"] = [{"label": "500 ml", "price": None}, {"label": "1 litre", "price": None}]
+            p["pack_sizes"] = [{"label": "1 litre", "price": None}]
         elif p.get("category") == "pickles":
             prices = PICKLE_PRICES.get(p["slug"], [None, None, None])
             p["pack_sizes"] = [
@@ -861,7 +861,7 @@ async def seed():
                 {"label": "500 g", "price": prices[1]},
                 {"label": "1 kg", "price": prices[2]},
             ]
-            p["images"] = [f"/products/{p['slug']}.jpg?v=4"]
+            p["images"] = [f"/products/{p['slug']}.jpg?v=5"]
         images = p.pop("images", [])
         # `availability` is admin-managed inventory: set it only on first insert so
         # changes made in the admin panel (e.g. marking stock back in) persist across

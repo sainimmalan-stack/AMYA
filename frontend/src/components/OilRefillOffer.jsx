@@ -11,18 +11,18 @@ export const OilRefillOffer = () => {
     <Reveal>
       <div
         data-testid="oil-refill-offer"
-        className="rounded-2xl border border-terracotta/30 bg-terracotta/5 px-6 py-7 sm:px-8 sm:py-8 mb-8 sm:mb-10"
+        className="rounded-2xl border border-terracotta/30 bg-terracotta/5 px-5 py-5 sm:px-8 sm:py-7 mb-6 sm:mb-10"
       >
         <span className="font-sans text-[11px] uppercase tracking-[0.25em] text-terracotta">Hyderabad only</span>
-        <h2 className="font-serif text-2xl sm:text-3xl text-ink mt-2 leading-tight [text-wrap:balance]">
+        <h2 className="font-serif text-xl sm:text-3xl text-ink mt-1.5 leading-tight [text-wrap:balance]">
           Bring Your Own Bottle &amp; Save ₹60
         </h2>
-        <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 leading-relaxed">
+        <p className="font-sans text-sm sm:text-base text-ink-soft mt-1.5 leading-relaxed">
           Ordering from Hyderabad? Save ₹60 on bottling charges.
         </p>
 
-        <div className="grid sm:grid-cols-2 gap-4 mt-6">
-          <div className="rounded-xl bg-ivory/70 border border-beige px-5 py-5" data-testid="oil-offer-refill">
+        <div className="grid sm:grid-cols-2 gap-3 mt-4">
+          <div className="rounded-xl bg-ivory/70 border border-beige px-4 py-4" data-testid="oil-offer-refill">
             <div className="flex items-center gap-2.5">
               <Droplet size={18} className="text-terracotta shrink-0" />
               <h3 className="font-sans text-xs uppercase tracking-[0.18em] text-ink font-medium">Refill &amp; Save</h3>
@@ -33,7 +33,7 @@ export const OilRefillOffer = () => {
             </p>
           </div>
 
-          <div className="rounded-xl bg-ivory/70 border border-beige px-5 py-5" data-testid="oil-offer-return">
+          <div className="rounded-xl bg-ivory/70 border border-beige px-4 py-4" data-testid="oil-offer-return">
             <div className="flex items-center gap-2.5">
               <Recycle size={18} className="text-terracotta shrink-0" />
               <h3 className="font-sans text-xs uppercase tracking-[0.18em] text-ink font-medium">Return Your AMYA Bottle</h3>
