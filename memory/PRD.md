@@ -591,3 +591,13 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 - Verified by testing agent (iteration_18.json, frontend 100%): pack switching updates pd-total, qty +/- updates total, Add to Cart increments cart badge, pickle oil line below button, cashew brittle only 2 packs/no 10 kg/no pre-order, chilli shows Enquire, accordion expands, no 'India' text, pricing within fold, no new console errors. Preview only — redeploy needed for live.
 - Known pre-existing (not a regression): /api/admin/* ping returns 401 on public pages (console noise only).
 
+
+## Changelog — 2026-10-13 (Desktop/laptop audit + fixes)
+- Audited rendered pages at 1280/1366/1440/1920 (+375/768) across home, shop grids, oils, product detail, cart, header, footer.
+- Fix 1 — Product grid alignment (ProductCard.jsx): the "AMYA Signature" eyebrow pushed Nuvvula's name/price below its row-mates, and cards with fewer text lines left the price floating. Fix: reserved a fixed-height eyebrow slot (min-h-[14px]) so names align across every card; pinned pack/price to the bottom of the card (mt-auto) so prices sit on a common baseline; Link is flex-1 and buttons use mt-3 — names, prices and CTAs now line up across every row. Works at desktop/tablet/mobile.
+- Fix 2 — PageHero.jsx: reduced excessive vertical whitespace (py-20/lg:py-28 → py-14/sm:py-16/lg:py-20) and trimmed oversized title (lg:text-7xl → lg:text-6xl) so short-title heroes (e.g. 'AMYA Oils.') aren't sparse and products appear higher.
+- Verified already-correct (no change): max-w-7xl centered containers (no excessive stretch), NO horizontal overflow at any width, all footer links route to real pages, no 'AVAILABLE TO ORDER' badges anywhere, no location/'India' labels on product pages, product prices/pack-sizes/recipe attributions intact, Cashew Brittle has no 10 kg, no pre-order on sweets.
+- Functional test (desktop): pack select updates price (₹250→₹450→₹800), qty updates total, Add to Cart → cart badge + drawer (item, qty, Order total ₹900, Send-on-WhatsApp, Clear cart) all work. WhatsApp links use wa.me/919675334567. No payment gateway exists (WhatsApp-order mode) — not tested/claimed.
+- Not independently re-verified: true mobile pixel rendering via screenshot tool (it min-renders ~1568px); mitigated by scrollWidth overflow checks at 375/768 (all ok) and tablet-768 render confirming 2-col aligned grid.
+- Preview only — redeploy needed for live.
+

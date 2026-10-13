@@ -31,7 +31,7 @@ export default function ProductCard({ product, index = 0 }) {
       transition={{ duration: 0.6, delay: (index % 3) * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
       className="flex flex-col h-full"
     >
-      <Link to={`/product/${product.slug}`} data-testid={`product-card-${product.slug}`} className="group block">
+      <Link to={`/product/${product.slug}`} data-testid={`product-card-${product.slug}`} className="group flex flex-col flex-1">
         <div className="relative overflow-hidden bg-ivory-warm rounded-xl aspect-square">
           {showImg ? (
             (product.category === "spices" || product.category === "oils") ? (
@@ -57,55 +57,61 @@ export default function ProductCard({ product, index = 0 }) {
             <ArrowUpRight size={17} />
           </div>
         </div>
-        <div className="pt-2.5 pb-2.5">
-          {product.signature && (
-            <p className="flex items-center gap-1 font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-terracotta-deep font-semibold mb-0.5" data-testid={`signature-label-${product.slug}`}>
-              <Sparkles size={11} className="shrink-0" /> AMYA Signature
-            </p>
-          )}
-          <h3 className="font-serif text-base sm:text-xl lg:text-2xl text-ink leading-tight">{product.name}</h3>
-          {enquireOnly ? (
-            <>
-              {product.pack_sizes?.length > 0 && (
-                <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 tracking-wide">
-                  {product.pack_sizes.map((s) => s.label).join(" · ")}
-                </p>
-              )}
-              <p className="font-sans text-[11px] sm:text-xs text-terracotta-deep font-medium mt-1" data-testid={`enquire-note-${product.slug}`}>
-                {product.pack_sizes?.length > 0 ? "Enquire for price" : "Enquire for price and pack sizes"}
+        <div className="flex flex-col flex-1 pt-3">
+          {/* Reserved eyebrow slot keeps product names aligned across every card in a row */}
+          <div className="min-h-[14px]">
+            {product.signature && (
+              <p className="flex items-center gap-1 font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-terracotta-deep font-semibold" data-testid={`signature-label-${product.slug}`}>
+                <Sparkles size={11} className="shrink-0" /> AMYA Signature
               </p>
-            </>
-          ) : (
-            <>
-              {product.pack_sizes?.length > 0 ? (
-                <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 tracking-wide">
-                  {product.pack_sizes.map((s) => s.label).join(" · ")}
+            )}
+          </div>
+          <h3 className="font-serif text-base sm:text-xl lg:text-2xl text-ink leading-tight mt-0.5">{product.name}</h3>
+          {/* Pack / price pinned to the bottom so they align across every card */}
+          <div className="mt-auto pt-2">
+            {enquireOnly ? (
+              <>
+                {product.pack_sizes?.length > 0 && (
+                  <p className="font-sans text-[11px] sm:text-xs text-ink-soft tracking-wide">
+                    {product.pack_sizes.map((s) => s.label).join(" · ")}
+                  </p>
+                )}
+                <p className="font-sans text-[11px] sm:text-xs text-terracotta-deep font-medium mt-1" data-testid={`enquire-note-${product.slug}`}>
+                  {product.pack_sizes?.length > 0 ? "Enquire for price" : "Enquire for price and pack sizes"}
                 </p>
-              ) : (
-                product.short_description && (
-                  <p className="font-sans text-[11px] sm:text-xs text-ink-soft mt-1.5 line-clamp-2">{product.short_description}</p>
-                )
-              )}
-              {fromPrice != null && (
-                <p className="font-sans text-[11px] sm:text-xs text-terracotta-deep font-medium mt-1" data-testid={`from-price-${product.slug}`}>
-                  From ₹{fromPrice.toLocaleString("en-IN")}
-                </p>
-              )}
-            </>
-          )}
+              </>
+            ) : (
+              <>
+                {product.pack_sizes?.length > 0 ? (
+                  <p className="font-sans text-[11px] sm:text-xs text-ink-soft tracking-wide">
+                    {product.pack_sizes.map((s) => s.label).join(" · ")}
+                  </p>
+                ) : (
+                  product.short_description && (
+                    <p className="font-sans text-[11px] sm:text-xs text-ink-soft line-clamp-2">{product.short_description}</p>
+                  )
+                )}
+                {fromPrice != null && (
+                  <p className="font-sans text-[11px] sm:text-xs text-terracotta-deep font-medium mt-1" data-testid={`from-price-${product.slug}`}>
+                    From ₹{fromPrice.toLocaleString("en-IN")}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </Link>
       {comingSoon ? (
         <span
           data-testid={`coming-soon-cta-${product.slug}`}
-          className="mt-auto inline-flex items-center justify-center gap-1.5 border border-terracotta/40 text-terracotta-deep py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
+          className="mt-3 inline-flex items-center justify-center gap-1.5 border border-terracotta/40 text-terracotta-deep py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
         >
           Coming soon
         </span>
       ) : outOfStock ? (
         <span
           data-testid={`out-of-stock-cta-${product.slug}`}
-          className="mt-auto inline-flex items-center justify-center gap-1.5 border border-ink/20 bg-ink/5 text-ink-soft py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full cursor-not-allowed"
+          className="mt-3 inline-flex items-center justify-center gap-1.5 border border-ink/20 bg-ink/5 text-ink-soft py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full cursor-not-allowed"
         >
           Currently Unavailable
         </span>
@@ -115,7 +121,7 @@ export default function ProductCard({ product, index = 0 }) {
           target="_blank"
           rel="noreferrer"
           data-testid={`enquire-cta-${product.slug}`}
-          className="mt-auto inline-flex items-center justify-center gap-1.5 sm:gap-2 border border-terracotta text-terracotta-deep hover:bg-terracotta hover:text-ivory transition-colors py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
+          className="mt-3 inline-flex items-center justify-center gap-1.5 sm:gap-2 border border-terracotta text-terracotta-deep hover:bg-terracotta hover:text-ivory transition-colors py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
         >
           <MessageCircle size={13} className="shrink-0" /> <span>Enquire on WhatsApp</span>
         </a>
@@ -124,7 +130,7 @@ export default function ProductCard({ product, index = 0 }) {
           type="button"
           onClick={() => addItem(product, firstPack, 1)}
           data-testid={`add-cart-${product.slug}`}
-          className="mt-auto inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
+          className="mt-3 inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-2 sm:py-2.5 px-2 font-sans text-[9px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.12em] leading-tight text-center rounded-full"
         >
           <ShoppingBag size={13} className="shrink-0" /> <span>Add to cart</span>
         </button>
