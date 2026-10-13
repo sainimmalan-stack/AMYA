@@ -619,3 +619,9 @@ Note: changes are post an earlier deploy initiation — a redeploy is needed to 
 - Our Story (/our-story): kept the authentic uploaded kitchen photo; updated the final body paragraph to new wording ("AMYA is about preserving familiar flavours, honouring family traditions and sharing food made with care."). The "Two Generations" story exists ONLY on /our-story (homepage family section is different copy + a teaser link) — no verbatim duplication.
 - Verified rendered: desktop 1440 balanced two-column hero; mobile 375/768 — no horizontal overflow, h1 at top (~118px), hero image below CTA (~461px). Cart/nav/footer/logo untouched. Preview only — redeploy for live.
 
+
+## Changelog — 2026-10-13 (Image-loading issue on live desktop — diagnosed)
+- Reported: hero + product images blank on desktop/laptop at amyafoods.in. Root cause: STALE PRODUCTION DEPLOY. The live site had been serving a build from before the new hero (amya-hero.jpg?v=3) + our-story-kitchen.jpg + corrected product images and before the hero was changed to render on all breakpoints. On that old build the hero was desktop-only (hidden lg:block), so desktop showed a blank hero while mobile hid it ("looked fine on mobile").
+- Verified NOT a code bug: preview audit = 0 broken images across 12 pages @1440. Live image URLs all return 200 image/jpeg with real sizes. No path/case/CSS/lazy-load/srcset issues found. No code changes required.
+- Resolution: the redeploy that ran at the start of this task published the current code + assets. Live audit now: amyafoods.in @ 1440/1280/768/390 across 7 pages (63 imgs each) = 0 broken images, 0 horizontal overflow; hero v3 composite loads. Issue resolved by deploy, confirmed on the rendered live site via a fresh headless browser (no cache).
+
