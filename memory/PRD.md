@@ -682,3 +682,11 @@ Scope: Built the complete, secure Admin Order Management Dashboard on top of the
 - Set RAZORPAY_WEBHOOK_SECRET in production env + configure the webhook URL (/api/payments/razorpay/webhook, events payment.captured/order.paid) in the Razorpay dashboard so online payments reconcile automatically.
 - Optionally fill Admin → Settings business/invoice fields (FSSAI, address, GSTIN); business_notify_email already defaults to Contactamyafoods@gmail.com.
 - Resend managed sending may land in spam until a domain is verified.
+
+## Changelog — 2026-07-11 (Secure first-run admin bootstrap — no default password)
+- REMOVED env/hardcoded admin seeding from seed() (no more ADMIN_EMAIL/ADMIN_PASSWORD default admin). Production starts with zero admins.
+- Backend: GET /api/auth/setup-status {needs_setup}; POST /api/auth/setup (creates the FIRST admin only while zero admins exist, else 403; bcrypt + password strength: 8+ chars incl. letter & number; logs the new admin in via cookies+token); POST /api/auth/change-credentials (authenticated — verify current password, update own email and/or password, re-issue cookies). validate_password_strength() helper added.
+- Frontend: new /admin/setup page (AdminSetup.jsx) for one-time secure account creation; /admin/login auto-redirects to /admin/setup when needs_setup; /admin (dashboard) → login → setup chain guides first-run founders; new "Account security" card in Settings tab to change own email/password. AuthContext gained setupAdmin().
+- Admin authorization unchanged & enforced server-side on every /api/admin/* (401 without JWT); /admin is not security-by-obscurity.
+- Verified (preview): setup-status=false (admin exists), /auth/setup→403, login OK, change-credentials 401/400 guards, /admin/setup→redirect to login, Account security card renders. Pytest: /app/backend/tests/test_admin_auth.py (7 passed).
+- Production go-live note: first admin is created by the founder at /admin/setup on first launch; no default password ships anywhere.

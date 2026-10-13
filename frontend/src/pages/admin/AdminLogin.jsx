@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
-import { formatApiError } from "@/lib/api";
+import { api, formatApiError } from "@/lib/api";
 import Logo from "@/components/Logo";
 import Btn from "@/components/Btn";
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,12 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { if (admin) navigate("/admin"); }, [admin, navigate]);
+  useEffect(() => {
+    if (admin) { navigate("/admin"); return; }
+    api.get("/auth/setup-status")
+      .then(({ data }) => { if (data.needs_setup) navigate("/admin/setup"); })
+      .catch(() => {});
+  }, [admin, navigate]);
 
   const submit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();

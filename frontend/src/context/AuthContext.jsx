@@ -37,6 +37,16 @@ export function AuthProvider({ children }) {
     return data;
   };
 
+  const setupAdmin = async (name, email, password) => {
+    const { data } = await api.post("/auth/setup", { name, email, password });
+    if (data.token) {
+      localStorage.setItem(TOKEN_KEY, data.token);
+      setAuthHeader(data.token);
+    }
+    setAdmin(data);
+    return data;
+  };
+
   const logout = async () => {
     try { await api.post("/auth/logout"); } catch {}
     localStorage.removeItem(TOKEN_KEY);
@@ -45,7 +55,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ admin, login, logout, check }}>
+    <AuthContext.Provider value={{ admin, login, setupAdmin, logout, check }}>
       {children}
     </AuthContext.Provider>
   );

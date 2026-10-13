@@ -79,6 +79,12 @@ def verify_password(plain: str, hashed: str) -> bool:
         return False
 
 
+def validate_password_strength(pw: str) -> None:
+    if len(pw or "") < 8 or not re.search(r"[A-Za-z]", pw) or not re.search(r"\d", pw):
+        raise HTTPException(status_code=400,
+            detail="Password must be at least 8 characters and include at least one letter and one number.")
+
+
 def create_access_token(user_id: str, email: str) -> str:
     payload = {"sub": user_id, "email": email, "type": "access",
                "exp": datetime.now(timezone.utc) + timedelta(hours=12)}
@@ -310,6 +316,18 @@ class LoginIn(BaseModel):
     password: str
 
 
+class AdminSetupIn(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+
+
+class ChangeCredentialsIn(BaseModel):
+    current_password: str
+    new_email: Optional[EmailStr] = None
+    new_password: Optional[str] = None
+
+
 class StatusUpdate(BaseModel):
     status: str
 
@@ -455,6 +473,63 @@ async def logout(response: Response):
 @api.get("/auth/me")
 async def me(admin: dict = Depends(get_current_admin)):
     return admin
+
+
+@api.get("/auth/setup-status")
+async def setup_status():
+    """Public: tells the frontend whether a first-run admin account still needs creating."""
+    count = await db.users.count_documents({"role": "admin"})
+    return {"needs_setup": count == 0}
+
+
+@api.post("/auth/setup")
+async def setup_admin(payload: AdminSetupIn, response: Response):
+    """Create the FIRST admin account. Succeeds only while zero admins exist."""
+    if await db.users.count_documents({"role": "admin"}) > 0:
+        raise HTTPException(status_code=403, detail="Setup has already been completed. Please sign in.")
+    email = payload.email.lower().strip()
+    name = (payload.name or "").strip() or "Admin"
+    validate_password_strength(payload.password)
+    try:
+        res = await db.users.insert_one({
+            "email": email, "password_hash": hash_password(payload.password),
+            "name": name, "role": "admin", "created_at": now_iso(),
+        })
+    except Exception:
+        # Unique index race / duplicate email
+        raise HTTPException(status_code=403, detail="Setup has already been completed. Please sign in.")
+    uid = str(res.inserted_id)
+    access, refresh = create_access_token(uid, email), create_refresh_token(uid)
+    set_auth_cookies(response, access, refresh)
+    logger.info("First admin created via secure setup: %s", email)
+    return {"id": uid, "email": email, "name": name, "role": "admin", "token": access}
+
+
+@api.post("/auth/change-credentials")
+async def change_credentials(payload: ChangeCredentialsIn, response: Response,
+                             admin: dict = Depends(get_current_admin)):
+    """Logged-in admin updates their own email and/or password securely."""
+    user = await db.users.find_one({"_id": ObjectId(admin["_id"])})
+    if not user or not verify_password(payload.current_password, user["password_hash"]):
+        raise HTTPException(status_code=401, detail="Current password is incorrect.")
+    updates = {}
+    if payload.new_email:
+        new_email = payload.new_email.lower().strip()
+        if new_email != user["email"]:
+            clash = await db.users.find_one({"email": new_email})
+            if clash:
+                raise HTTPException(status_code=400, detail="That email is already in use.")
+            updates["email"] = new_email
+    if payload.new_password:
+        validate_password_strength(payload.new_password)
+        updates["password_hash"] = hash_password(payload.new_password)
+    if not updates:
+        raise HTTPException(status_code=400, detail="Provide a new email and/or a new password.")
+    await db.users.update_one({"_id": user["_id"]}, {"$set": updates})
+    email = updates.get("email", user["email"])
+    uid = str(user["_id"])
+    set_auth_cookies(response, create_access_token(uid, email), create_refresh_token(uid))
+    return {"id": uid, "email": email, "name": user.get("name"), "role": user.get("role")}
 
 
 # ===========================================================================
@@ -875,18 +950,10 @@ DEFAULT_POLICIES = {
 async def seed():
     await db.users.create_index("email", unique=True)
 
-    admin_email = os.environ.get("ADMIN_EMAIL", "admin@example.com").lower()
-    admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
-    existing = await db.users.find_one({"email": admin_email})
-    if existing is None:
-        await db.users.insert_one({
-            "email": admin_email, "password_hash": hash_password(admin_password),
-            "name": "Amulya Nimmala", "role": "admin", "created_at": now_iso(),
-        })
-        logger.info("Seeded admin %s", admin_email)
-    elif not verify_password(admin_password, existing["password_hash"]):
-        await db.users.update_one({"email": admin_email},
-                                  {"$set": {"password_hash": hash_password(admin_password)}})
+    # SECURITY: No default/hardcoded admin is ever created. The very first admin
+    # account is created by the founder via the one-time secure setup flow
+    # (POST /api/auth/setup), which succeeds ONLY while zero admins exist.
+    # This guarantees there is no shipped default password in any environment.
 
     # Upsert the canonical catalog by slug (idempotent) so every environment
     # — preview and production — always carries the full, latest product set.

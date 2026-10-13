@@ -218,6 +218,47 @@ function StatusPill({ status }) {
   return <span className={`px-3 py-1 text-[10px] uppercase tracking-[0.15em] ${map[status] || "bg-ink/10"}`}>{status}</span>;
 }
 
+function AccountSecurity() {
+  const { admin, check } = useAuth();
+  const [cur, setCur] = useState("");
+  const [email, setEmail] = useState("");
+  const [pw, setPw] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [saving, setSaving] = useState(false);
+  const submit = async () => {
+    if (!cur) { toast.error("Enter your current password."); return; }
+    if (!email && !pw) { toast.error("Enter a new email and/or new password."); return; }
+    if (pw) {
+      if (pw.length < 8 || !/[A-Za-z]/.test(pw) || !/\d/.test(pw)) { toast.error("New password must be at least 8 characters with a letter and a number."); return; }
+      if (pw !== confirm) { toast.error("New passwords do not match."); return; }
+    }
+    setSaving(true);
+    try {
+      await api.post("/auth/change-credentials", { current_password: cur, new_email: email || undefined, new_password: pw || undefined });
+      toast.success("Credentials updated.");
+      setCur(""); setEmail(""); setPw(""); setConfirm("");
+      check();
+    } catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Update failed"); }
+    finally { setSaving(false); }
+  };
+  return (
+    <div className="bg-white border border-ink/10 p-5 space-y-4" data-testid="account-security">
+      <div>
+        <p className="font-sans text-xs uppercase tracking-[0.15em] text-ink-soft">Account security</p>
+        <p className="font-sans text-sm text-ink mt-1">Signed in as <b>{admin?.email}</b>. Update your own login below — no default password is stored anywhere.</p>
+      </div>
+      <div><Label className="text-xs text-ink-soft">Current password *</Label><Input data-testid="sec-current" type="password" value={cur} onChange={(e) => setCur(e.target.value)} /></div>
+      <div className="grid sm:grid-cols-2 gap-3">
+        <div><Label className="text-xs text-ink-soft">New email (optional)</Label><Input data-testid="sec-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={admin?.email} /></div>
+        <div className="hidden sm:block" />
+        <div><Label className="text-xs text-ink-soft">New password (optional)</Label><Input data-testid="sec-password" type="password" value={pw} onChange={(e) => setPw(e.target.value)} /></div>
+        <div><Label className="text-xs text-ink-soft">Confirm new password</Label><Input data-testid="sec-confirm" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} /></div>
+      </div>
+      <button onClick={submit} disabled={saving} data-testid="sec-save" className={`${btn} bg-ink text-ivory rounded-full`}>{saving ? "Saving…" : "Update credentials"}</button>
+    </div>
+  );
+}
+
 function SettingsPanel({ settings, setSettings, onSave }) {
   const s = settings;
   const upd = (k, v) => setSettings({ ...s, [k]: v });
@@ -225,6 +266,8 @@ function SettingsPanel({ settings, setSettings, onSave }) {
   return (
     <div className="max-w-3xl space-y-8">
       <SectionTitle action={<button onClick={onSave} data-testid="save-settings" className={`${btn} bg-terracotta text-ivory rounded-full`}>Save settings</button>}>Site settings</SectionTitle>
+
+      <AccountSecurity />
 
       <div className="bg-white border border-ink/10 p-5 space-y-4">
         <ToggleRow label="Announcement bar" checked={s.announcement_enabled} onChange={(v) => upd("announcement_enabled", v)} testid="toggle-announcement" />

@@ -22,6 +22,7 @@ import Checkout from "@/pages/Checkout";
 import OrderConfirmation from "@/pages/OrderConfirmation";
 import NotFound from "@/pages/NotFound";
 import AdminLogin from "@/pages/admin/AdminLogin";
+import AdminSetup from "@/pages/admin/AdminSetup";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminOrderDetail from "@/pages/admin/AdminOrderDetail";
 
@@ -56,6 +57,7 @@ function App() {
               <Route path="/checkout" element={withLayout(<Checkout />)} />
               <Route path="/order/:orderNumber" element={withLayout(<OrderConfirmation />)} />
               <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/setup" element={<AdminSetup />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/orders/:orderNumber" element={<AdminOrderDetail />} />
               <Route path="*" element={withLayout(<NotFound />)} />
