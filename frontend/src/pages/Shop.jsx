@@ -26,9 +26,9 @@ const CATEGORY_META = {
     key: "cashew-brittles",
   },
   oils: {
-    eyebrow: "Cold-extracted, prepared to order",
+    eyebrow: "Prepared to order, in small batches",
     title: ["AMYA Oils."],
-    sub: "Cooking oils cold-extracted in small batches using our own setup. Request a live session to watch the actual process and ask questions before you order.",
+    sub: "Cooking oils prepared to order in small batches. Request a live session to watch the actual process and ask questions before you order.",
     key: "oils",
   },
 };

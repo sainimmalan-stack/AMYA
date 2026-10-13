@@ -492,9 +492,9 @@ async def admin_update_settings(payload: Settings, admin: dict = Depends(get_cur
 INITIAL_PRODUCTS = [
     {
         "slug": "groundnut-oil", "name": "Groundnut Oil", "category": "oils",
-        "short_description": "Cold-extracted groundnut oil, prepared to order in small batches.",
-        "description": "Groundnut oil extracted using our own oil-extraction setup, in small batches. Request a live session to observe the actual preparation process and ask questions before you order.",
-        "extraction_method": "Our own cold-extraction setup.",
+        "short_description": "Groundnut oil, prepared to order in small batches.",
+        "description": "Groundnut oil, prepared to order in small batches. Request a live session to observe the actual preparation process and ask questions before you order.",
+        "extraction_method": "",
         "ingredients": "100% groundnuts (peanuts).",
         "allergens": "Contains peanuts.",
         "storage": "Store in a cool, dry place away from direct sunlight.",
@@ -508,9 +508,9 @@ INITIAL_PRODUCTS = [
     },
     {
         "slug": "sesame-oil", "name": "Sesame Oil", "category": "oils",
-        "short_description": "Aromatic sesame (gingelly) oil, cold-extracted in small batches.",
-        "description": "Sesame oil prepared using our own oil-extraction setup. Availability opens as production is ready — request a live session to see the process.",
-        "extraction_method": "Our own cold-extraction setup.",
+        "short_description": "Aromatic sesame (gingelly) oil, prepared in small batches.",
+        "description": "Availability opens as production is ready — request a live session to see the process.",
+        "extraction_method": "",
         "ingredients": "100% sesame seeds.",
         "allergens": "Contains sesame.",
         "storage": "Store in a cool, dry place away from direct sunlight.",
@@ -523,9 +523,9 @@ INITIAL_PRODUCTS = [
     },
     {
         "slug": "coconut-oil", "name": "Coconut Oil", "category": "oils",
-        "short_description": "Coconut oil, cold-extracted in small batches.",
-        "description": "Coconut oil prepared using our own oil-extraction setup. Availability opens as production is ready.",
-        "extraction_method": "Our own mechanical cold-extraction setup.",
+        "short_description": "Coconut oil, prepared in small batches.",
+        "description": "Availability opens as production is ready.",
+        "extraction_method": "",
         "ingredients": "100% dried coconut.",
         "allergens": "May contain traces depending on shared handling. Details confirmed by AMYA.",
         "storage": "Store in a cool, dry place. May solidify in cooler temperatures.",

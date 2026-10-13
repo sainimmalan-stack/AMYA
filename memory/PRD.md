@@ -18,7 +18,13 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Three targeted fixes (2026-10-13f) — preview only, NOT yet published
+## Pre-launch notice + oil claim cleanup (2026-10-13g) — preview only, NOT yet published
+- ISSUE 1: Removed the entire "PRE-LAUNCH / Online checkout isn't active yet…" notice block from ProductDetail.jsx (gone on ALL product pages, no reserved gap). Also removed the now-unused `checkoutEnabled` var.
+- ISSUE 2: Cleaned oil descriptions/short-descriptions of unverified claims ("our own oil-/cold-extraction setup", "cold-extracted") for Groundnut, Sesame, Coconut; cleared each oil's `extraction_method` to "". Also fixed Shop.jsx oils hero eyebrow/sub ("cold-extracted … using our own setup" removed).
+- ISSUE 3: Removed the "Extraction method" accordion from ProductDetail.jsx (only oils populated it, so effectively oil-only). Description/Ingredients/Storage/Delivery/Returns/Food-Label sections preserved.
+- Verified (mobile, /product/groundnut-oil): no pd-prelaunch, no "Extraction", no "our own", no "pre-launch", clean accordion with no gaps. Prices/availability/images unchanged. No payment gateway touched.
+
+
 - ISSUE 1: Compacted the OilRefillOffer promo card on mobile — reduced outer padding (py-7->py-5), heading/desc margins (mt-2->1.5), grid gap/margin (gap-4 mt-6 -> gap-3 mt-4), sub-card padding (py-5->py-4), bottom margin (mb-8->mb-6). Wording/colours/offers unchanged.
 - ISSUE 2: Oils now show ONLY "1 litre" — seed oil pack override (server.py ~L856) changed from [500 ml, 1 litre] to [1 litre]. Affects cards, detail pages and selectors. Pickle/spice/podi quantities untouched.
 - ISSUE 3: Pickle glass was reading as CLEAR (amber came only from contents). Regenerated all 6 with a new master jar that has thick DARK GOLDEN-BROWN AMBER GLASS visible in the empty headspace/neck/shoulders/walls (not just contents). master+edit approach for consistency; cache bumped to ?v=5. Availability/prices preserved (Avakai/Maagai out-of-stock). Spice pouches, podi, oils, cashew images untouched.

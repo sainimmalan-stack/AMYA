@@ -24,7 +24,6 @@ export default function ProductDetail() {
   const [activeImg, setActiveImg] = useState(0);
 
   const phone = config?.business?.phone || "9675334567";
-  const checkoutEnabled = config?.settings?.checkout_enabled;
   useEffect(() => {
     api.get(`/products/${slug}`).then(({ data }) => setProduct(data)).catch(() => setNotFound(true));
   }, [slug]);
@@ -235,16 +234,6 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Pre-launch notice — only for products not yet open for ordering */}
-          {!checkoutEnabled && !orderable && !outOfStock && (
-            <div className="mt-5 border border-ink/15 bg-ivory-warm/50 px-4 py-3" data-testid="pd-prelaunch">
-              <p className="font-sans text-[11px] uppercase tracking-[0.15em] text-ink-soft">Pre-launch</p>
-              <p className="font-sans text-sm text-ink-soft mt-1">
-                Online checkout isn't active yet — add items to your cart and send your order on WhatsApp. We'll confirm availability, final pricing and delivery with you.
-              </p>
-            </div>
-          )}
-
           {/* Preparation & Dispatch */}
           {(product.preparation || product.dispatch) && (
             <div className="mt-5 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-4 py-4" data-testid="pd-prep-dispatch">
@@ -275,12 +264,6 @@ export default function ProductDetail() {
               <AccordionItem value="desc">
                 <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Description</AccordionTrigger>
                 <AccordionContent className="font-sans text-sm text-ink-soft leading-relaxed whitespace-pre-line">{product.description}</AccordionContent>
-              </AccordionItem>
-            )}
-            {product.extraction_method && (
-              <AccordionItem value="extract">
-                <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Extraction method</AccordionTrigger>
-                <AccordionContent className="font-sans text-sm text-ink-soft leading-relaxed">{product.extraction_method}</AccordionContent>
               </AccordionItem>
             )}
             {product.ingredients && (
