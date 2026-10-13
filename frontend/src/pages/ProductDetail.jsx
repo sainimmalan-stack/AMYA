@@ -117,6 +117,14 @@ export default function ProductDetail() {
             </div>
           )}
 
+          {product.recipe_story && (
+            <div className="mt-5 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-5 py-5" data-testid="pd-recipe-story">
+              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Recipes with a story</p>
+              <h2 className="font-serif text-xl sm:text-2xl text-ink mt-1.5 leading-tight">{product.recipe_story.heading}</h2>
+              <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">{product.recipe_story.body}</p>
+            </div>
+          )}
+
           {/* Pack sizes */}
           {product.pack_sizes?.length > 0 && (
             <div className="mt-5">
@@ -159,6 +167,13 @@ export default function ProductDetail() {
                   <p data-testid="pd-total" className="font-sans text-2xl font-bold text-terracotta tabular-nums leading-none mt-1">₹{total.toLocaleString("en-IN")}</p>
                 </div>
               )}
+            </div>
+          )}
+
+          {orderable && (
+            <div className="mt-5 rounded-lg border border-terracotta/30 bg-terracotta/5 px-4 py-3.5" data-testid="pd-made-to-order">
+              <p className="font-sans text-[11px] uppercase tracking-[0.18em] text-terracotta font-medium">Made to order, with care</p>
+              <p className="font-sans text-sm text-ink-soft mt-1.5 leading-relaxed">We prepare your order after it is placed. Our standard delivery commitment is the third day after ordering. Thank you for giving our kitchen the time it deserves.</p>
             </div>
           )}
 
@@ -299,6 +314,14 @@ export default function ProductDetail() {
               </AccordionItem>
             )}
           </Accordion>
+
+          {/* AMYA Quality Promise */}
+          <div className="mt-6 rounded-lg border border-beige bg-ivory-warm px-5 py-5" data-testid="pd-quality-promise">
+            <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">The AMYA Quality Promise</p>
+            <p className="font-serif text-lg text-ink mt-1.5">Your trust. Our promise.</p>
+            <p className="font-sans text-sm text-ink-soft mt-1.5 leading-relaxed">Damaged order? Incorrect product? We're here to make it right.</p>
+            <Link to="/refund-policy" data-testid="pd-refund-link" className="link-underline inline-flex items-center gap-1.5 font-sans text-xs uppercase tracking-[0.18em] text-ink mt-3">View Refund &amp; Replacement Policy</Link>
+          </div>
         </div>
       </section>
     </div>

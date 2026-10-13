@@ -23,8 +23,8 @@ export default function Footer() {
           <div>
             <h4 className="font-sans text-[11px] uppercase tracking-[0.22em] text-ivory/60 mb-5">Explore</h4>
             <ul className="space-y-3 font-sans text-sm">
-              {[["Shop", "/shop"], ["AMYA Live Press", "/live-press"], ["Transparency", "/transparency"], ["Our Story", "/our-story"], ["About", "/about"]].map(([l, t]) => (
-                <li key={t}><Link to={t} className="link-underline text-ivory/85 hover:text-ivory">{l}</Link></li>
+              {[["Shop", "/shop"], ["Our Story", "/our-story"], ["Prepared with Care", "/#prepared-with-care"], ["AMYA Live Press", "/live-press"], ["Transparency", "/transparency"], ["Refund & Replacement", "/refund-policy"], ["About", "/about"]].map(([l, t]) => (
+                <li key={t}><Link to={t} data-testid={`footer-link-${l.toLowerCase().replace(/[^a-z]+/g, "-").replace(/(^-|-$)/g, "")}`} className="link-underline text-ivory/85 hover:text-ivory">{l}</Link></li>
               ))}
             </ul>
           </div>

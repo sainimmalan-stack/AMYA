@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, MessageCircle, Phone, PackageCheck, Truck } from "lucide-react";
 import { api, waLink, telHref, formatPhoneIN } from "@/lib/api";
@@ -119,10 +119,26 @@ const ORDER_STEPS = [
   { icon: Truck, t: "Delivery", d: "Delivery / courier charges are shared and confirmed before dispatch." },
 ];
 
+const RECIPE_CREDITS = [
+  { eyebrow: "By Leela", title: "Traditional Family Recipes", body: "Nuvvula Podi, Avakai and Magai follow Leela's family recipes, shaped by more than 30 years of cooking experience." },
+  { eyebrow: "By Ammu", title: "Pickle Specialities", body: "Our non-vegetarian pickles — chicken, mutton and prawn — are prepared by Ammu, with a passion for deep, satisfying flavours." },
+  { eyebrow: "Ammu's Ammamma", title: "A Recipe Passed Down", body: "Sweet Allam Pickle comes from Ammu's Ammamma's family recipe — a much-loved taste passed down through generations." },
+];
+
 export default function Home() {
   const { config } = useConfig();
+  const { hash } = useLocation();
   const wa = config?.business?.whatsapp || "919675334567";
   const phone = config?.business?.phone || "9675334567";
+
+  useEffect(() => {
+    if (!hash) return;
+    const el = document.querySelector(hash);
+    if (el) {
+      const t = setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 350);
+      return () => clearTimeout(t);
+    }
+  }, [hash]);
 
   return (
     <div>
@@ -144,26 +160,21 @@ export default function Home() {
       {/* Products appear immediately */}
       <OurCollection />
 
-      {/* Brand story — concise, below products */}
-      <section className="bg-ivory-warm" data-testid="brand-story-section">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-12 lg:py-14">
+      {/* Prepared with care, after you order */}
+      <section id="prepared-with-care" className="bg-beige scroll-mt-24" data-testid="prepared-with-care-section">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-14 lg:py-16">
           <Reveal>
-            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Our Story</span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink">Small Batches. Unforgettable Taste.</h2>
-            <p className="font-sans text-sm sm:text-base text-ink-soft mt-4 max-w-3xl leading-relaxed">
-              AMYA is a founder-led brand by Amulya Nimmala, bringing together traditional recipes and carefully selected ingredients. Our podis and spice blends are prepared fresh against orders, and our signature cashew brittles are made in small batches — so you always know what you're buying and how it's prepared.
-            </p>
-            <Link to="/our-story" className="link-underline inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink mt-5" data-testid="brand-story-link">
-              More about AMYA <ArrowRight size={14} />
-            </Link>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Our Philosophy</span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink [text-wrap:balance]">Prepared With Care, After You Order</h2>
+            <div className="mt-5 max-w-3xl space-y-4 font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
+              <p>At AMYA, good food cannot be rushed. We prepare your order after it is placed, giving us the time to focus on the ingredients, preparation, and care that go into every batch.</p>
+              <p>We believe our customers deserve food made with attention, not mass-produced in a hurry.</p>
+              <p className="text-ink font-medium">Our standard delivery commitment is the third day after your order is placed. Please allow this preparation time so we can give your order the care it deserves.</p>
+              <p>We appreciate your patience and your trust in our kitchen.</p>
+            </div>
           </Reveal>
-        </div>
-      </section>
 
-      {/* How ordering works */}
-      <section className="bg-beige">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 lg:py-12">
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-3 gap-6 mt-9">
             {ORDER_STEPS.map((s, i) => (
               <Reveal key={s.t} delay={i * 0.07}>
                 <div className="flex gap-3 items-start">
@@ -176,9 +187,76 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
-          <p className="font-sans text-xs text-ink-soft mt-6">
-            Online checkout isn't active yet — we take orders on WhatsApp and confirm payment directly. International shipping is quoted individually.
+          <p className="font-sans text-xs text-ink-soft mt-7 max-w-3xl leading-relaxed">
+            The third-day commitment covers our preparation and dispatch; actual delivery time also depends on your location and the courier. Online checkout isn't active yet — we take orders on WhatsApp and confirm payment directly. International shipping is quoted individually.
           </p>
+        </div>
+      </section>
+
+      {/* The Heart Behind AMYA — family story */}
+      <section id="our-family" className="bg-ivory-warm scroll-mt-24" data-testid="heart-behind-amya-section">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-16 lg:py-20">
+          <Reveal>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Our Family</span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink [text-wrap:balance]">The Heart Behind AMYA</h2>
+          </Reveal>
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-14 mt-6">
+            <Reveal>
+              <div className="space-y-4 font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
+                <p>AMYA is not simply a business selling food. It was born from Amulya's genuine love of cooking and her desire to share the food she loves making.</p>
+                <p>Amulya, affectionately known as Ammu, is passionate about preparing delicious food. She is building AMYA around the belief that the best food comes from a genuine love of cooking, thoughtfully selected ingredients, and recipes that carry memories.</p>
+              </div>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <div className="space-y-4 font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
+                <p>Her mother-in-law, Leela, shares the same passion for cooking. She supports AMYA by helping source quality raw materials from across India and by bringing decades of cooking experience and traditional recipes to the kitchen.</p>
+                <p>Together, Ammu and Leela bring different strengths to AMYA: a passion for preparing delicious food, an appreciation for traditional recipes, and a commitment to selecting ingredients carefully.</p>
+                <p>AMYA is our way of sharing this family passion with your home.</p>
+              </div>
+            </Reveal>
+          </div>
+          <Reveal>
+            <p className="font-serif text-xl sm:text-2xl lg:text-3xl text-terracotta mt-10 max-w-3xl leading-snug [text-wrap:balance]">More than a food brand, AMYA is a family kitchen sharing the flavours, recipes, and traditions we love.</p>
+          </Reveal>
+
+          {/* Good food starts with good ingredients */}
+          <Reveal>
+            <div className="mt-10 rounded-xl border border-terracotta/20 bg-ivory px-6 py-7 sm:px-8 sm:py-8 max-w-3xl" data-testid="ingredient-sourcing">
+              <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Sourcing</span>
+              <h3 className="font-serif text-2xl sm:text-3xl text-ink mt-2 leading-tight [text-wrap:balance]">Good Food Starts With Good Ingredients</h3>
+              <div className="mt-3 space-y-3 font-sans text-sm sm:text-base text-ink-soft leading-relaxed">
+                <p>Behind every memorable recipe is the care taken in choosing its ingredients. Leela helps AMYA source quality raw materials from across India, bringing her experience and attention to ingredient selection into the process.</p>
+                <p>We believe that thoughtful sourcing is an important part of preparing food we are proud to share.</p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Recipes with a story */}
+      <section className="bg-ivory" data-testid="recipes-with-a-story-section">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-14 lg:py-16">
+          <Reveal>
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Heritage</span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2 text-ink [text-wrap:balance]">Recipes With a Story</h2>
+            <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 max-w-2xl leading-relaxed">AMYA's recipes come from the people who love preparing them — each one carries its own family story.</p>
+          </Reveal>
+          <div className="grid sm:grid-cols-3 gap-5 mt-8">
+            {RECIPE_CREDITS.map((r, i) => (
+              <Reveal key={r.title} delay={i * 0.07}>
+                <div className="h-full rounded-xl border border-beige bg-ivory-warm px-6 py-6">
+                  <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">{r.eyebrow}</p>
+                  <h3 className="font-serif text-xl sm:text-2xl text-ink mt-2 leading-tight">{r.title}</h3>
+                  <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">{r.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <Link to="/our-story" className="link-underline inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink mt-8" data-testid="recipes-story-link">
+              More about AMYA <ArrowRight size={14} />
+            </Link>
+          </Reveal>
         </div>
       </section>
 

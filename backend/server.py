@@ -129,6 +129,11 @@ class DeliveryRegion(BaseModel):
     text: str
 
 
+class RecipeStory(BaseModel):
+    heading: str
+    body: str
+
+
 class Product(BaseDocument):
     slug: str
     name: str
@@ -151,6 +156,7 @@ class Product(BaseDocument):
     preparation: str = ""
     dispatch: str = ""
     delivery_details: List[DeliveryRegion] = []
+    recipe_story: Optional[RecipeStory] = None
     images: List[str] = []
     pack_sizes: List[PackSize] = []
     availability: str = "coming-soon"  # ready | order | available | coming-soon | enquire | unavailable
@@ -668,6 +674,7 @@ INITIAL_PRODUCTS = [
         "preparation": "",
         "dispatch": "",
         "delivery_details": [],
+        "recipe_story": {"heading": "LEELA'S TRADITIONAL RECIPE", "body": "Our Nuvvula Podi follows Leela's traditional family recipe, shaped by more than 30 years of cooking experience. Prepared with care and inspired by the flavours she has perfected over the years, this recipe brings a cherished family tradition to the AMYA kitchen."},
         "availability": "order", "live_press": False, "featured": True, "sort_order": 8,
     },
     {
@@ -748,6 +755,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
+        "recipe_story": {"heading": "A FAMILY RECIPE BY LEELA", "body": "Our Avakai follows Leela's family recipe, carrying the traditional Andhra pickle-making knowledge she has developed over more than 30 years of cooking experience. A recipe rooted in family tradition and prepared with care."},
         "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 6,
     },
     {
@@ -758,6 +766,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
+        "recipe_story": {"heading": "A FAMILY RECIPE BY LEELA", "body": "Our Magai follows Leela's traditional family recipe, reflecting more than 30 years of cooking experience and a love for authentic Andhra flavours. A treasured family preparation, brought to you by AMYA."},
         "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 7,
     },
     {
@@ -768,6 +777,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
+        "recipe_story": {"heading": "AMMU'S AMMAMMA'S ORIGINAL RECIPE", "body": "Some recipes are too special to leave behind. AMYA's Sweet Allam Pickle comes from Ammu's Ammamma's family recipe, preserving a much-loved taste passed down through generations. It is a tribute to the original recipe and the family memories that make traditional food so special."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 5,
     },
     {
@@ -778,6 +788,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
+        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Ammu prepares AMYA's non-vegetarian pickles, bringing her passion and skill for pickles and podis into every batch. Her focus is on creating deeply satisfying flavours through careful preparation and thoughtfully selected ingredients. These recipes reflect Ammu's love of cooking and her commitment to sharing food she is proud to serve."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 2,
     },
     {
@@ -788,6 +799,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
+        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Ammu prepares AMYA's non-vegetarian pickles, bringing her passion and skill for pickles and podis into every batch. Her focus is on creating deeply satisfying flavours through careful preparation and thoughtfully selected ingredients. These recipes reflect Ammu's love of cooking and her commitment to sharing food she is proud to serve."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 3,
     },
     {
@@ -798,6 +810,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
+        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Ammu prepares AMYA's non-vegetarian pickles, bringing her passion and skill for pickles and podis into every batch. Her focus is on creating deeply satisfying flavours through careful preparation and thoughtfully selected ingredients. These recipes reflect Ammu's love of cooking and her commitment to sharing food she is proud to serve."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 4,
     },
 ]
