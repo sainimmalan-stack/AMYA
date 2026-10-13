@@ -18,7 +18,14 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Catalogue final-check round (2026-10-13b) — preview only, NOT yet published
+## Oil visuals + Sunflower removal (2026-10-13c) — preview only, NOT yet published
+- **Oil bottles regenerated** from the user's actual bottle reference photo (IMG_9509): tall SQUARE amber-glass bottles with flat sides, defined corners, short neck and ribbed black screw cap, warm golden highlights — Groundnut, Sesame, Coconut. Clean warm-neutral studio backgrounds, AMYA terracotta label with correct oil name. Cache bumped to ?v=3.
+- **Sunflower Oil removed completely**: product block deleted from INITIAL_PRODUCTS, removed from FORCE_IMAGE_SLUGS, image file deleted; delete_many drops it from DB (total products 20 -> 19). GET /api/products/sunflower-oil = 404; no references anywhere in code/data; no broken links.
+- Oil section stays last; other oils' prices/capacities/availability unchanged (all coming-soon, not orderable). No checkout/payment changes.
+- Verified desktop + mobile (390px): 3 oil cards aligned/responsive, bottles render, logo intact.
+- NOTE: earlier label-shrink request (Task 3 of prior round) on the 6 REAL approved photos was left pending the user's decision (brand-safety); Cumin/Coriander labels already fixed + slightly smaller.
+
+
 - **Pickle prices verified correct** on preview (no change needed; already matched): Chicken 400/750/1400 (in-stock), Avakai 200/300/500 (out-of-stock), Maagai 200/300/500 (out-of-stock), Allam 200/300/500 (in-stock), Mutton 500/900/1700 (in-stock), Prawn 600/1000/1900 (in-stock). "From ₹" and cart totals confirmed accurate (Prawn 1kg x2 = ₹3,800). NOTE: live amyafoods.in still shows old data until deployed.
 - **Oil images regenerated** as distinctly SQUARE amber glass bottles with black caps (previous versions looked tall/narrow). Cache bumped to ?v=2. Oils remain coming-soon / not orderable, kept at end.
 - Catalogue consistency re-checked: 20 products, no duplicates, correct order, all images 200 (Kaju Bites intentionally image-less placeholder).
