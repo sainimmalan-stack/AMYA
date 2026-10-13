@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
-  ArrowLeft, FileText, MessageCircle, Truck, Ban, History, CreditCard, MapPin, Package,
+  ArrowLeft, FileText, MessageCircle, Truck, Ban, History, CreditCard, MapPin, Package, Trash2, RotateCcw,
 } from "lucide-react";
 import { api, API, formatApiError, waLink } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
@@ -48,6 +48,9 @@ export default function AdminOrderDetail() {
   const [courier, setCourier] = useState("");
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
+  const [delOpen, setDelOpen] = useState(false);
+  const [permOpen, setPermOpen] = useState(false);
+  const [permAck, setPermAck] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -93,8 +96,35 @@ export default function AdminOrderDetail() {
     setCancelOpen(false); setCancelReason("");
   };
 
+  const doSoftDelete = async () => {
+    setSaving(true);
+    try {
+      await api.delete(`/admin/orders/${orderNumber}`);
+      toast.success("Order moved to Trash");
+      navigate("/admin");
+    } catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Delete failed"); }
+    finally { setSaving(false); setDelOpen(false); }
+  };
+  const doRestore = async () => {
+    setSaving(true);
+    try { await api.post(`/admin/orders/${orderNumber}/restore`); toast.success("Order restored"); load(); }
+    catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Restore failed"); }
+    finally { setSaving(false); }
+  };
+  const doPermanent = async () => {
+    setSaving(true);
+    try {
+      await api.delete(`/admin/orders/${orderNumber}/permanent`);
+      toast.success("Order permanently deleted");
+      navigate("/admin");
+    } catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Permanent delete failed"); }
+    finally { setSaving(false); setPermOpen(false); setPermAck(false); }
+  };
+
   const c = order.customer || {};
   const isCancelled = order.order_status === "cancelled";
+  const isDeleted = !!order.deleted_at;
+  const hasFinancialRecord = !!order.razorpay_payment_id || ["paid", "cod_collected", "refund_processing", "refunded"].includes(order.payment_status);
   const ps = order.payment_status;
   const moneyCollected = ps === "paid" || ps === "cod_collected";
   const waMsg = `Hello ${c.name || ""}, regarding your AMYA order ${order.order_number}.`;
@@ -128,6 +158,19 @@ export default function AdminOrderDetail() {
           <div className="bg-red-50 border border-red-200 rounded-xl p-4" data-testid="cancel-reason-banner">
             <p className="font-sans text-xs uppercase tracking-[0.12em] text-red-700 mb-1">Cancelled</p>
             <p className="font-sans text-sm text-red-800">{order.cancellation_reason}</p>
+          </div>
+        )}
+
+        {isDeleted && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3" data-testid="trash-banner">
+            <div>
+              <p className="font-sans text-xs uppercase tracking-[0.12em] text-amber-700 mb-1">In Trash</p>
+              <p className="font-sans text-sm text-amber-800">Deleted {formatDateTime(order.deleted_at)}{order.deleted_by ? ` by ${order.deleted_by}` : ""}. Hidden from the dashboard and excluded from counts & revenue.</p>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={doRestore} disabled={saving} data-testid="detail-restore" className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-sans uppercase tracking-[0.08em] rounded-full border border-emerald-300 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-colors"><RotateCcw size={14} /> Restore</button>
+              <button onClick={() => { setPermAck(false); setPermOpen(true); }} disabled={saving} data-testid="detail-permanent" className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-sans uppercase tracking-[0.08em] rounded-full bg-red-600 text-white border border-red-600 hover:bg-red-700 transition-colors"><Trash2 size={14} /> Delete permanently</button>
+            </div>
           </div>
         )}
 
@@ -274,6 +317,14 @@ export default function AdminOrderDetail() {
                 </p>
               </div>
             </Card>
+
+            {!isDeleted && (
+              <Card title="Danger zone" icon={Trash2} testid="detail-danger">
+                <p className="font-sans text-xs text-ink-soft mb-3">Move this order to Trash. It stays retained and can be restored anytime.</p>
+                <button onClick={() => setDelOpen(true)} disabled={saving} data-testid="delete-order-btn"
+                        className={`${actBtn} justify-center w-full border-red-300 text-red-600 hover:bg-red-600 hover:text-white`}><Trash2 size={14} /> Move to Trash</button>
+              </Card>
+            )}
           </div>
         </div>
       </div>
@@ -291,6 +342,39 @@ export default function AdminOrderDetail() {
             <button onClick={() => setCancelOpen(false)} className={`${actBtn} border-ink/20 text-ink`}>Keep order</button>
             <button onClick={doCancel} disabled={saving || !cancelReason.trim()} data-testid="confirm-cancel"
                     className={`${actBtn} bg-red-600 text-white border-red-600 hover:bg-red-700`}>Cancel order</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Move to Trash dialog */}
+      <Dialog open={delOpen} onOpenChange={setDelOpen}>
+        <DialogContent className="bg-ivory">
+          <DialogHeader><DialogTitle className="font-serif text-2xl">Move this order to Trash?</DialogTitle></DialogHeader>
+          <p className="font-sans text-sm text-ink-soft">Order <b className="text-ink">{order.order_number}</b> will be hidden from the dashboard and excluded from counts and revenue. It is retained and can be restored from Trash anytime.</p>
+          <DialogFooter>
+            <button onClick={() => setDelOpen(false)} className={`${actBtn} border-ink/20 text-ink`}>Keep order</button>
+            <button onClick={doSoftDelete} disabled={saving} data-testid="confirm-soft-delete"
+                    className={`${actBtn} bg-red-600 text-white border-red-600 hover:bg-red-700`}>Move to Trash</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Permanent delete dialog */}
+      <Dialog open={permOpen} onOpenChange={(o) => { setPermOpen(o); if (!o) setPermAck(false); }}>
+        <DialogContent className="bg-ivory">
+          <DialogHeader><DialogTitle className="font-serif text-2xl">Permanently delete this order?</DialogTitle></DialogHeader>
+          <p className="font-sans text-sm text-ink-soft">
+            Order <b className="text-ink">{order.order_number}</b> will be erased forever — this cannot be undone.
+            {hasFinancialRecord && " This order has a verified payment/refund record and is retained for tax & accounting compliance, so permanent deletion will be blocked."}
+          </p>
+          <label className="flex items-center gap-2 mt-2 font-sans text-sm text-ink" data-testid="detail-perm-ack">
+            <input type="checkbox" className="h-4 w-4 accent-[#B94F40]" checked={permAck} onChange={(e) => setPermAck(e.target.checked)} />
+            I understand this is permanent and irreversible.
+          </label>
+          <DialogFooter>
+            <button onClick={() => setPermOpen(false)} className={`${actBtn} border-ink/20 text-ink`}>Cancel</button>
+            <button onClick={doPermanent} disabled={saving || !permAck} data-testid="confirm-detail-permanent"
+                    className={`${actBtn} bg-red-600 text-white border-red-600 hover:bg-red-700`}>Delete forever</button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

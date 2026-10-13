@@ -375,6 +375,10 @@ class OrderStatusUpdate(BaseModel):
     note: Optional[str] = None
 
 
+class BulkOrderAction(BaseModel):
+    order_numbers: List[str] = []
+
+
 # Order lifecycle (single source of truth) and payment states
 ORDER_STATUSES = ["placed", "confirmed", "preparing", "ready_to_dispatch", "shipped", "delivered", "cancelled"]
 # COD: cod_pending -> cod_collected ; Online: pending -> paid / failed ; Refund: refund_processing -> refunded
@@ -996,6 +1000,8 @@ async def seed():
     await db.users.create_index("email", unique=True)
     await db.password_reset_tokens.create_index("token", unique=True)
     await db.password_reset_tokens.create_index("expires_at", expireAfterSeconds=0)
+    # Backfill soft-delete marker so active/trash queries are consistent for legacy orders.
+    await db.orders.update_many({"deleted_at": {"$exists": False}}, {"$set": {"deleted_at": None}})
 
     # SECURITY: No default/hardcoded admin is ever created. The very first admin
     # account is created by the founder via the one-time secure setup flow
@@ -1373,12 +1379,29 @@ def _admin_order(doc: dict) -> dict:
     doc.setdefault("courier_name", "")
     doc.setdefault("cancellation_reason", "")
     doc.setdefault("status_history", [])
+    doc.setdefault("deleted_at", None)
+    doc.setdefault("deleted_by", None)
+    doc.setdefault("deletion_log", [])
     return doc
+
+
+# A record with real financial/tax significance must be retained (soft-delete only).
+def _has_retained_financial_record(doc: dict) -> bool:
+    return bool(doc.get("razorpay_payment_id")) or (
+        doc.get("payment_status") in {"paid", "cod_collected", "refund_processing", "refunded"})
 
 
 @api.get("/admin/orders")
 async def admin_orders(admin: dict = Depends(get_current_admin)):
-    docs = await db.orders.find().sort("created_at", -1).to_list(2000)
+    # Active orders only — soft-deleted orders live in Trash and are excluded
+    # from the dashboard, counts and revenue.
+    docs = await db.orders.find({"deleted_at": None}).sort("created_at", -1).to_list(2000)
+    return [_admin_order(d) for d in docs]
+
+
+@api.get("/admin/orders/deleted")
+async def admin_orders_deleted(admin: dict = Depends(get_current_admin)):
+    docs = await db.orders.find({"deleted_at": {"$ne": None}}).sort("deleted_at", -1).to_list(2000)
     return [_admin_order(d) for d in docs]
 
 
@@ -1485,6 +1508,102 @@ async def admin_resend_email(order_number: str, admin: dict = Depends(get_curren
     if not res.get("ok"):
         raise HTTPException(status_code=502, detail=f"Email not sent: {res.get('error')}")
     return {"ok": True, "detail": res.get("id")}
+
+
+# -------------------- Admin: order deletion (soft delete / trash / restore) --------------------
+async def _audit_deletion(order_number: str, action: str, admin: dict, extra: dict = None):
+    """Durable deletion audit trail (survives even a permanent delete)."""
+    entry = {"order_number": order_number, "action": action,
+             "by": admin.get("name") or "Admin", "by_email": admin.get("email") or "",
+             "at": now_iso()}
+    if extra:
+        entry.update(extra)
+    await db.deletion_audit.insert_one(dict(entry))
+    return entry
+
+
+async def _soft_delete_one(order_number: str, admin: dict) -> str:
+    """Returns 'deleted' | 'not_found' | 'already'."""
+    doc = await db.orders.find_one({"order_number": order_number})
+    if not doc:
+        return "not_found"
+    if doc.get("deleted_at"):
+        return "already"
+    entry = await _audit_deletion(order_number, "soft_delete", admin)
+    await db.orders.update_one({"order_number": order_number}, {
+        "$set": {"deleted_at": entry["at"], "deleted_by": entry["by"], "deleted_by_email": entry["by_email"]},
+        "$push": {"deletion_log": {"action": "soft_delete", "by": entry["by"], "by_email": entry["by_email"], "at": entry["at"]}},
+    })
+    return "deleted"
+
+
+@api.delete("/admin/orders/{order_number}")
+async def admin_soft_delete_order(order_number: str, admin: dict = Depends(get_current_admin)):
+    """Move a single order to Trash (soft delete). The record is retained, just hidden."""
+    result = await _soft_delete_one(order_number, admin)
+    if result == "not_found":
+        raise HTTPException(status_code=404, detail="Order not found")
+    if result == "already":
+        raise HTTPException(status_code=400, detail="This order is already in Trash.")
+    return {"ok": True, "status": "deleted"}
+
+
+@api.post("/admin/orders/bulk-delete")
+async def admin_bulk_delete_orders(payload: BulkOrderAction, admin: dict = Depends(get_current_admin)):
+    """Move multiple orders to Trash (soft delete)."""
+    if not payload.order_numbers:
+        raise HTTPException(status_code=400, detail="No orders selected.")
+    deleted, skipped = 0, 0
+    for on in payload.order_numbers:
+        res = await _soft_delete_one(on, admin)
+        if res == "deleted":
+            deleted += 1
+        else:
+            skipped += 1
+    return {"ok": True, "deleted": deleted, "skipped": skipped}
+
+
+@api.post("/admin/orders/{order_number}/restore")
+async def admin_restore_order(order_number: str, admin: dict = Depends(get_current_admin)):
+    doc = await db.orders.find_one({"order_number": order_number})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Order not found")
+    if not doc.get("deleted_at"):
+        raise HTTPException(status_code=400, detail="This order is not in Trash.")
+    entry = await _audit_deletion(order_number, "restore", admin)
+    await db.orders.update_one({"order_number": order_number}, {
+        "$set": {"deleted_at": None, "deleted_by": None, "deleted_by_email": None},
+        "$push": {"deletion_log": {"action": "restore", "by": entry["by"], "by_email": entry["by_email"], "at": entry["at"]}},
+    })
+    return {"ok": True, "status": "restored"}
+
+
+@api.delete("/admin/orders/{order_number}/permanent")
+async def admin_permanent_delete_order(order_number: str, admin: dict = Depends(get_current_admin)):
+    """Permanently delete an order — ONLY if it carries no retained financial/tax record."""
+    doc = await db.orders.find_one({"order_number": order_number})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Order not found")
+    if not doc.get("deleted_at"):
+        raise HTTPException(status_code=400, detail="Move the order to Trash first, then permanently delete it.")
+    if _has_retained_financial_record(doc):
+        raise HTTPException(status_code=403,
+            detail="This order has a verified payment or refund record and must be retained for tax/accounting compliance. It can stay in Trash but cannot be permanently deleted.")
+    # Record a durable audit snapshot BEFORE removing the order document.
+    await _audit_deletion(order_number, "permanent_delete", admin, extra={
+        "customer_name": (doc.get("customer") or {}).get("name"),
+        "total": doc.get("total"), "payment_status": doc.get("payment_status"),
+        "order_status": doc.get("order_status"), "created_at": doc.get("created_at")})
+    await db.orders.delete_one({"order_number": order_number})
+    return {"ok": True, "status": "permanently_deleted"}
+
+
+@api.get("/admin/deletion-audit")
+async def admin_deletion_audit(admin: dict = Depends(get_current_admin)):
+    docs = await db.deletion_audit.find().sort("at", -1).to_list(2000)
+    for d in docs:
+        d.pop("_id", None)
+    return docs
 
 
 app.include_router(api)
