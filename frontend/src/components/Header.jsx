@@ -11,12 +11,14 @@ import { waLink, telHref } from "@/lib/api";
 const NAV = [
   { to: "/", label: "Home" },
   { to: "/our-story", label: "Our Story" },
-  { to: "/shop/spices", label: "Spices" },
+  { to: "/shop/spices", label: "Spices & Podis" },
   { to: "/shop/pickles", label: "Pickles" },
-  { to: "/shop/cashew-brittles", label: "Cashew Brittle" },
+  { to: "/shop/cashew-brittles", label: "Artisanal Sweets" },
   { to: "/shop/oils", label: "Oils" },
   { to: "/contact", label: "Contact" },
 ];
+
+const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -44,7 +46,7 @@ export default function Header() {
               <Link
                 key={n.to}
                 to={n.to}
-                data-testid={`nav-${n.label.toLowerCase().replace(/ /g, "-")}`}
+                data-testid={`nav-${slugify(n.label)}`}
                 className={`link-underline font-sans text-xs uppercase tracking-[0.18em] transition-colors ${
                   loc.pathname === n.to ? "text-ivory" : "text-ivory/70 hover:text-ivory"
                 }`}
@@ -94,34 +96,34 @@ export default function Header() {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-50 bg-terracotta text-ivory grain"
+            className="fixed inset-0 z-50 bg-terracotta text-ivory grain overflow-y-auto"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             data-testid="mobile-menu"
           >
-            <div className="flex items-center justify-between h-20 px-5">
+            <div className="flex items-center justify-between h-16 px-5">
               <Logo variant="ivory" size="menu" />
               <button onClick={() => setOpen(false)} data-testid="mobile-menu-close" aria-label="Close menu"
                       className="h-10 w-10 inline-flex items-center justify-center">
                 <X size={24} />
               </button>
             </div>
-            <nav className="px-6 mt-6 flex flex-col gap-1">
+            <nav className="px-6 mt-4 flex flex-col">
               {NAV.map((n, i) => (
                 <motion.div key={n.to}
                   initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.06 * i, duration: 0.4 }}>
                   <Link to={n.to} onClick={() => setOpen(false)}
-                        data-testid={`mobile-nav-${n.label.toLowerCase().replace(/ /g, "-")}`}
-                        className="block font-serif text-4xl py-2 border-b border-ivory/15">
+                        data-testid={`mobile-nav-${slugify(n.label)}`}
+                        className="block font-serif text-3xl py-2 border-b border-ivory/10">
                     {n.label}
                   </Link>
                 </motion.div>
               ))}
             </nav>
-            <div className="px-6 mt-8 flex gap-3">
-              <a href={telHref(phone)} className="flex-1 border border-ivory/40 py-3 text-center text-xs uppercase tracking-[0.2em]">Call</a>
-              <a href={waLink(wa, "Hello AMYA")} target="_blank" rel="noreferrer" className="flex-1 bg-ivory text-terracotta py-3 text-center text-xs uppercase tracking-[0.2em]">WhatsApp</a>
+            <div className="px-6 mt-6 mb-8 flex gap-3">
+              <a href={telHref(phone)} className="flex-1 border border-ivory/40 py-2.5 text-center text-xs uppercase tracking-[0.2em] rounded-full">Call</a>
+              <a href={waLink(wa, "Hello AMYA")} target="_blank" rel="noreferrer" className="flex-1 bg-ivory text-terracotta py-2.5 text-center text-xs uppercase tracking-[0.2em] rounded-full">WhatsApp</a>
             </div>
           </motion.div>
         )}

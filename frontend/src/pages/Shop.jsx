@@ -21,7 +21,7 @@ const CATEGORY_META = {
   },
   "cashew-brittles": {
     eyebrow: "Artisanal foods",
-    title: ["Cashew Brittle."],
+    title: ["Artisanal Sweets."],
     sub: "Premium whole roasted cashews dipped in jaggery, crafted in small batches by AMYA.",
     key: "cashew-brittles",
   },

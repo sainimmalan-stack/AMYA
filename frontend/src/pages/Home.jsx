@@ -56,7 +56,7 @@ function Hero() {
 }
 
 const CATEGORIES = [
-  { label: "Cashew Brittle", to: "/shop/cashew-brittles" },
+  { label: "Artisanal Sweets", to: "/shop/cashew-brittles" },
   { label: "Podis & Spices", to: "/shop/spices" },
   { label: "Pickles", to: "/shop/pickles" },
   { label: "Cooking Oils", to: "/shop/oils" },

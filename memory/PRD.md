@@ -18,7 +18,13 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Compact oil offer + serving suggestions (2026-10-13h) — preview only, NOT yet published
+## Mobile nav refinement (2026-10-13i) — preview only, NOT yet published
+- Renamed nav labels: "Cashew Brittle" -> "Artisanal Sweets", "Spices" -> "Spices & Podis" (Header NAV, homepage category chip, and cashew category page title). Links/category/URLs unchanged (still /shop/cashew-brittles, /shop/spices).
+- Nav order: Home, Our Story, Spices & Podis, Pickles, Artisanal Sweets, Oils, Contact.
+- Mobile menu made compact/premium: link font text-4xl->text-3xl, removed inter-item gap, subtler dividers (ivory/15->ivory/10), menu header h-20->h-16, Call/WhatsApp buttons py-3->py-2.5 pill rounded, added overflow-y-auto. Fits iPhone without scrolling. Serif/ivory/terracotta preserved.
+- Added slugify() for clean data-testids (nav-spices-podis, mobile-nav-artisanal-sweets, etc.). Functionality/destinations preserved.
+
+
 - TASK 1: Rewrote OilRefillOffer into ONE compact card (heading + two short icon lines for the ₹60 refill & ₹60 return benefits + combined "Hyderabad only — message before visiting" line + WhatsApp button). Much shorter on mobile; oil products appear sooner. Both benefits retained.
 - TASK 2: Oils show only "1 litre" (seed override already enforced; also cleaned dead 500ml refs in INITIAL_PRODUCTS). Verified API returns ['1 litre'] for all 3 oils.
 - TASK 3: Shortened the "AMMU'S PICKLE SPECIALITIES" recipe_story body (chicken/mutton/prawn) to the exact short copy; tightened pd-recipe-story padding (px-5 py-5 -> px-4 py-4, smaller heading).
