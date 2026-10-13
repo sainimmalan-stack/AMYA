@@ -18,7 +18,13 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Homepage hero copy refinement (2026-10-13j) — preview only, NOT yet published
+## Pickle family-story unification (2026-10-13k) — preview only, NOT yet published
+- Replaced recipe_story on ALL 6 pickles (chicken, mutton, prawn, allam-sweet, avakai, maagai) with a single legacy story: heading "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW" + body "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA." Eyebrow stays "Recipes with a story" (renders uppercase).
+- Podi/spice/oil/cashew recipe_story untouched (Nuvvula still "LEELA'S TRADITIONAL RECIPE"). Names, ingredients, prices, pack sizes, stock status and serving suggestions all unchanged.
+- pd-recipe-story card made compact: mt-5->mt-4, py-4->py-3.5, heading text-lg/sm:xl -> text-base/sm:lg + leading-snug + [text-wrap:balance] so the long heading wraps neatly and stays smaller than the product title.
+- Verified Maagai Pickle on mobile: story displays correctly, compact, neat wrap, out-of-stock preserved.
+
+
 - Top eyebrow line -> "Made to order · Prepared in small batches" (reduced mobile tracking 0.28em->0.16em for natural wrap).
 - Hero description replaced with the Andhra pickles/podis/spices/cashew "made to be shared" copy; mobile size 17px->15px to avoid excess height. Headline "Tradition You Can Taste." unchanged.
 - Primary CTA "Shop Our Collection" changed from Link to /shop -> button that smooth-scrolls to the on-page product collection (#collection). Secondary CTA "Our Story" unchanged (-> /our-story).

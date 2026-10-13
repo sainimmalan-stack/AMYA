@@ -739,7 +739,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "A FAMILY RECIPE BY LEELA", "body": "Our Avakai follows Leela's family recipe, carrying the traditional Andhra pickle-making knowledge she has developed over more than 30 years of cooking experience. A recipe rooted in family tradition and prepared with care."},
+        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
         "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 6,
     },
     {
@@ -750,7 +750,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "A FAMILY RECIPE BY LEELA", "body": "Our Magai follows Leela's traditional family recipe, reflecting more than 30 years of cooking experience and a love for authentic Andhra flavours. A treasured family preparation, brought to you by AMYA."},
+        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
         "availability": "out-of-stock", "live_press": False, "featured": False, "sort_order": 7,
     },
     {
@@ -761,7 +761,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "AMMU'S AMMAMMA'S ORIGINAL RECIPE", "body": "Some recipes are too special to leave behind. AMYA's Sweet Allam Pickle comes from Ammu's Ammamma's family recipe, preserving a much-loved taste passed down through generations. It is a tribute to the original recipe and the family memories that make traditional food so special."},
+        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 5,
     },
     {
@@ -772,7 +772,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Prepared in small batches by Ammu, our non-vegetarian pickles celebrate traditional flavours, carefully selected ingredients and a love for homemade food."},
+        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 2,
     },
     {
@@ -783,7 +783,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Prepared in small batches by Ammu, our non-vegetarian pickles celebrate traditional flavours, carefully selected ingredients and a love for homemade food."},
+        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 3,
     },
     {
@@ -794,7 +794,7 @@ INITIAL_PRODUCTS = [
         "food_label_info": "Non-vegetarian. Ingredients, pack sizes and pricing confirmed at launch.",
         "images": [],
         "pack_sizes": [],
-        "recipe_story": {"heading": "AMMU'S PICKLE SPECIALITIES", "body": "Prepared in small batches by Ammu, our non-vegetarian pickles celebrate traditional flavours, carefully selected ingredients and a love for homemade food."},
+        "recipe_story": {"heading": "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW", "body": "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA."},
         "availability": "in-stock", "live_press": False, "featured": False, "sort_order": 4,
     },
 ]

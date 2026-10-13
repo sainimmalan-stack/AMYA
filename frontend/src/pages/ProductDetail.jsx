@@ -126,9 +126,9 @@ export default function ProductDetail() {
           )}
 
           {product.recipe_story && (
-            <div className="mt-5 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-4 py-4" data-testid="pd-recipe-story">
+            <div className="mt-4 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-4 py-3.5" data-testid="pd-recipe-story">
               <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Recipes with a story</p>
-              <h2 className="font-serif text-lg sm:text-xl text-ink mt-1 leading-tight">{product.recipe_story.heading}</h2>
+              <h2 className="font-serif text-base sm:text-lg text-ink mt-1 leading-snug [text-wrap:balance]">{product.recipe_story.heading}</h2>
               <p className="font-sans text-sm text-ink-soft mt-1.5 leading-relaxed">{product.recipe_story.body}</p>
             </div>
           )}
