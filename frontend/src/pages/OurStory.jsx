@@ -66,7 +66,7 @@ export default function OurStory() {
               <p>AMYA was born from Amulya's love for cooking and her passion for sharing the flavours of homemade Indian food.</p>
               <p>Together with her mother-in-law, Leela, she brings cherished family recipes, carefully selected ingredients and traditional cooking methods into the AMYA kitchen.</p>
               <p>From signature podis and traditional Andhra pickles to much-loved homemade treats, every small batch is prepared with patience, care and a genuine love for good food.</p>
-              <p>AMYA is not about rushing food to market. It is about preserving familiar flavours, honouring family traditions and sharing food made with care.</p>
+              <p>AMYA is about preserving familiar flavours, honouring family traditions and sharing food made with care.</p>
             </div>
           </Reveal>
         </div>

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle, Phone, PackageCheck, Truck } from "lucide-react";
 import { api, waLink, telHref, formatPhoneIN } from "@/lib/api";
 import { useConfig } from "@/context/ConfigContext";
@@ -8,17 +8,14 @@ import { Reveal, MaskedLines } from "@/components/Reveal";
 import Btn from "@/components/Btn";
 import ProductCard from "@/components/ProductCard";
 
-const HERO_IMG = "/products/amya-hero.jpg?v=2";
+const HERO_IMG = "/products/amya-hero.jpg?v=3";
 
 function Hero() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 90]);
-
   return (
-    <section ref={ref} className="relative bg-ivory-warm text-ink overflow-hidden border-b border-ink/10">
+    <section className="relative bg-ivory-warm text-ink overflow-hidden border-b border-ink/10">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 pt-6 pb-7 lg:pt-12 lg:pb-12 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">          <div className="lg:col-span-7">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div>
             <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}
               className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.16em] sm:tracking-[0.28em] text-terracotta block mb-3">
               Made to order · Prepared in small batches
@@ -42,11 +39,11 @@ function Hero() {
             </motion.div>
           </div>
 
-          {/* Decorative image — desktop only to keep mobile hero compact */}
-          <div className="hidden lg:block lg:col-span-5">
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.25, duration: 0.9 }}
-              className="relative aspect-[4/5] overflow-hidden rounded-t-[110px] border border-ink/10 bg-ivory">
-              <motion.img src={HERO_IMG} alt="AMYA cashew brittle gold gift box with bowls of podi and spices" style={{ y }} className="h-full w-full object-cover" />
+          {/* Premium product photograph */}
+          <div>
+            <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.9 }}
+              className="relative aspect-[3/2] overflow-hidden rounded-2xl border border-ink/10 bg-ivory shadow-sm">
+              <img src={HERO_IMG} alt="AMYA Kaju Bites in a glass jar, Cashew Brittle gift box, Nuvvula Podi pouch with a bowl of podi, and a pickle jar on a warm ivory table" loading="eager" decoding="async" className="h-full w-full object-cover object-center" />
             </motion.div>
           </div>
         </div>
