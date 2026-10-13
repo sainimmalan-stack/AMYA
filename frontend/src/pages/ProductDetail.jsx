@@ -88,6 +88,7 @@ export default function ProductDetail() {
 
         {/* Info */}
         <div>
+          {/* A. Name + B. Short description */}
           <Reveal>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-sans text-xs uppercase tracking-[0.25em] text-terracotta">{product.category.replace("-", " ")}</span>
@@ -98,58 +99,13 @@ export default function ProductDetail() {
               )}
               {product.diet && <DietMark diet={product.diet} />}
             </div>
-            {product.slug !== "cashew-brittle" && (
-              <h1 className="font-serif text-3xl sm:text-4xl tracking-tight mt-2 leading-tight text-ink">{product.name}</h1>
-            )}
-            <p className="font-sans text-sm sm:text-base text-ink-soft mt-2 leading-relaxed whitespace-pre-line">{product.short_description}</p>
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2.5 leading-[1.05] text-ink">{product.name}</h1>
+            <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 leading-relaxed line-clamp-2 sm:line-clamp-none">{product.short_description}</p>
           </Reveal>
 
-          {product.highlights?.length > 0 && (
-            <ul className="mt-3 grid gap-1.5" data-testid="pd-highlights">
-              {product.highlights.map((h, i) => (
-                <li key={i} className="flex items-start gap-2 font-sans text-sm text-ink-soft">
-                  <Check size={15} className="text-terracotta shrink-0 mt-0.5" /> {h}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {product.serving && !showServingSuggestion && (
-            <div className="mt-4 rounded-lg border border-beige bg-ivory-warm px-4 py-3" data-testid="pd-serving">
-              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">How to enjoy</p>
-              <p className="font-sans text-sm text-ink mt-1.5 leading-relaxed">{product.serving}</p>
-            </div>
-          )}
-
-          {showServingSuggestion && (
-            <div className="mt-4 rounded-lg border border-beige bg-ivory-warm px-4 py-3" data-testid="pd-serving-suggestion">
-              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Serving Suggestion</p>
-              <p className="font-sans text-sm text-ink mt-1.5 leading-relaxed">Best enjoyed with hot rice and a generous spoon of ghee.</p>
-            </div>
-          )}
-
-          {product.recipe_story && (
-            <div className="mt-4 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-4 py-3.5" data-testid="pd-recipe-story">
-              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Recipes with a story</p>
-              <h2 className="font-serif text-base sm:text-lg text-ink mt-1 leading-snug [text-wrap:balance]">{product.recipe_story.heading}</h2>
-              <p className="font-sans text-sm text-ink-soft mt-1.5 leading-relaxed">{product.recipe_story.body}</p>
-            </div>
-          )}
-
-          {product.category === "pickles" && (
-            <div className="mt-4 rounded-lg border border-terracotta/30 bg-terracotta/[0.06] px-4 py-3.5" data-testid="pd-cold-pressed-oil">
-              <p className="flex items-center gap-1.5 font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta-deep font-semibold">
-                <Droplets size={13} className="shrink-0" /> Made with AMYA Cold-Pressed Oils
-              </p>
-              <p className="font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-terracotta mt-1.5">AMYA Cold-Pressed Oils · Traditional Recipes · Small-Batch Preparation</p>
-              <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">Prepared in small batches with AMYA cold-pressed oils, our pickles bring together traditional Andhra recipes, carefully selected ingredients and the rich taste of homemade food. From our kitchen to yours, every jar is crafted with care for a flavourful, authentic experience.</p>
-              <p className="font-serif text-sm sm:text-base text-terracotta-deep mt-2.5 [text-wrap:balance]">Clean Ingredients. Authentic Flavours. Made with Care.</p>
-            </div>
-          )}
-
-          {/* Pack sizes */}
+          {/* C. Pack sizes */}
           {product.pack_sizes?.length > 0 && (
-            <div className="mt-5">
+            <div className="mt-6">
               <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft mb-2.5">Pack size</p>
               <div className="grid gap-2 sm:gap-2.5 [grid-template-columns:repeat(auto-fit,minmax(88px,1fr))]">
                 {product.pack_sizes.map((ps, i) => {
@@ -172,7 +128,7 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Quantity + live total */}
+          {/* D. Quantity + live total */}
           {orderable && !enquireOnly && (
             <div className="mt-5 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -183,7 +139,7 @@ export default function ProductDetail() {
                   <button onClick={() => setQty((q) => q + 1)} data-testid="qty-plus" className="h-10 w-10 flex items-center justify-center hover:bg-ivory-warm"><Plus size={15} /></button>
                 </div>
               </div>
-              {orderable && total != null && (
+              {total != null && (
                 <div className="text-right">
                   <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">Total</p>
                   <p data-testid="pd-total" className="font-sans text-2xl font-bold text-terracotta tabular-nums leading-none mt-1">₹{total.toLocaleString("en-IN")}</p>
@@ -192,14 +148,7 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {orderable && (
-            <div className="mt-5 rounded-lg border border-terracotta/30 bg-terracotta/5 px-4 py-3.5" data-testid="pd-made-to-order">
-              <p className="font-sans text-[11px] uppercase tracking-[0.18em] text-terracotta font-medium">Made to order, with care</p>
-              <p className="font-sans text-sm text-ink-soft mt-1.5 leading-relaxed">We prepare your order after it is placed. Our standard delivery commitment is the third day after ordering. Thank you for giving our kitchen the time it deserves.</p>
-            </div>
-          )}
-
-          {/* Primary action */}
+          {/* E. Primary action */}
           {outOfStock ? (
             <div
               data-testid="pd-out-of-stock"
@@ -235,8 +184,15 @@ export default function ProductDetail() {
             </button>
           )}
 
+          {/* Made to order — compact note below the button */}
+          {orderable && (
+            <p className="mt-3 font-sans text-xs text-ink-soft leading-relaxed text-center" data-testid="pd-made-to-order">
+              Made to order · prepared after your order is placed, with dispatch by the third day.
+            </p>
+          )}
+
           {/* Secondary actions */}
-          <div className="mt-3 flex flex-col sm:flex-row gap-3">
+          <div className="mt-4 flex flex-col sm:flex-row gap-3">
             {product.live_press && (
               <Btn to={`/live-press?oil=${product.slug}`} variant="outline" data-testid="pd-book-livepress">
                 <Video size={15} /> Book AMYA Live Press
@@ -257,32 +213,49 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Preparation & Dispatch */}
-          {(product.preparation || product.dispatch) && (
-            <div className="mt-5 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-4 py-4" data-testid="pd-prep-dispatch">
-              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Preparation & Dispatch</p>
-              {product.preparation && <p className="font-sans text-sm text-ink mt-2 leading-relaxed">{product.preparation}</p>}
-              {product.dispatch && <p className="font-sans text-sm text-ink mt-1.5 leading-relaxed">{product.dispatch}</p>}
-            </div>
+          {/* F. Supporting information — below the purchase */}
+
+          {/* Pickles: compact cold-pressed oils line */}
+          {product.category === "pickles" && (
+            <p className="mt-7 flex items-start gap-2.5 border-t border-beige pt-6 font-sans text-sm text-ink-soft leading-relaxed" data-testid="pd-cold-pressed-oil">
+              <Droplets size={16} className="text-terracotta shrink-0 mt-0.5" />
+              <span>Made with AMYA cold-pressed oils and traditional Andhra recipes, prepared in small batches with care.</span>
+            </p>
           )}
 
-          {/* Delivery information */}
-          {product.delivery_details?.length > 0 && (
-            <div className="mt-4 rounded-lg border border-terracotta/25 bg-ivory-warm/60 px-4 py-4" data-testid="pd-delivery-info">
-              <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-terracotta">Delivery Information</p>
-              <ul className="mt-3 grid gap-3">
-                {product.delivery_details.map((d, i) => (
-                  <li key={i} className="flex flex-col">
-                    <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-ink">{d.region}</span>
-                    <span className="font-sans text-sm text-ink-soft mt-0.5 leading-relaxed">{d.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Details accordion */}
-          <Accordion type="single" collapsible className="mt-6" defaultValue="desc">
+          {/* Our Story & Ingredients */}
+          <Accordion type="single" collapsible className={product.category === "pickles" ? "mt-4" : "mt-7 border-t border-beige pt-2"}>
+            {product.recipe_story && (
+              <AccordionItem value="story">
+                <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]" data-testid="pd-story-trigger">Our Story</AccordionTrigger>
+                <AccordionContent className="font-sans text-sm text-ink-soft leading-relaxed" data-testid="pd-recipe-story">
+                  <span className="block font-serif text-base text-ink mb-1.5 normal-case tracking-normal">{product.recipe_story.heading}</span>
+                  {product.recipe_story.body}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+            {(showServingSuggestion || product.serving) && (
+              <AccordionItem value="serving">
+                <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Serving Suggestion</AccordionTrigger>
+                <AccordionContent className="font-sans text-sm text-ink-soft leading-relaxed" data-testid="pd-serving">
+                  {showServingSuggestion ? "Best enjoyed with hot rice and a generous spoon of ghee." : product.serving}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+            {product.highlights?.length > 0 && (
+              <AccordionItem value="highlights">
+                <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Highlights</AccordionTrigger>
+                <AccordionContent>
+                  <ul className="grid gap-1.5" data-testid="pd-highlights">
+                    {product.highlights.map((h, i) => (
+                      <li key={i} className="flex items-start gap-2 font-sans text-sm text-ink-soft">
+                        <Check size={15} className="text-terracotta shrink-0 mt-0.5" /> {h}
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            )}
             {product.description && (
               <AccordionItem value="desc">
                 <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Description</AccordionTrigger>
@@ -301,6 +274,30 @@ export default function ProductDetail() {
                 <AccordionContent className="font-sans text-sm text-ink-soft leading-relaxed">{product.storage}</AccordionContent>
               </AccordionItem>
             )}
+            {(product.preparation || product.dispatch) && (
+              <AccordionItem value="prep">
+                <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]" data-testid="pd-prep-dispatch">Preparation &amp; Dispatch</AccordionTrigger>
+                <AccordionContent className="font-sans text-sm text-ink-soft leading-relaxed">
+                  {product.preparation && <p>{product.preparation}</p>}
+                  {product.dispatch && <p className="mt-1.5">{product.dispatch}</p>}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+            {product.delivery_details?.length > 0 && (
+              <AccordionItem value="delivery-regions">
+                <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]" data-testid="pd-delivery-info">Delivery Information</AccordionTrigger>
+                <AccordionContent>
+                  <ul className="grid gap-3">
+                    {product.delivery_details.map((d, i) => (
+                      <li key={i} className="flex flex-col">
+                        <span className="font-sans text-xs font-medium uppercase tracking-[0.12em] text-ink">{d.region}</span>
+                        <span className="font-sans text-sm text-ink-soft mt-0.5 leading-relaxed">{d.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            )}
             {product.delivery_info && (
               <AccordionItem value="delivery">
                 <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Delivery</AccordionTrigger>
@@ -309,7 +306,7 @@ export default function ProductDetail() {
             )}
             {product.returns_info && (
               <AccordionItem value="returns">
-                <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Returns & cancellation</AccordionTrigger>
+                <AccordionTrigger className="font-sans text-xs uppercase tracking-[0.2em]">Returns &amp; cancellation</AccordionTrigger>
                 <AccordionContent className="font-sans text-sm text-ink-soft leading-relaxed">{product.returns_info}</AccordionContent>
               </AccordionItem>
             )}
