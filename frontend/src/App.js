@@ -23,6 +23,8 @@ import OrderConfirmation from "@/pages/OrderConfirmation";
 import NotFound from "@/pages/NotFound";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminSetup from "@/pages/admin/AdminSetup";
+import AdminForgot from "@/pages/admin/AdminForgot";
+import AdminResetPassword from "@/pages/admin/AdminResetPassword";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminOrderDetail from "@/pages/admin/AdminOrderDetail";
 
@@ -58,6 +60,8 @@ function App() {
               <Route path="/order/:orderNumber" element={withLayout(<OrderConfirmation />)} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin/setup" element={<AdminSetup />} />
+              <Route path="/admin/forgot-password" element={<AdminForgot />} />
+              <Route path="/admin/reset-password" element={<AdminResetPassword />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/orders/:orderNumber" element={<AdminOrderDetail />} />
               <Route path="*" element={withLayout(<NotFound />)} />

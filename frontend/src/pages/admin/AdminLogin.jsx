@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { api, formatApiError } from "@/lib/api";
@@ -56,6 +56,9 @@ export default function AdminLogin() {
             {loading ? "Signing in…" : "Sign in"}
           </Btn>
         </form>
+        <div className="text-center mt-5">
+          <Link to="/admin/forgot-password" data-testid="forgot-password-link" className="font-sans text-xs uppercase tracking-[0.15em] text-ink-soft hover:text-terracotta">Forgot password?</Link>
+        </div>
       </div>
     </div>
   );

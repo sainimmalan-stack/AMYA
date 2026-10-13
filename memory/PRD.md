@@ -690,3 +690,9 @@ Scope: Built the complete, secure Admin Order Management Dashboard on top of the
 - Admin authorization unchanged & enforced server-side on every /api/admin/* (401 without JWT); /admin is not security-by-obscurity.
 - Verified (preview): setup-status=false (admin exists), /auth/setup→403, login OK, change-credentials 401/400 guards, /admin/setup→redirect to login, Account security card renders. Pytest: /app/backend/tests/test_admin_auth.py (7 passed).
 - Production go-live note: first admin is created by the founder at /admin/setup on first launch; no default password ships anywhere.
+
+## Changelog — 2026-07-11 (Password reset + cleared legacy admin for founder self-setup)
+- Added secure password reset: POST /api/auth/forgot-password (generic response, no account enumeration; emails one-time link valid 1h, single-use via Resend) and POST /api/auth/reset-password (token + strength check, marks token used). TTL + unique indexes on password_reset_tokens. emailer.admin_reset_email_html() added.
+- Frontend: AdminForgot.jsx (/admin/forgot-password), AdminResetPassword.jsx (/admin/reset-password?token=), "Forgot password?" link on login.
+- DELETED the legacy preview admin so preview matches production (needs_setup=true) → founder creates the first account (Contactamyafoods@gmail.com) with a private password via /admin/setup. Customer orders preserved.
+- Verified end-to-end (API): setup→auto-login→GET /admin/orders (200, 7 orders); setup blocked (403) once an admin exists; /admin/orders 401 without token; forgot→email→reset→login with new password; reused reset token rejected (400); weak password rejected. UI: /admin→/admin/setup redirect, setup/forgot/reset pages render, Settings "Account security" card. Pytest test_admin_auth.py = 6 passed / 2 skipped (non-destructive, state-aware).

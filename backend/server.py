@@ -328,6 +328,15 @@ class ChangeCredentialsIn(BaseModel):
     new_password: Optional[str] = None
 
 
+class ForgotPasswordIn(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordIn(BaseModel):
+    token: str
+    new_password: str
+
+
 class StatusUpdate(BaseModel):
     status: str
 
@@ -530,6 +539,42 @@ async def change_credentials(payload: ChangeCredentialsIn, response: Response,
     uid = str(user["_id"])
     set_auth_cookies(response, create_access_token(uid, email), create_refresh_token(uid))
     return {"id": uid, "email": email, "name": user.get("name"), "role": user.get("role")}
+
+
+@api.post("/auth/forgot-password")
+async def forgot_password(payload: ForgotPasswordIn, request: Request):
+    """Email a one-time reset link. Always returns a generic message (no account enumeration)."""
+    email = payload.email.lower().strip()
+    generic = {"ok": True, "message": "If an admin account exists for that email, a password reset link has been sent."}
+    user = await db.users.find_one({"email": email, "role": "admin"})
+    if not user:
+        return generic
+    token = secrets.token_urlsafe(32)
+    now = datetime.now(timezone.utc)
+    await db.password_reset_tokens.insert_one({
+        "token": token, "user_id": str(user["_id"]), "email": email, "used": False,
+        "created_at": now.isoformat(), "expires_at": now + timedelta(hours=1),
+        "expires_ts": (now + timedelta(hours=1)).timestamp(),
+    })
+    reset_url = f"{_site_origin(request)}/admin/reset-password?token={token}"
+    res = await emailer.send_email(
+        to=email, subject="Reset your AMYA admin password",
+        html=emailer.admin_reset_email_html(user.get("name") or "there", reset_url))
+    logger.info("Admin password reset requested for %s (email ok=%s)", email, res.get("ok"))
+    return generic
+
+
+@api.post("/auth/reset-password")
+async def reset_password(payload: ResetPasswordIn):
+    doc = await db.password_reset_tokens.find_one({"token": payload.token})
+    now_ts = datetime.now(timezone.utc).timestamp()
+    if not doc or doc.get("used") or now_ts > doc.get("expires_ts", 0):
+        raise HTTPException(status_code=400, detail="This reset link is invalid or has expired. Please request a new one.")
+    validate_password_strength(payload.new_password)
+    await db.users.update_one({"_id": ObjectId(doc["user_id"])},
+                              {"$set": {"password_hash": hash_password(payload.new_password)}})
+    await db.password_reset_tokens.update_one({"_id": doc["_id"]}, {"$set": {"used": True}})
+    return {"ok": True, "message": "Your password has been reset. You can now sign in."}
 
 
 # ===========================================================================
@@ -949,6 +994,8 @@ DEFAULT_POLICIES = {
 
 async def seed():
     await db.users.create_index("email", unique=True)
+    await db.password_reset_tokens.create_index("token", unique=True)
+    await db.password_reset_tokens.create_index("expires_at", expireAfterSeconds=0)
 
     # SECURITY: No default/hardcoded admin is ever created. The very first admin
     # account is created by the founder via the one-time secure setup flow

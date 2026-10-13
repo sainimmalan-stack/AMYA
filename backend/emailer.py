@@ -215,3 +215,18 @@ def status_update_email_html(order, new_status, invoice_url):
         f'style="background:#B5643C;color:#FBF3E9;text-decoration:none;font-size:13px;letter-spacing:1px;'
         f'padding:12px 22px;border-radius:999px;display:inline-block">VIEW YOUR INVOICE</a></p>')
     return _wrap(inner)
+
+
+def admin_reset_email_html(name, reset_url):
+    inner = (
+        f'<p style="font-size:15px;color:#3B2A20;margin:0 0 12px">Hi {escape(name)},</p>'
+        f'<p style="font-size:14px;color:#6B5647;margin:0 0 16px">We received a request to reset the password for your '
+        f'AMYA admin account. Click the button below to choose a new password. This link expires in 1 hour and can be used once.</p>'
+        f'<p style="margin:0 0 18px"><a href="{reset_url}" '
+        f'style="background:#B5643C;color:#FBF3E9;text-decoration:none;font-size:13px;letter-spacing:1px;'
+        f'padding:12px 22px;border-radius:999px;display:inline-block">RESET PASSWORD</a></p>'
+        f'<p style="font-size:12px;color:#6B5647;margin:0 0 10px">If the button does not work, open this link:<br/>'
+        f'<a href="{reset_url}" style="color:#B5643C">{reset_url}</a></p>'
+        f'<p style="font-size:12px;color:#6B5647;margin:0">If you did not request this, you can safely ignore this email — '
+        f'your password will not change.</p>')
+    return _wrap(inner)
