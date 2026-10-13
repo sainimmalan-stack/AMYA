@@ -18,7 +18,12 @@ Premium pre-launch e-commerce website for AMYA Artisanal Foods (domain amayafood
 - No fabricated licences, certifications, GST, lab reports, reviews, or business history.
 - Two-colour brand identity; premium, mobile-first, responsive.
 
-## Pickle family-story unification (2026-10-13k) — preview only, NOT yet published
+## Kaju Bites product image (2026-10-13l) — preview only, NOT yet published
+- Generated a premium photorealistic Kaju Bites product image from the user's reference photo: clear ~250ml transparent glass jar, matte black lid, realistic handmade golden-brown jaggery-coated cashew clusters, small proportionate terracotta AMYA label (AMYA / ARTISANAL FOODS / KAJU BITES), warm ivory+terracotta studio, 3/4 elevated angle, few bites beside, square 1:1.
+- Wired into kaju-bites product (images ["/products/kaju-bites.jpg?v=1"], added to FORCE_IMAGE_SLUGS). Availability "available" with no pack_sizes/price -> renders as enquire-only ("Enquire for price and pack sizes" + WhatsApp). No invented weight/price.
+- Verified card renders on /shop/cashew-brittles (Artisanal Sweets). No other changes.
+
+
 - Replaced recipe_story on ALL 6 pickles (chicken, mutton, prawn, allam-sweet, avakai, maagai) with a single legacy story: heading "A LEGACY OF FLAVOUR, FROM MOTHER-IN-LAW TO DAUGHTER-IN-LAW" + body "Inspired by Leela's 30+ years of cooking experience, our pickles bring the authentic taste of Andhra family traditions to your table — lovingly prepared and shared through AMYA." Eyebrow stays "Recipes with a story" (renders uppercase).
 - Podi/spice/oil/cashew recipe_story untouched (Nuvvula still "LEELA'S TRADITIONAL RECIPE"). Names, ingredients, prices, pack sizes, stock status and serving suggestions all unchanged.
 - pd-recipe-story card made compact: mt-5->mt-4, py-4->py-3.5, heading text-lg/sm:xl -> text-base/sm:lg + leading-snug + [text-wrap:balance] so the long heading wraps neatly and stays smaller than the product title.
