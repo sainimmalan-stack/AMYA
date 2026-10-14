@@ -13,6 +13,18 @@ export default function OurStory() {
   const wa = config?.business?.whatsapp || "919675334567";
   return (
     <div data-testid="our-story-page">
+      {/* Amulya & Leela — featured photograph at the very top of the page */}
+      <Reveal>
+        <figure className="max-w-6xl mx-auto px-5 sm:px-8 pt-6 sm:pt-8" data-testid="our-story-top-photo">
+          <img
+            src="/products/our-story-kitchen.jpg"
+            alt="Amulya and her mother-in-law, Leela, together preparing traditional homemade food in a kitchen."
+            loading="eager"
+            decoding="async"
+            className="block w-full h-auto rounded-2xl sm:rounded-3xl shadow-[0_18px_50px_-24px_rgba(74,44,28,0.45)]"
+          />
+        </figure>
+      </Reveal>
       <PageHero
         eyebrow="Founder-led"
         titleLines={["The person", "behind AMYA."]}
@@ -49,19 +61,8 @@ export default function OurStory() {
           <Reveal>
             <span className="block text-center font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Our Story</span>
           </Reveal>
-          <Reveal delay={0.08}>
-            <figure className="mt-6 sm:mt-8 overflow-hidden rounded-2xl sm:rounded-3xl bg-ivory shadow-[0_18px_50px_-24px_rgba(74,44,28,0.45)]">
-              <img
-                src="/products/our-story-kitchen.jpg"
-                alt="Amulya and her mother-in-law, Leela, together preparing traditional homemade food in a kitchen."
-                loading="lazy"
-                decoding="async"
-                className="block w-full h-auto"
-              />
-            </figure>
-          </Reveal>
           <Reveal delay={0.16}>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-10 sm:mt-12 leading-tight text-ink text-center [text-wrap:balance]">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-6 sm:mt-8 leading-tight text-ink text-center [text-wrap:balance]">
               Two Generations. One Love for Homemade Food.
             </h2>
             <div className="mt-6 space-y-4 font-sans text-base text-ink-soft leading-relaxed max-w-2xl mx-auto">

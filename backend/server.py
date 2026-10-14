@@ -352,9 +352,23 @@ class OrderCreate(BaseModel):
     customer_mobile: str
     customer_email: Optional[EmailStr] = None
     delivery_address: str
+    country: str = "IN"
+    postcode: Optional[str] = None
     items: List[OrderItemIn]
     client_ref: Optional[str] = None
-    payment_method: str = "cod"  # cod | razorpay
+    payment_method: str = "razorpay"  # razorpay only (Cash on Delivery removed)
+
+
+def india_shipping(postcode: Optional[str]):
+    """Returns (charge:int|None, status:'ok'|'quote'). Hyderabad=100, AP/TS=180, else quote."""
+    pin = (postcode or "").strip()
+    if not pin.isdigit() or len(pin) != 6:
+        return None, "quote"
+    if pin[:4] in ("5000", "5001"):
+        return 100, "ok"          # Hyderabad eligible service area
+    if pin[:2] in ("50", "51", "52", "53"):
+        return 180, "ok"          # Telangana / Andhra Pradesh
+    return None, "quote"
 
 
 class RazorpayVerify(BaseModel):
@@ -1168,7 +1182,8 @@ async def _build_order_doc(payload: OrderCreate, request: Request) -> dict:
                       "pack_label": raw.pack_label, "unit_price": unit_price,
                       "qty": qty, "line_total": line_total, "note": note})
     subtotal = round(subtotal, 2)
-    delivery_charge = round(float(cfg.get("delivery_charge") or 0), 2)
+    ship_charge, _ship_status = india_shipping(payload.postcode)
+    delivery_charge = round(float(ship_charge or 0), 2)
     discount = 0.0
     gst_amount = None
     total = None if any_unpriced else round(subtotal + delivery_charge - discount, 2)
@@ -1216,6 +1231,15 @@ def _public_order(doc: dict) -> dict:
 
 @api.post("/orders")
 async def create_order(payload: OrderCreate, request: Request):
+    # Cash on Delivery has been removed — only verified online payment is accepted.
+    if payload.payment_method != "razorpay":
+        raise HTTPException(status_code=400, detail="Cash on Delivery is no longer available. Please pay online to place your order.")
+    # Online payment & INR charging are enabled for eligible India destinations only.
+    if (payload.country or "IN").upper() != "IN":
+        raise HTTPException(status_code=400, detail="International orders require a shipping and payment quote. Please use the enquiry option to place your order.")
+    _ship, _ship_status = india_shipping(payload.postcode)
+    if _ship_status != "ok":
+        raise HTTPException(status_code=400, detail="This PIN code needs a shipping quote before online payment. Please use the enquiry option.")
     # Idempotency: same client cart reference returns the existing order (no duplicates)
     if payload.client_ref:
         existing = await db.orders.find_one({"client_ref": payload.client_ref})
@@ -1228,9 +1252,9 @@ async def create_order(payload: OrderCreate, request: Request):
     if payload.payment_method == "razorpay":
         client = _razorpay_client()
         if not client:
-            raise HTTPException(status_code=503, detail="Online payment is not configured. Please choose Cash on Delivery.")
+            raise HTTPException(status_code=503, detail="Online payment is temporarily unavailable. Please contact us on WhatsApp to place your order.")
         if doc.get("total_pending") or doc.get("total") is None or doc["total"] <= 0:
-            raise HTTPException(status_code=400, detail="This order needs price confirmation and can't be paid online yet. Please choose Cash on Delivery.")
+            raise HTTPException(status_code=400, detail="This order needs price confirmation before it can be paid online. Please contact us on WhatsApp to confirm.")
         rz = client.order.create({
             "amount": int(round(doc["total"] * 100)),
             "currency": "INR",
