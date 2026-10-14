@@ -17,7 +17,7 @@ export default function Footer() {
           <div className="md:col-span-2">
             <Logo variant="ivory" size="md" className="!items-start" />
             <p className="mt-6 max-w-sm font-sans text-sm text-ivory/80 leading-relaxed">
-              A founder-led artisanal food brand by Amulya Nimmala. Good food begins with trust —
+              A founder led artisanal food brand by Amulya Nimmala. Good food begins with trust —
               we start small and build our customer experience step by step.
             </p>
           </div>

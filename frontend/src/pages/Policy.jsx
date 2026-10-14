@@ -25,7 +25,7 @@ export default function Policy() {
         <Reveal>
           <p className="font-sans text-base text-ink-soft leading-relaxed whitespace-pre-line">{body}</p>
           <p className="font-sans text-xs text-ink-soft mt-10 border-t border-ink/15 pt-6">
-            AMYA is a founder-led, pre-launch brand. This content is editable by AMYA and will be finalised before
+            AMYA is a founder led, pre-launch brand. This content is editable by AMYA and will be finalised before
             commercial checkout is enabled. It does not constitute legal advice.
           </p>
         </Reveal>

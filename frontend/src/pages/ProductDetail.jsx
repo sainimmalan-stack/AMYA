@@ -100,7 +100,7 @@ export default function ProductDetail() {
               {product.diet && <DietMark diet={product.diet} />}
             </div>
             <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-2.5 leading-[1.05] text-ink">{product.name}</h1>
-            <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 leading-relaxed line-clamp-2 sm:line-clamp-none">{product.short_description}</p>
+            <p className="font-sans text-sm sm:text-base text-ink-soft mt-3 leading-relaxed" data-testid="pd-short-description">{product.short_description}</p>
           </Reveal>
 
           {/* C. Pack sizes */}

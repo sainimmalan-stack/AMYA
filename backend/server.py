@@ -815,7 +815,7 @@ INITIAL_PRODUCTS = [
         "short_description": "A premium turmeric powder, carefully sourced from Srikakulam, Andhra Pradesh.",
         "description": "AMYA Turmeric Powder is carefully sourced from Srikakulam, Andhra Pradesh, and prepared in small batches with hygienic handling.\n\nWith its naturally rich golden colour and warm, earthy character, it is a beautiful addition to traditional Indian cooking.",
         "origin": "Srikakulam, Andhra Pradesh, India",
-        "highlights": ["Turmeric carefully sourced from Srikakulam, Andhra Pradesh", "Small-batch preparation", "Hygienic handling and processing", "Naturally rich golden colour", "Suitable for everyday cooking and traditional recipes"],
+        "highlights": ["Turmeric carefully sourced from Srikakulam, Andhra Pradesh", "Small batch preparation", "Hygienic handling and processing", "Naturally rich golden colour", "Suitable for everyday cooking and traditional recipes"],
         "diet": "veg",
         "ingredients": "Turmeric.",
         "storage": "Store in an airtight container in a cool, dry place away from direct sunlight.",
@@ -877,10 +877,10 @@ INITIAL_PRODUCTS = [
 
     {
         "slug": "amya-nuvvula-podi", "name": "Nuvvula Podi", "category": "spices",
-        "short_description": "Bring home the comforting taste of traditional Andhra cooking with AMYA Nuvvula Podi. This sesame-based podi pairs beautifully with hot rice and ghee, making everyday meals feel special.",
-        "description": "AMYA Nuvvula Podi is a traditional sesame podi, prepared by Amulya's mother-in-law, Leela, in small batches for an authentic, home-style flavour.",
+        "short_description": "Bring home the comforting taste of traditional Andhra cooking with AMYA Nuvvula Podi. Made with care in small batches, this sesame based podi adds a rich, nutty flavour to everyday meals.",
+        "description": "AMYA Nuvvula Podi is a traditional sesame podi, prepared by Amulya's mother in law, Leela, in small batches for an authentic, home style flavour.",
         "origin": "Andhra Pradesh, India",
-        "highlights": ["Traditional Andhra-style sesame podi", "Prepared by Amulya's mother-in-law, Leela", "A familiar, home-style flavour"],
+        "highlights": ["Traditional Andhra style sesame podi", "Prepared by Amulya's mother in law, Leela", "A familiar, home style flavour"],
         "diet": "veg",
         "serving": "Enjoy with hot rice and ghee, or serve alongside idli and dosa.",
         "serving_highlight": "",
@@ -1038,7 +1038,7 @@ INITIAL_PRODUCTS = [
 ]
 
 DEFAULT_POLICIES = {
-    "terms": "Terms & Conditions will be published here. AMYA is a founder-led, pre-launch brand; these terms will be finalised before commercial checkout is enabled.",
+    "terms": "Terms & Conditions will be published here. AMYA is a founder led, pre-launch brand; these terms will be finalised before commercial checkout is enabled.",
     "privacy": "We collect only the information needed to respond to your enquiry or booking (such as name, phone and WhatsApp number). We do not sell your data. A full privacy policy will be published before launch.",
     "shipping": "AMYA serves customers across India, and intends to offer shipping to the UK and USA subject to product eligibility, import regulations and confirmed carrier charges. International shipping is quoted individually.",
     "refund": "Cancellation and refund terms depend on the product and its preparation stage. For fresh-pressed and homemade foods, returns are limited. Please contact AMYA for any order issue.",

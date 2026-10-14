@@ -207,10 +207,13 @@ export default function Checkout() {
 
   return (
     <div data-testid="checkout-page">
-      <div className="max-w-2xl mx-auto px-5 sm:px-8 pt-6">
+      <div className="max-w-2xl mx-auto px-5 sm:px-8 pt-6 flex items-center justify-between gap-4">
         <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 font-sans text-xs uppercase tracking-[0.2em] text-ink-soft hover:text-terracotta" data-testid="checkout-back">
           <ArrowLeft size={14} /> Back
         </button>
+        <Link to="/shop" className="font-sans text-xs uppercase tracking-[0.18em] text-ink-soft hover:text-terracotta transition-colors" data-testid="checkout-continue-shopping">
+          Continue shopping
+        </Link>
       </div>
 
       <section className="max-w-2xl mx-auto px-5 sm:px-8 py-6 lg:py-10 space-y-8">

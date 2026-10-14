@@ -21,6 +21,10 @@ export default function CartDrawer() {
             <ShoppingBag className="text-terracotta/40" size={40} />
             <p className="font-sans text-sm text-ink-soft mt-4">Your cart is empty.</p>
             <p className="font-sans text-xs text-ink-soft mt-1">Add products to send your order on WhatsApp.</p>
+            <button onClick={() => { setOpen(false); navigate("/shop"); }} data-testid="cart-empty-shop"
+              className="mt-6 inline-flex items-center justify-center gap-2 bg-terracotta text-ivory rounded-full px-6 py-3 font-sans text-xs uppercase tracking-[0.14em] hover:bg-terracotta-deep transition-colors">
+              <ShoppingBag size={15} /> Shop products
+            </button>
           </div>
         ) : (
           <>
@@ -79,6 +83,9 @@ export default function CartDrawer() {
               >
                 <MessageCircle size={15} /> Order on WhatsApp instead
               </a>
+              <button onClick={() => { setOpen(false); navigate("/shop"); }} data-testid="cart-continue-shopping" className="w-full text-center font-sans text-[11px] uppercase tracking-[0.14em] text-ink hover:text-terracotta transition-colors">
+                Continue shopping
+              </button>
               <button onClick={clear} className="w-full text-center font-sans text-[11px] uppercase tracking-[0.14em] text-ink-soft hover:text-terracotta transition-colors" data-testid="cart-clear">
                 Clear cart
               </button>

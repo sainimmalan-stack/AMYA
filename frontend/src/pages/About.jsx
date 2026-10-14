@@ -2,7 +2,7 @@ import PageHero from "@/components/PageHero";
 import { Reveal } from "@/components/Reveal";
 
 const POINTS = [
-  ["Founder-led", "A brand led personally by Amulya Nimmala, not a faceless label."],
+  ["Founder led", "A brand led personally by Amulya Nimmala, not a faceless label."],
   ["A limited range", "A small, carefully selected set of products — introduced gradually, one at a time."],
   ["Homemade approach", "Relevant products are prepared homemade, in small batches."],
   ["Traditional oil press", "A planned traditional wooden chekku extraction experience you can watch live."],
