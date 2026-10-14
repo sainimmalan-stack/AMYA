@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Loader2, ShoppingBag, MessageCircle } from "lucide-react";
+import { ArrowLeft, Loader2, ShoppingBag, MessageCircle, ShieldCheck } from "lucide-react";
 import { api, formatApiError } from "@/lib/api";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
@@ -9,17 +9,20 @@ import {
   getFxRates, convertFromInr, fmtMoney,
 } from "@/lib/intl";
 
+const WA_NUMBER = "919675334567";
 const inr = (n) => `₹${Number(n).toLocaleString("en-IN")}`;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { items, count, allPriced, grandTotal, orderRef, clear, whatsappUrl } = useCart();
+  const { items, count, allPriced, grandTotal, orderRef, clear, newOrderRef } = useCart();
   const [form, setForm] = useState({ name: "", mobile: "", email: "", address: "", city: "", state: "", postcode: "", country: "IN" });
   const [submitting, setSubmitting] = useState(false);
   const [rzp, setRzp] = useState({ enabled: false, key_id: "" });
   const [fx, setFx] = useState(null);
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  // Changing country revalidates location: clear state + postcode so India's PIN rule never leaks to other countries.
+  const onCountry = (e) => setForm((f) => ({ ...f, country: e.target.value, state: "", postcode: "" }));
   const method = "razorpay"; // Cash on Delivery removed — verified online payment only
 
   const c = countryByCode(form.country);
@@ -52,28 +55,38 @@ export default function Checkout() {
 
   const goConfirm = (data) => { clear(); navigate(`/order/${data.order_number}?token=${encodeURIComponent(data.download_token)}`); };
 
-  const submit = async (e) => {
+  // Shared field validation. forOnline additionally requires a valid email (needed for the invoice).
+  const validateCore = (forOnline) => {
+    const mobile = form.mobile.replace(/\s+/g, "");
+    if (!form.name.trim()) { toast.error("Please enter your full name."); return null; }
+    const minMobile = form.country === "IN" ? /^\d{10}$/ : /^\d{6,}$/;
+    if (!minMobile.test(mobile)) { toast.error(form.country === "IN" ? "Please enter a valid 10-digit mobile number." : "Please enter a valid mobile number."); return null; }
+    if (forOnline && !EMAIL_RE.test(form.email.trim())) { toast.error("Please enter a valid email address."); return null; }
+    if (form.email.trim() && !EMAIL_RE.test(form.email.trim())) { toast.error("Please enter a valid email address."); return null; }
+    if (!form.address.trim()) { toast.error("Please enter your delivery address."); return null; }
+    if (!form.city.trim()) { toast.error("Please enter your city."); return null; }
+    if (!form.state.trim()) { toast.error(`Please enter your ${c.stateLabel.toLowerCase()}.`); return null; }
+    if (!c.postalRe.test(form.postcode.trim())) { toast.error(`Please enter a valid ${c.postalLabel} (${c.postalHint}).`); return null; }
+    return mobile;
+  };
+
+  const fullAddress = () => `${form.address.trim()}, ${form.city.trim()}, ${form.state.trim()} ${form.postcode.trim()}, ${c.name}`;
+
+  // Option A — pay securely online (India + confirmed shipping only)
+  const payOnline = async (e) => {
     e.preventDefault();
     if (submitting) return;
-    const mobile = form.mobile.replace(/\s+/g, "");
-    if (!form.name.trim()) { toast.error("Please enter your full name."); return; }
-    const minMobile = form.country === "IN" ? /^\d{10}$/ : /^\d{6,}$/;
-    if (!minMobile.test(mobile)) { toast.error(form.country === "IN" ? "Please enter a valid 10-digit mobile number." : "Please enter a valid mobile number."); return; }
-    if (!EMAIL_RE.test(form.email.trim())) { toast.error("Please enter a valid email address."); return; }
-    if (!form.address.trim()) { toast.error("Please enter your delivery address."); return; }
-    if (!form.city.trim()) { toast.error("Please enter your city."); return; }
-    if (!form.state.trim()) { toast.error(`Please enter your ${c.stateLabel.toLowerCase()}.`); return; }
-    if (!c.postalRe.test(form.postcode.trim())) { toast.error(`Please enter a valid ${c.postalLabel} (${c.postalHint}).`); return; }
-    if (!onlineEligible) { toast.error("Online payment isn't available for this destination. Please use the enquiry option."); return; }
+    const mobile = validateCore(true);
+    if (!mobile) return;
+    if (!onlineEligible) { toast.error("Online payment isn't available for this destination yet. Please use the WhatsApp option."); return; }
 
-    const fullAddress = `${form.address.trim()}, ${form.city.trim()}, ${form.state.trim()} ${form.postcode.trim()}, ${c.name}`;
     setSubmitting(true);
     try {
       const { data } = await api.post("/orders", {
         customer_name: form.name.trim(),
         customer_mobile: `${c.dial} ${mobile}`,
         customer_email: form.email.trim(),
-        delivery_address: fullAddress,
+        delivery_address: fullAddress(),
         country: form.country,
         postcode: form.postcode.trim(),
         client_ref: orderRef,
@@ -111,6 +124,60 @@ export default function Checkout() {
     }
   };
 
+  // Option B — order on WhatsApp (always available; states clearly when shipping must be confirmed)
+  const buildWaMessage = () => {
+    const mobile = form.mobile.replace(/\s+/g, "");
+    const shipConfirmed = shipping.status === "ok";
+    const lines = [
+      "Hello AMYA! I would like to place an order.",
+      "",
+      `Order reference: ${orderRef}`,
+      "",
+      `Customer: ${form.name.trim()}`,
+      `Mobile: ${c.dial} ${mobile}`,
+    ];
+    if (form.email.trim()) lines.push(`Email: ${form.email.trim()}`);
+    lines.push(`Delivery address: ${fullAddress()}`);
+    lines.push("");
+    lines.push("My Order:");
+    items.forEach((it, i) => {
+      lines.push(`${i + 1}. ${it.name}`);
+      if (it.packLabel) lines.push(`   Pack size: ${it.packLabel}`);
+      lines.push(`   Quantity: ${it.qty} pack${it.qty > 1 ? "s" : ""}`);
+      if (it.price != null) {
+        lines.push(`   Price: ${inr(it.price)} per pack`);
+        lines.push(`   Subtotal: ${inr(it.price * it.qty)}`);
+      } else {
+        lines.push("   Price: To be confirmed");
+      }
+    });
+    lines.push("");
+    lines.push(subtotalInr != null ? `Product subtotal: ${inr(subtotalInr)}` : "Product subtotal: To be confirmed");
+    lines.push(`Shipping: ${shipConfirmed ? inr(shipping.amount) : "Shipping quote required"}`);
+    if (totalInr != null) {
+      lines.push(`Final total: ${inr(totalInr)}`);
+    } else {
+      lines.push("Final total: To be confirmed once shipping is confirmed");
+    }
+    lines.push("");
+    if (!shipConfirmed) {
+      lines.push("Please confirm the shipping charge for my address before I pay — the shipping amount is not yet confirmed for this location.");
+    } else {
+      lines.push("Please confirm availability and the expected dispatch/delivery date. I understand this message is an enquiry and does not confirm payment.");
+    }
+    lines.push("");
+    lines.push("Thank you!");
+    return lines.join("\n");
+  };
+
+  const orderOnWhatsApp = () => {
+    const mobile = validateCore(false);
+    if (!mobile) return;
+    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(buildWaMessage())}`;
+    window.open(url, "_blank", "noreferrer");
+    newOrderRef();
+  };
+
   const labelCls = "block font-sans text-xs uppercase tracking-[0.18em] text-ink-soft mb-1.5";
   const inputCls = "w-full border border-ink/15 rounded-lg bg-ivory px-3.5 py-3 font-sans text-sm text-ink focus:outline-none focus:border-terracotta transition-colors";
 
@@ -132,15 +199,15 @@ export default function Checkout() {
         <div>
           <span className="font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Checkout</span>
           <h1 className="font-serif text-3xl sm:text-4xl tracking-tight mt-2 text-ink leading-tight">Checkout</h1>
-          <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">Review your order, add your delivery details and pay securely online.</p>
+          <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">Add your delivery details, enter your PIN/ZIP to see shipping, then pay online or order on WhatsApp.</p>
         </div>
 
-        {/* 1. Order summary */}
-        <div className="rounded-xl border border-beige bg-ivory-warm p-5 sm:p-6" data-testid="checkout-summary">
-          <h2 className="font-serif text-xl text-ink">Order summary ({count})</h2>
+        {/* 1. Cart review — items only */}
+        <div className="rounded-xl border border-beige bg-ivory-warm p-5 sm:p-6" data-testid="checkout-cart">
+          <h2 className="font-serif text-xl text-ink">Your items ({count})</h2>
           <div className="mt-4 space-y-3">
             {items.map((it) => (
-              <div key={it.key} className="flex justify-between gap-3 border-b border-beige pb-3" data-testid={`summary-item-${it.slug}`}>
+              <div key={it.key} className="flex justify-between gap-3 border-b border-beige pb-3 last:border-0 last:pb-0" data-testid={`summary-item-${it.slug}`}>
                 <div className="min-w-0">
                   <p className="font-serif text-base text-ink leading-tight">{it.name}</p>
                   {it.packLabel && <p className="font-sans text-xs text-ink-soft mt-0.5">Pack size: {it.packLabel} · Qty {it.qty}</p>}
@@ -150,6 +217,60 @@ export default function Checkout() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* 2. Your details */}
+        <div>
+          <h2 className="font-serif text-2xl text-ink">Your details</h2>
+          <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">Enter your contact and delivery details. Your shipping charge appears in the order summary below as soon as you add your PIN/ZIP.</p>
+          <div className="mt-5 space-y-4">
+            <div>
+              <label className={labelCls} htmlFor="co-name">Full name *</label>
+              <input id="co-name" className={inputCls} value={form.name} onChange={set("name")} data-testid="checkout-name" autoComplete="name" />
+            </div>
+            <div>
+              <label className={labelCls} htmlFor="co-country">Country *</label>
+              <select id="co-country" className={inputCls} value={form.country} onChange={onCountry} data-testid="checkout-country" autoComplete="country">
+                {COUNTRIES.map((o) => <option key={o.code} value={o.code}>{o.name}</option>)}
+              </select>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls} htmlFor="co-mobile">Mobile number *</label>
+                <div className="flex">
+                  <span className="inline-flex items-center px-3 border border-r-0 border-ink/15 rounded-l-lg bg-ivory-warm font-sans text-sm text-ink-soft" data-testid="checkout-dial">{c.dial}</span>
+                  <input id="co-mobile" className={`${inputCls} rounded-l-none`} value={form.mobile} onChange={set("mobile")} data-testid="checkout-mobile" inputMode="tel" autoComplete="tel" placeholder="Mobile number" />
+                </div>
+              </div>
+              <div>
+                <label className={labelCls} htmlFor="co-email">Email address {onlineEligible ? "*" : "(optional)"}</label>
+                <input id="co-email" type="email" className={inputCls} value={form.email} onChange={set("email")} data-testid="checkout-email" autoComplete="email" />
+              </div>
+            </div>
+            <div>
+              <label className={labelCls} htmlFor="co-address">Complete delivery address *</label>
+              <textarea id="co-address" rows={3} className={inputCls} value={form.address} onChange={set("address")} data-testid="checkout-address" autoComplete="street-address" placeholder="House / flat, street, area, landmark" />
+            </div>
+            <div className="grid sm:grid-cols-3 gap-4">
+              <div>
+                <label className={labelCls} htmlFor="co-city">City *</label>
+                <input id="co-city" className={inputCls} value={form.city} onChange={set("city")} data-testid="checkout-city" autoComplete="address-level2" />
+              </div>
+              <div>
+                <label className={labelCls} htmlFor="co-state">{c.stateLabel} *</label>
+                <input id="co-state" className={inputCls} value={form.state} onChange={set("state")} data-testid="checkout-state" autoComplete="address-level1" />
+              </div>
+              <div>
+                <label className={labelCls} htmlFor="co-postcode">{c.postalLabel} *</label>
+                <input id="co-postcode" className={inputCls} value={form.postcode} onChange={set("postcode")} data-testid="checkout-postcode" inputMode="text" autoComplete="postal-code" placeholder={c.postalHint} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Order summary with live shipping — right after the address/PIN, before payment */}
+        <div className="rounded-xl border border-terracotta/30 bg-ivory-warm p-5 sm:p-6" data-testid="checkout-summary">
+          <h2 className="font-serif text-xl text-ink">Order summary</h2>
           <div className="mt-4 space-y-1.5">
             <Row label="Product subtotal" value={subtotalInr != null ? inr(subtotalInr) : "To be confirmed"} />
             <Row label="Shipping" value={shipping.status === "ok" ? inr(shipping.amount) : "Quote required"} />
@@ -162,100 +283,44 @@ export default function Checkout() {
                 ≈ {est(totalInr)} estimated · FX rate as of {fx?.date}{fx?.stale ? " (cached)" : ""}. You'll be charged in INR; your bank may apply its own rate/fees.
               </p>
             )}
-            {showEstimate && !fx && (
-              <p className="font-sans text-[11px] text-ink-soft pt-1">Currency estimate unavailable right now — amounts shown in INR. Final total confirmed on enquiry.</p>
-            )}
-            <p className="font-sans text-[11px] text-ink-soft pt-1 leading-relaxed">{shipping.note}</p>
+            <p className="font-sans text-[11px] text-ink-soft pt-1 leading-relaxed" data-testid="checkout-ship-note">{shipping.note}</p>
           </div>
         </div>
 
-        <form onSubmit={submit} className="space-y-8" data-testid="checkout-form">
-          {/* 2. Your details */}
-          <div>
-            <h2 className="font-serif text-2xl text-ink">Your details</h2>
-            <p className="font-sans text-sm text-ink-soft mt-2 leading-relaxed">Enter your contact and delivery details so we can prepare your order. Your order total is shown in the order summary above.</p>
-            <div className="mt-5 space-y-4">
-              <div>
-                <label className={labelCls} htmlFor="co-name">Full name *</label>
-                <input id="co-name" className={inputCls} value={form.name} onChange={set("name")} data-testid="checkout-name" autoComplete="name" />
-              </div>
-              <div>
-                <label className={labelCls} htmlFor="co-country">Country *</label>
-                <select id="co-country" className={inputCls} value={form.country} onChange={set("country")} data-testid="checkout-country" autoComplete="country">
-                  {COUNTRIES.map((o) => <option key={o.code} value={o.code}>{o.name}</option>)}
-                </select>
-              </div>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label className={labelCls} htmlFor="co-mobile">Mobile number *</label>
-                  <div className="flex">
-                    <span className="inline-flex items-center px-3 border border-r-0 border-ink/15 rounded-l-lg bg-ivory-warm font-sans text-sm text-ink-soft" data-testid="checkout-dial">{c.dial}</span>
-                    <input id="co-mobile" className={`${inputCls} rounded-l-none`} value={form.mobile} onChange={set("mobile")} data-testid="checkout-mobile" inputMode="tel" autoComplete="tel" placeholder="Mobile number" />
-                  </div>
-                </div>
-                <div>
-                  <label className={labelCls} htmlFor="co-email">Email address *</label>
-                  <input id="co-email" type="email" className={inputCls} value={form.email} onChange={set("email")} data-testid="checkout-email" autoComplete="email" />
-                </div>
-              </div>
-              <div>
-                <label className={labelCls} htmlFor="co-address">Complete delivery address *</label>
-                <textarea id="co-address" rows={3} className={inputCls} value={form.address} onChange={set("address")} data-testid="checkout-address" autoComplete="street-address" placeholder="House / flat, street, area, landmark" />
-              </div>
-              <div className="grid sm:grid-cols-3 gap-4">
-                <div>
-                  <label className={labelCls} htmlFor="co-city">City *</label>
-                  <input id="co-city" className={inputCls} value={form.city} onChange={set("city")} data-testid="checkout-city" autoComplete="address-level2" />
-                </div>
-                <div>
-                  <label className={labelCls} htmlFor="co-state">{c.stateLabel} *</label>
-                  <input id="co-state" className={inputCls} value={form.state} onChange={set("state")} data-testid="checkout-state" autoComplete="address-level1" />
-                </div>
-                <div>
-                  <label className={labelCls} htmlFor="co-postcode">{c.postalLabel} *</label>
-                  <input id="co-postcode" className={inputCls} value={form.postcode} onChange={set("postcode")} data-testid="checkout-postcode" inputMode="text" autoComplete="postal-code" placeholder={c.postalHint} />
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* 4. Two order options */}
+        <div className="space-y-4" data-testid="checkout-options">
+          <h2 className="font-serif text-2xl text-ink">Place your order</h2>
 
-          {/* 3. Payment method — online only */}
-          <div>
-            <h2 className="font-serif text-2xl text-ink">Payment method</h2>
-            {onlineEligible ? (
-              <div data-testid="pay-razorpay" className="flex items-center gap-3 border border-terracotta bg-terracotta/[0.06] rounded-lg px-3.5 py-3 mt-4">
-                <span className="h-4 w-4 rounded-full border-[5px] border-terracotta shrink-0" aria-hidden="true" />
-                <span><span className="font-sans text-sm text-ink font-medium">Pay online (Razorpay)</span><span className="block font-sans text-xs text-ink-soft">UPI, cards &amp; netbanking · charged in INR, paid securely now</span></span>
-              </div>
-            ) : (
-              <div data-testid="pay-unavailable" className="border border-ink/15 rounded-lg px-3.5 py-4 mt-4 bg-ivory-warm">
-                <p className="font-sans text-sm text-ink">
-                  {form.country !== "IN"
-                    ? "International shipping & payment quote required."
-                    : shipping.status !== "ok"
-                      ? "A shipping quote is required for this PIN code."
-                      : "Online payment isn't available for this order right now."}
-                </p>
-                <p className="font-sans text-xs text-ink-soft mt-1">We don't charge an unconfirmed amount. Please send us your order and address and we'll confirm shipping and payment.</p>
-                <a href={whatsappUrl} target="_blank" rel="noreferrer" data-testid="checkout-enquire"
-                   className="inline-flex items-center gap-1.5 mt-3 font-sans text-xs uppercase tracking-[0.14em] text-terracotta border border-terracotta rounded-full px-3.5 py-2 hover:bg-terracotta hover:text-ivory transition-colors">
-                  <MessageCircle size={14} /> Enquire on WhatsApp
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* 4. Pay & place order */}
-          <div>
-            <button type="submit" disabled={submitting || !onlineEligible} data-testid="checkout-submit"
+          {/* Option A — Pay securely online */}
+          {onlineEligible ? (
+            <button type="button" onClick={payOnline} disabled={submitting} data-testid="checkout-pay-online"
               className="w-full inline-flex items-center justify-center gap-2 bg-terracotta text-ivory hover:bg-terracotta-deep transition-colors py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full disabled:opacity-50 disabled:cursor-not-allowed">
-              {submitting ? <><Loader2 size={17} className="animate-spin" /> Processing…</> : <>Pay &amp; place order</>}
+              {submitting ? <><Loader2 size={17} className="animate-spin" /> Processing…</> : <><ShieldCheck size={16} /> Pay Securely with Razorpay</>}
             </button>
-            <p className="font-sans text-[11px] text-ink-soft text-center mt-3 leading-relaxed" data-testid="checkout-pay-note">
-              You'll complete payment securely via Razorpay now, charged in INR. Your order is marked PAID only after the payment is verified by our backend.
-            </p>
-          </div>
-        </form>
+          ) : (
+            <div data-testid="pay-unavailable" className="border border-ink/15 rounded-lg px-3.5 py-3.5 bg-ivory-warm">
+              <p className="font-sans text-sm text-ink">
+                {form.country !== "IN"
+                  ? "Online payment for international orders isn't available yet — please order on WhatsApp and we'll confirm shipping and payment."
+                  : shipping.status !== "ok"
+                    ? "A shipping quote is required for this PIN code before online payment. Please order on WhatsApp."
+                    : "Online payment isn't available for this order right now — please order on WhatsApp."}
+              </p>
+            </div>
+          )}
+
+          {/* Option B — Order on WhatsApp (always) */}
+          <button type="button" onClick={orderOnWhatsApp} data-testid="checkout-whatsapp"
+            className="w-full inline-flex items-center justify-center gap-2 border border-terracotta text-terracotta hover:bg-terracotta hover:text-ivory transition-colors py-4 font-sans text-sm uppercase tracking-[0.18em] rounded-full">
+            <MessageCircle size={16} /> Order on WhatsApp
+          </button>
+
+          <p className="font-sans text-[11px] text-ink-soft text-center leading-relaxed" data-testid="checkout-pay-note">
+            {onlineEligible
+              ? "Razorpay supports UPI, cards & netbanking · charged in INR. Your order is marked PAID only after payment is verified by our backend. WhatsApp is an enquiry and does not confirm payment."
+              : "We never charge an unconfirmed amount. Sending your order on WhatsApp lets us confirm shipping and share a secure payment link. A WhatsApp message is an enquiry and does not confirm payment."}
+          </p>
+        </div>
       </section>
     </div>
   );

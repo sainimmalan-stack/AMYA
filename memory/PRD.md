@@ -750,3 +750,12 @@ Edited ONLY /app/frontend/src/pages/Checkout.jsx (no other sections/branding/bac
   - Order Summary renders FIRST (above the form). Our Story real Amulya & Leela kitchen photo at the very top (/products/our-story-kitchen.jpg, y≈65) — NOT replaced with AI imagery.
   - No horizontal overflow at 390 / 1440. Backend regression: test_admin_auth + test_admin_deletion = 12 passed, 2 skipped.
 - ACTION REQUIRED: REDEPLOY so the live site serves the already-correct international checkout. No code change needed.
+
+## Changelog — 2026-07-14 (Checkout: summary-before-payment + dual order options)
+- Restructured /checkout flow to: (1) Your items → (2) Your details (name/country/mobile/email/address/city/state/PIN) → (3) Order summary with LIVE shipping (sits right after the address/PIN section, before payment) → (4) Two order options.
+- Shipping updates live on PIN/ZIP entry (reactive). India supported PINs show the fee (Hyd ₹100 / AP-TS ₹180); unsupported India PIN now shows exact copy "Please contact AMYA to confirm delivery and shipping charges." and blocks online pay; international shows confirmed weight-tier rate (US/UK) or "Shipping quote required".
+- Country change now clears state + postcode (revalidates) so India's 6-digit PIN rule never applies to US/UK/AU/EU. US ZIP (5 or ZIP+4) accepted; verified 11697 + 10001-1234.
+- OPTION A "Pay Securely with Razorpay" shown only when India + confirmed shipping + Razorpay enabled + all items priced; sends exact final INR total (subtotal+shipping); server-side verify unchanged; duplicate protection via client_ref idempotency.
+- OPTION B "Order on WhatsApp" (wa.me/919675334567) ALWAYS available; composes full readable message: customer name/mobile, full address+country+PIN, items/packs/qty/prices, product subtotal, shipping (or "Shipping quote required"), final total (only when confirmed), and clearly states WhatsApp is an enquiry that does not confirm payment. Email optional for WhatsApp, required for online pay.
+- COD remains fully removed (frontend + backend 400). No prices/packs/stock/descriptions changed. Razorpay secret stays server-side.
+- VERIFIED (actual tests, mobile 390 + desktop 1440): section order correct; IN 500081 → total ₹600 both buttons; IN 400001 → quote required + WhatsApp only + correct message; US 11697 → ZIP label, total ₹2,900, no Razorpay, WhatsApp only; country switch clears PIN; empty-field validation blocks WhatsApp; no horizontal overflow. NOT redeployed (awaiting user).

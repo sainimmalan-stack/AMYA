@@ -44,7 +44,7 @@ export function computeShipping(region, postcode, weightKg) {
     if (!/^\d{6}$/.test(pin)) return { status: "quote", amount: null, note: "Enter a valid 6-digit PIN to see shipping." };
     if (["5000", "5001"].includes(pin.slice(0, 4))) return { status: "ok", amount: 100, note: "Hyderabad delivery" };
     if (["50", "51", "52", "53"].includes(pin.slice(0, 2))) return { status: "ok", amount: 180, note: "Andhra Pradesh / Telangana delivery" };
-    return { status: "quote", amount: null, note: "Outside our current India service area — shipping quote required." };
+    return { status: "quote", amount: null, note: "Please contact AMYA to confirm delivery and shipping charges." };
   }
   if (region === "US") {
     const bands = [[0.5, 2400], [1, 2900], [2, 3400], [3, 4300], [4, 5000], [5, 5800], [6, 6500], [7, 7000], [8, 7800], [9, 8200], [10, 8800]];
