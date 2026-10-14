@@ -45,24 +45,26 @@ export default function OurStory() {
 
       {/* Our Story — Amulya & Leela (real kitchen photograph) */}
       <section className="bg-ivory-warm" data-testid="our-story-two-generations">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14 sm:py-20 lg:py-24 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className="max-w-4xl mx-auto px-5 sm:px-8 py-14 sm:py-20 lg:py-24">
           <Reveal>
-            <div className="relative aspect-[3/2] overflow-hidden rounded-xl bg-ivory">
+            <span className="block text-center font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Our Story</span>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <figure className="mt-6 sm:mt-8 overflow-hidden rounded-2xl sm:rounded-3xl bg-ivory shadow-[0_18px_50px_-24px_rgba(74,44,28,0.45)]">
               <img
                 src="/products/our-story-kitchen.jpg"
-                alt="Amulya and her mother-in-law, Leela, preparing traditional homemade food in a kitchen."
+                alt="Amulya and her mother-in-law, Leela, together preparing traditional homemade food in a kitchen."
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full object-cover object-center"
+                className="block w-full h-auto"
               />
-            </div>
+            </figure>
           </Reveal>
-          <Reveal delay={0.1}>
-            <span className="block font-sans text-xs uppercase tracking-[0.3em] text-terracotta">Our Story</span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-3 leading-tight text-ink [text-wrap:balance]">
+          <Reveal delay={0.16}>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-10 sm:mt-12 leading-tight text-ink text-center [text-wrap:balance]">
               Two Generations. One Love for Homemade Food.
             </h2>
-            <div className="mt-6 space-y-4 font-sans text-base text-ink-soft leading-relaxed">
+            <div className="mt-6 space-y-4 font-sans text-base text-ink-soft leading-relaxed max-w-2xl mx-auto">
               <p>AMYA was born from Amulya's love for cooking and her passion for sharing the flavours of homemade Indian food.</p>
               <p>Together with her mother-in-law, Leela, she brings cherished family recipes, carefully selected ingredients and traditional cooking methods into the AMYA kitchen.</p>
               <p>From signature podis and traditional Andhra pickles to much-loved homemade treats, every small batch is prepared with patience, care and a genuine love for good food.</p>

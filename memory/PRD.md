@@ -712,3 +712,7 @@ FIX (no code publish; live-API remediation on the deployed build which already h
 - Triggered POST /api/auth/forgot-password for contactamyafoods@gmail.com. Deployer confirmed from PROD: EMERGENT_EMAIL_KEY present; email provider ACCEPTED the reset (HTTP 202, log "email ok=True"); prod admin count=1 email=contactamyafoods@gmail.com; no amulya/other admins.
 - Founder set their own private password via the emailed reset link; legacy password AmyaFounder@2026 now REJECTED (401) in production.
 VERIFIED IN PRODUCTION (curl against https://amyafoods.in): correct login 200 + /auth/me session 200 + authorized /admin/orders 200; wrong password 401; unknown email 401; admin API without token 401; logout 200. Prod real orders = 0 (7 orders are preview test data). Nothing deleted/reset.
+
+## Changelog — 2026-07-14 (Our Story section — photo-first editorial layout)
+- Restructured ONLY the "Our Story" (Two Generations) section in OurStory.jsx from a 2-column (image-left/text-right) grid into a stacked, centered editorial layout: "OUR STORY" label → large rounded photo of Amulya & Leela (existing /products/our-story-kitchen.jpg, 1536x1024, shown w-full h-auto so both women are fully visible with no crop/stretch) → heading "Two Generations. One Love for Homemade Food." → unchanged story paragraphs.
+- Story text unchanged; no duplicate section; logo/nav/header/bag/WhatsApp and all other sections untouched; terracotta/ivory palette preserved. Verified DOM order + visual on desktop & mobile in preview. (Redeploy to publish to amyafoods.in.)
