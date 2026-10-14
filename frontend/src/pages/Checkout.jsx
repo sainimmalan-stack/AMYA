@@ -175,6 +175,22 @@ export default function Checkout() {
   const orderOnWhatsApp = () => {
     const mobile = validateCore(false);
     if (!mobile) return;
+    // Best-effort: capture the enquiry so admin can one-click a payment link later. Never blocks WhatsApp.
+    api.post("/quote-enquiries", {
+      customer_name: form.name.trim(),
+      customer_mobile: mobile,
+      customer_email: form.email.trim() || undefined,
+      delivery_address: fullAddress(),
+      country: form.country,
+      postcode: form.postcode.trim(),
+      items: items.map((it) => ({ name: it.name, pack_label: it.packLabel, qty: it.qty, line_total: it.price != null ? it.price * it.qty : null })),
+      subtotal: subtotalInr,
+      weight_kg: shipping.billableKg,
+      shipping_status: shipping.status,
+      shipping_amount: shipping.status === "ok" ? shipping.amount : null,
+      note: c.region !== "IN" ? `Parcel ${shipping.billableKg} kg · rate ${shipping.rateLabel}` : (shipping.note || null),
+      client_ref: orderRef,
+    }).catch(() => {});
     const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(buildWaMessage())}`;
     window.open(url, "_blank", "noreferrer");
     newOrderRef();

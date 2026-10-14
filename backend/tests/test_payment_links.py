@@ -32,3 +32,11 @@ def test_callback_route_exists_and_redirects():
     # Invalid/missing signature must not error out — it redirects to the done page.
     r = requests.get(f"{API}/payments/payment-link/callback", allow_redirects=False)
     assert r.status_code in (302, 303)
+
+
+def test_admin_quote_enquiries_requires_auth():
+    assert requests.get(f"{API}/admin/quote-enquiries").status_code == 401
+
+
+def test_admin_quote_enquiry_update_requires_auth():
+    assert requests.patch(f"{API}/admin/quote-enquiries/AMYAQE-TEST", json={"status": "closed"}).status_code == 401

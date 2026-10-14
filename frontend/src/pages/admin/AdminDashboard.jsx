@@ -233,18 +233,44 @@ function LinkStatusPill({ status }) {
 function PaymentLinks() {
   const EMPTY_F = { customer_name: "", customer_mobile: "", customer_email: "", delivery_address: "", country: "IN", subtotal: "", shipping: "", note: "", expiry_days: 7 };
   const [links, setLinks] = useState([]);
+  const [enquiries, setEnquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState("");
+  const [fromEnquiry, setFromEnquiry] = useState("");
   const [f, setF] = useState(EMPTY_F);
   const set = (k) => (e) => setF((prev) => ({ ...prev, [k]: e.target.value }));
   const inr = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
   const load = useCallback(async () => {
-    try { const { data } = await api.get("/admin/payment-links"); setLinks(data); }
-    catch { toast.error("Failed to load payment links"); }
+    try {
+      const [l, e] = await Promise.all([api.get("/admin/payment-links"), api.get("/admin/quote-enquiries")]);
+      setLinks(l.data); setEnquiries(e.data);
+    } catch { toast.error("Failed to load payment links"); }
     finally { setLoading(false); }
   }, []);
   useEffect(() => { load(); }, [load]);
+
+  const prefill = (enq) => {
+    setFromEnquiry(enq.enquiry_id);
+    setF({
+      customer_name: enq.customer?.name || "",
+      customer_mobile: enq.customer?.mobile || "",
+      customer_email: enq.customer?.email || "",
+      delivery_address: enq.delivery_address || "",
+      country: enq.country || "IN",
+      subtotal: enq.subtotal != null ? String(enq.subtotal) : "",
+      shipping: enq.shipping_status === "ok" && enq.shipping_amount != null ? String(enq.shipping_amount) : "",
+      note: enq.note || "",
+      expiry_days: 7,
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    toast.success("Form prefilled from enquiry — review & create");
+  };
+
+  const dismissEnquiry = async (id) => {
+    try { await api.patch(`/admin/quote-enquiries/${id}`, { status: "closed" }); setEnquiries((p) => p.filter((x) => x.enquiry_id !== id)); }
+    catch { toast.error("Could not dismiss"); }
+  };
 
   const total = (Number(f.subtotal) || 0) + (Number(f.shipping) || 0);
 
@@ -262,6 +288,11 @@ function PaymentLinks() {
       toast.success("Payment link created — SMS/email sent if contact provided");
       setF(EMPTY_F);
       setLinks((prev) => [data, ...prev]);
+      if (fromEnquiry) {
+        try { await api.patch(`/admin/quote-enquiries/${fromEnquiry}`, { status: "converted" }); } catch { /* non-blocking */ }
+        setEnquiries((p) => p.filter((x) => x.enquiry_id !== fromEnquiry));
+        setFromEnquiry("");
+      }
     } catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Could not create link"); }
     finally { setBusy(""); }
   };
@@ -296,8 +327,33 @@ function PaymentLinks() {
         After agreeing a shipping quote on WhatsApp, create a one-time Razorpay link so the customer can pay without re-entering anything. When paid, a confirmed order is created automatically in the Orders tab.
       </p>
 
+      {enquiries.length > 0 && (
+        <div className="mb-6" data-testid="pl-enquiries">
+          <p className="font-sans text-xs uppercase tracking-[0.18em] text-terracotta mb-3">From WhatsApp enquiries ({enquiries.length})</p>
+          <div className="space-y-2">
+            {enquiries.map((e) => (
+              <div key={e.enquiry_id} data-testid={`pl-enq-${e.enquiry_id}`} className="flex flex-wrap items-center justify-between gap-2 bg-ivory-warm border border-beige rounded-lg px-4 py-3">
+                <div className="min-w-0">
+                  <p className="font-serif text-base text-ink">{e.customer?.name} · {countryByCode(e.country).name}{e.subtotal != null ? ` · items ${inr(e.subtotal)}` : ""}</p>
+                  <p className="font-sans text-xs text-ink-soft mt-0.5">
+                    {e.customer?.mobile}{e.postcode ? ` · ${e.postcode}` : ""}{e.weight_kg != null ? ` · ${e.weight_kg} kg` : ""}
+                    {e.shipping_status === "ok" && e.shipping_amount != null ? ` · ship ${inr(e.shipping_amount)}` : " · shipping: quote required"}
+                  </p>
+                  {e.items?.length > 0 && <p className="font-sans text-xs text-ink-soft mt-0.5 truncate">{e.items.map((it) => `${it.qty}× ${it.name}${it.pack_label ? ` (${it.pack_label})` : ""}`).join(", ")}</p>}
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <button onClick={() => prefill(e)} data-testid={`pl-use-${e.enquiry_id}`} className={`${btn} bg-terracotta text-ivory hover:bg-terracotta-deep rounded-full`}><Plus size={13} /> Use</button>
+                  <button onClick={() => dismissEnquiry(e.enquiry_id)} data-testid={`pl-dismiss-${e.enquiry_id}`} title="Dismiss" className={`${btn} border border-ink/20 rounded-full`}><X size={13} /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Create form */}
       <div className="bg-white border border-ink/10 p-5 grid sm:grid-cols-2 gap-4" data-testid="pl-create-form">
+        {fromEnquiry && <div className="sm:col-span-2 text-xs font-sans text-terracotta" data-testid="pl-prefilled-note">Prefilled from WhatsApp enquiry {fromEnquiry} — review the shipping amount, then create.</div>}
         <L label="Customer name *"><Input data-testid="pl-name" value={f.customer_name} onChange={set("customer_name")} /></L>
         <L label="Mobile number *"><Input data-testid="pl-mobile" value={f.customer_mobile} onChange={set("customer_mobile")} placeholder="e.g. 9675334567" /></L>
         <L label="Email (optional)"><Input data-testid="pl-email" type="email" value={f.customer_email} onChange={set("customer_email")} /></L>

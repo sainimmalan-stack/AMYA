@@ -391,6 +391,29 @@ class PaymentLinkCreate(BaseModel):
     expiry_days: int = 7
 
 
+class QuoteEnquiryItem(BaseModel):
+    name: str
+    pack_label: Optional[str] = None
+    qty: int = 1
+    line_total: Optional[float] = None
+
+
+class QuoteEnquiryIn(BaseModel):
+    customer_name: str
+    customer_mobile: str
+    customer_email: Optional[str] = None
+    delivery_address: Optional[str] = None
+    country: str = "IN"
+    postcode: Optional[str] = None
+    items: List[QuoteEnquiryItem] = []
+    subtotal: Optional[float] = None
+    weight_kg: Optional[float] = None
+    shipping_status: Optional[str] = None
+    shipping_amount: Optional[float] = None
+    note: Optional[str] = None
+    client_ref: Optional[str] = None
+
+
 class OrderStatusUpdate(BaseModel):
     payment_status: Optional[str] = None
     order_status: Optional[str] = None
@@ -1603,6 +1626,58 @@ async def payment_link_callback(request: Request):
         order_number = await _mark_link_paid(link, qp.get("razorpay_payment_id") or "paid")
         ref = order_number or link.get("link_id")
     return RedirectResponse(url=f"{done}?status=paid&ref={ref}", status_code=303)
+
+
+# -------------------- Quote enquiries (from checkout "Order on WhatsApp") --------------------
+def _public_quote_enquiry(doc: dict) -> dict:
+    return {k: v for k, v in doc.items() if k != "_id"}
+
+
+@api.post("/quote-enquiries")
+async def create_quote_enquiry(payload: QuoteEnquiryIn):
+    """Best-effort capture of a checkout WhatsApp enquiry so admin can one-click a payment link later."""
+    now = now_iso()
+    doc = {
+        "customer": {"name": payload.customer_name.strip(), "mobile": payload.customer_mobile.strip(),
+                     "email": (payload.customer_email or "").strip() or None},
+        "delivery_address": (payload.delivery_address or "").strip() or None,
+        "country": (payload.country or "IN").upper(),
+        "postcode": (payload.postcode or "").strip() or None,
+        "items": [i.model_dump() for i in payload.items],
+        "subtotal": payload.subtotal,
+        "weight_kg": payload.weight_kg,
+        "shipping_status": payload.shipping_status,
+        "shipping_amount": payload.shipping_amount,
+        "note": (payload.note or "").strip() or None,
+        "status": "new",
+        "updated_at": now,
+    }
+    ref = (payload.client_ref or "").strip()
+    if ref:
+        existing = await db.quote_enquiries.find_one({"enquiry_id": ref})
+        if existing:
+            await db.quote_enquiries.update_one({"enquiry_id": ref}, {"$set": doc})
+            return {"ok": True, "id": ref}
+        doc["enquiry_id"] = ref
+    else:
+        doc["enquiry_id"] = f"AMYAQE-{secrets.token_hex(5).upper()}"
+    doc["created_at"] = now
+    await db.quote_enquiries.insert_one(dict(doc))
+    return {"ok": True, "id": doc["enquiry_id"]}
+
+
+@api.get("/admin/quote-enquiries")
+async def admin_quote_enquiries(admin: dict = Depends(get_current_admin)):
+    docs = await db.quote_enquiries.find({"status": {"$ne": "closed"}}).sort("created_at", -1).to_list(200)
+    return [_public_quote_enquiry(d) for d in docs]
+
+
+@api.patch("/admin/quote-enquiries/{enquiry_id}")
+async def admin_update_quote_enquiry(enquiry_id: str, payload: StatusUpdate, admin: dict = Depends(get_current_admin)):
+    r = await db.quote_enquiries.update_one({"enquiry_id": enquiry_id}, {"$set": {"status": payload.status, "updated_at": now_iso()}})
+    if r.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Enquiry not found")
+    return {"ok": True}
 
 
 # -------------------- Admin: orders --------------------
