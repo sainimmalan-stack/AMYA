@@ -759,3 +759,12 @@ Edited ONLY /app/frontend/src/pages/Checkout.jsx (no other sections/branding/bac
 - OPTION B "Order on WhatsApp" (wa.me/919675334567) ALWAYS available; composes full readable message: customer name/mobile, full address+country+PIN, items/packs/qty/prices, product subtotal, shipping (or "Shipping quote required"), final total (only when confirmed), and clearly states WhatsApp is an enquiry that does not confirm payment. Email optional for WhatsApp, required for online pay.
 - COD remains fully removed (frontend + backend 400). No prices/packs/stock/descriptions changed. Razorpay secret stays server-side.
 - VERIFIED (actual tests, mobile 390 + desktop 1440): section order correct; IN 500081 → total ₹600 both buttons; IN 400001 → quote required + WhatsApp only + correct message; US 11697 → ZIP label, total ₹2,900, no Razorpay, WhatsApp only; country switch clears PIN; empty-field validation blocks WhatsApp; no horizontal overflow. NOT redeployed (awaiting user).
+
+## Changelog — 2026-07-14 (International shipping breakdown + confirmed USA/UK per-kg rates)
+- USA now FULLY CONFIRMED in computeShipping: flat brackets 0.5kg₹2400,1kg₹2900,2kg₹3400,3kg₹4300,4kg₹5000,5kg₹5800,6kg₹6500,7kg₹7000,8kg₹7800,9kg₹8200; 10–19kg ₹880/kg; 20kg+ ₹850/kg. Billable = 0.5kg min or rounded up to whole kg.
+- UK confirmed: 5–9kg ₹850/kg, 10–19kg ₹650/kg. UK <5kg and 20kg+ (ambiguous "600 & 520") = QUOTE REQUIRED. Australia & Europe = QUOTE REQUIRED (no rates supplied).
+- Order summary now shows an International shipping breakdown for US/UK/AU/EU: Parcel weight (billable), Shipping rate (₹/kg, only for per-kg tiers), Shipping charge, then Product subtotal + Final total (INR) + local-currency estimate with FX date. Quote states show "Quote required" and never a fabricated total.
+- computeShipping returns structured { status, amount, billableKg, ratePerKg, note }. WhatsApp message now includes parcel weight + per-kg rate.
+- Online Razorpay stays India-only (international payments not enabled on merchant account); international = WhatsApp enquiry. COD still removed. No prices changed. No fabricated rates.
+- VERIFIED (node logic for all US/UK weight tiers + UI breakdown on preview mobile 390, US 11697 → 0.5kg/₹2,400/₹2,900/$30.42). NOT redeployed.
+- STILL AWAITING CONFIRMATION: UK <5kg, UK 20kg+ (600 vs 520 conflict), Australia metro rates, Europe rates. Admin rate-management UI (requirement #6) NOT built yet — deferred as a separate task.

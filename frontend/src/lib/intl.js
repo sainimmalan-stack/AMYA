@@ -35,36 +35,51 @@ export const cartWeightKg = (items) =>
   items.reduce((sum, it) => sum + packWeightKg(it.packLabel) * (it.qty || 1), 0);
 
 export const roundUpHalfKg = (kg) => Math.max(0.5, Math.ceil(kg / 0.5) * 0.5);
+// Courier bills per whole kilogram for per-kg international tiers (minimum 1 kg).
+export const billableWholeKg = (kg) => Math.max(1, Math.ceil(kg || 0));
 
-// Returns { status: 'ok' | 'quote', amount: number|null, note: string } — amount is INR.
+const shipOk = (amount, billableKg, ratePerKg, note) => ({ status: "ok", amount, billableKg, ratePerKg, note });
+const shipQuote = (note, billableKg) => ({ status: "quote", amount: null, billableKg, ratePerKg: null, note });
+
+// Returns { status: 'ok'|'quote', amount: number|null (INR), billableKg, ratePerKg: number|null, note }.
+// Rates below are EXACTLY as confirmed by the founder. Anything unconfirmed returns a quote.
 export function computeShipping(region, postcode, weightKg) {
-  const w = roundUpHalfKg(weightKg);
+  const raw = Math.max(0, weightKg || 0);
+
   if (region === "IN") {
+    const w = roundUpHalfKg(raw);
     const pin = (postcode || "").trim();
-    if (!/^\d{6}$/.test(pin)) return { status: "quote", amount: null, note: "Enter a valid 6-digit PIN to see shipping." };
-    if (["5000", "5001"].includes(pin.slice(0, 4))) return { status: "ok", amount: 100, note: "Hyderabad delivery" };
-    if (["50", "51", "52", "53"].includes(pin.slice(0, 2))) return { status: "ok", amount: 180, note: "Andhra Pradesh / Telangana delivery" };
-    return { status: "quote", amount: null, note: "Please contact AMYA to confirm delivery and shipping charges." };
+    if (!/^\d{6}$/.test(pin)) return shipQuote("Enter a valid 6-digit PIN to see shipping.", w);
+    if (["5000", "5001"].includes(pin.slice(0, 4))) return shipOk(100, w, null, "Hyderabad delivery");
+    if (["50", "51", "52", "53"].includes(pin.slice(0, 2))) return shipOk(180, w, null, "Andhra Pradesh / Telangana delivery");
+    return shipQuote("Please contact AMYA to confirm delivery and shipping charges.", w);
   }
+
   if (region === "US") {
-    const bands = [[0.5, 2400], [1, 2900], [2, 3400], [3, 4300], [4, 5000], [5, 5800], [6, 6500], [7, 7000], [8, 7800], [9, 8200], [10, 8800]];
-    for (const [max, price] of bands) if (w <= max) {
-      return { status: "ok", amount: price, note: max === 10 ? `Parcel ${w} kg · rate subject to confirmation` : `Parcel ${w} kg` };
-    }
-    return { status: "quote", amount: null, note: "Above 10 kg — shipping quote required." };
+    // Confirmed: flat brackets up to 9 kg, then 880/kg (10–19), 850/kg (20+).
+    const billable = raw <= 0.5 ? 0.5 : billableWholeKg(raw);
+    const bands = { 0.5: 2400, 1: 2900, 2: 3400, 3: 4300, 4: 5000, 5: 5800, 6: 6500, 7: 7000, 8: 7800, 9: 8200 };
+    if (billable <= 9) return shipOk(bands[billable], billable, null, "USA delivery · you'll be charged in INR");
+    if (billable < 20) return shipOk(880 * billable, billable, 880, "USA delivery · you'll be charged in INR");
+    return shipOk(850 * billable, billable, 850, "USA delivery · you'll be charged in INR");
   }
+
   if (region === "UK") {
-    if (w >= 20) return { status: "quote", amount: null, note: "20 kg+ rate pending confirmation — quote required." };
-    if (w >= 10) return { status: "ok", amount: Math.round(650 * w), note: `Parcel ${w} kg @ ₹650/kg` };
-    if (w >= 5) return { status: "ok", amount: Math.round(850 * w), note: `Parcel ${w} kg @ ₹850/kg` };
-    return { status: "quote", amount: null, note: "Under 5 kg — shipping quote required." };
+    // Confirmed: 5–9 kg @ 850/kg, 10–19 kg @ 650/kg. Under 5 kg and 20 kg+ not confirmed.
+    const billable = billableWholeKg(raw);
+    if (billable >= 20) return shipQuote("20 kg+ rate pending confirmation — shipping quote required.", billable);
+    if (billable >= 10) return shipOk(650 * billable, billable, 650, "UK delivery · you'll be charged in INR");
+    if (billable >= 5) return shipOk(850 * billable, billable, 850, "UK delivery · you'll be charged in INR");
+    return shipQuote("Under 5 kg — shipping quote required.", billable);
   }
+
   if (region === "AU") {
-    // Metro eligibility cannot be verified from a postcode list -> always quote.
-    return { status: "quote", amount: null, note: "Australia delivery — metro eligibility & quote required." };
+    // Australia rate not confirmed.
+    return shipQuote("Australia shipping rate not confirmed — quote required.", billableWholeKg(raw));
   }
-  // EU and anything else
-  return { status: "quote", amount: null, note: "International shipping quote required." };
+
+  // EU and anything else — not confirmed.
+  return shipQuote("International shipping rate: Quote required.", billableWholeKg(raw));
 }
 
 // --- FX estimates (never hard-coded; cached with a visible date) ---

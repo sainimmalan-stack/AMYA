@@ -152,7 +152,9 @@ export default function Checkout() {
       }
     });
     lines.push("");
+    lines.push(`Parcel weight (billable): ${shipping.billableKg} kg`);
     lines.push(subtotalInr != null ? `Product subtotal: ${inr(subtotalInr)}` : "Product subtotal: To be confirmed");
+    if (c.region !== "IN" && shipping.ratePerKg != null && shipConfirmed) lines.push(`Shipping rate: ${inr(shipping.ratePerKg)} per kg`);
     lines.push(`Shipping: ${shipConfirmed ? inr(shipping.amount) : "Shipping quote required"}`);
     if (totalInr != null) {
       lines.push(`Final total: ${inr(totalInr)}`);
@@ -273,9 +275,20 @@ export default function Checkout() {
           <h2 className="font-serif text-xl text-ink">Order summary</h2>
           <div className="mt-4 space-y-1.5">
             <Row label="Product subtotal" value={subtotalInr != null ? inr(subtotalInr) : "To be confirmed"} />
-            <Row label="Shipping" value={shipping.status === "ok" ? inr(shipping.amount) : "Quote required"} />
+
+            {c.region !== "IN" ? (
+              <div className="rounded-lg bg-ivory border border-beige px-3 py-2.5 my-1" data-testid="checkout-intl-breakdown">
+                <p className="font-sans text-xs uppercase tracking-[0.14em] text-terracotta mb-1.5">International shipping</p>
+                <Row label="Parcel weight (billable)" value={`${shipping.billableKg} kg`} />
+                {shipping.ratePerKg != null && <Row label="Shipping rate" value={`${inr(shipping.ratePerKg)} per kg`} />}
+                <Row label="Shipping charge" value={shipping.status === "ok" ? inr(shipping.amount) : "Quote required"} />
+              </div>
+            ) : (
+              <Row label="Shipping" value={shipping.status === "ok" ? inr(shipping.amount) : "Quote required"} />
+            )}
+
             <div className="flex justify-between pt-2 border-t border-beige">
-              <span className="font-sans text-sm text-ink-soft">Total {showEstimate ? "(charged in INR)" : ""}</span>
+              <span className="font-sans text-sm text-ink-soft">Final total {showEstimate ? "(charged in INR)" : ""}</span>
               <span className="font-serif text-lg text-terracotta" data-testid="checkout-total">{totalInr != null ? inr(totalInr) : "Quote required"}</span>
             </div>
             {showEstimate && totalInr != null && est(totalInr) && (
