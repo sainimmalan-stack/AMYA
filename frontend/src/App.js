@@ -20,6 +20,7 @@ import Policy from "@/pages/Policy";
 import RefundPolicy from "@/pages/RefundPolicy";
 import Checkout from "@/pages/Checkout";
 import OrderConfirmation from "@/pages/OrderConfirmation";
+import PaymentLinkDone from "@/pages/PaymentLinkDone";
 import NotFound from "@/pages/NotFound";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminSetup from "@/pages/admin/AdminSetup";
@@ -58,6 +59,7 @@ function App() {
               <Route path="/refund-policy" element={withLayout(<RefundPolicy />)} />
               <Route path="/checkout" element={withLayout(<Checkout />)} />
               <Route path="/order/:orderNumber" element={withLayout(<OrderConfirmation />)} />
+              <Route path="/payment-link/done" element={withLayout(<PaymentLinkDone />)} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin/setup" element={<AdminSetup />} />
               <Route path="/admin/forgot-password" element={<AdminForgot />} />

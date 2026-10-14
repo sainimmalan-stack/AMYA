@@ -6,6 +6,7 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends
+from fastapi.responses import RedirectResponse
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import logging
@@ -376,6 +377,18 @@ class RazorpayVerify(BaseModel):
     razorpay_order_id: str
     razorpay_payment_id: str
     razorpay_signature: str
+
+
+class PaymentLinkCreate(BaseModel):
+    customer_name: str
+    customer_mobile: str
+    customer_email: Optional[str] = None
+    delivery_address: Optional[str] = None
+    country: Optional[str] = "IN"
+    subtotal: float
+    shipping: float = 0.0
+    note: Optional[str] = None
+    expiry_days: int = 7
 
 
 class OrderStatusUpdate(BaseModel):
@@ -1392,7 +1405,204 @@ async def razorpay_webhook(request: Request):
                 "payment_status": "paid", "razorpay_payment_id": rzp_payment_id, "order_status": "confirmed"}})
             doc = await db.orders.find_one({"_id": doc["_id"]})
             await _send_order_emails(doc)
+    if data.get("event") == "payment_link.paid":
+        pl_entity = (((data.get("payload") or {}).get("payment_link") or {}).get("entity")) or {}
+        pay_entity = (((data.get("payload") or {}).get("payment") or {}).get("entity")) or {}
+        pl_id = pl_entity.get("id")
+        if pl_id:
+            link = await db.payment_links.find_one({"rzp_payment_link_id": pl_id})
+            if link:
+                await _mark_link_paid(link, pay_entity.get("id") or "paid")
     return {"status": "ok"}
+
+
+# -------------------- Razorpay Payment Links (post-WhatsApp quote) --------------------
+def _public_payment_link(doc: dict) -> dict:
+    return {k: v for k, v in doc.items() if k != "_id"}
+
+
+async def _order_doc_from_link(link: dict, rzp_payment_id: str) -> dict:
+    now = datetime.now(timezone.utc)
+    order_number = _gen_order_number()
+    while await db.orders.find_one({"order_number": order_number}):
+        order_number = _gen_order_number()
+    suffix = order_number.split("-")[-1]
+    subtotal = round(float(link.get("subtotal") or 0), 2)
+    shipping = round(float(link.get("shipping") or 0), 2)
+    total = round(subtotal + shipping, 2)
+    note = link.get("note")
+    items = [{"slug": "quote", "name": "Order as agreed on WhatsApp", "pack_label": None,
+              "unit_price": subtotal, "qty": 1, "line_total": subtotal, "note": note or None}]
+    return {
+        "order_number": order_number,
+        "invoice_number": f"INV-{now.strftime('%Y%m%d')}-{suffix}",
+        "created_at": now.isoformat(),
+        "invoice_date": now.strftime("%d %b %Y"),
+        "customer": {"name": link["customer"]["name"], "mobile": link["customer"]["mobile"],
+                     "email": link["customer"].get("email"),
+                     "address": link.get("delivery_address") or "Provided on WhatsApp enquiry"},
+        "items": items,
+        "subtotal": subtotal, "delivery_charge": shipping, "discount": 0.0,
+        "gst_amount": None, "total": total, "total_pending": False,
+        "payment_method": "razorpay", "payment_status": "paid",
+        "razorpay_order_id": None, "razorpay_payment_id": rzp_payment_id,
+        "razorpay_payment_link_id": link.get("rzp_payment_link_id"),
+        "order_status": "confirmed", "preparation_status": "pending", "dispatch_status": "not_dispatched",
+        "tracking_reference": "", "courier_name": "", "cancellation_reason": "",
+        "status_history": [],
+        "download_token": secrets.token_urlsafe(24),
+        "invoice_generated": True,
+        "site_origin": link.get("site_origin") or (os.environ.get("PUBLIC_BASE_URL") or "https://amyafoods.in"),
+        "client_ref": link.get("link_id"),
+        "country": link.get("country") or "IN",
+        "source": "payment_link",
+        "notifications": [],
+    }
+
+
+async def _mark_link_paid(link: dict, rzp_payment_id: str):
+    """Idempotently mark a payment link paid and create a single paid Order."""
+    if link.get("order_number"):
+        return link.get("order_number")
+    order_doc = await _order_doc_from_link(link, rzp_payment_id)
+    await db.orders.insert_one(dict(order_doc))
+    await db.payment_links.update_one({"link_id": link["link_id"]}, {"$set": {
+        "status": "paid", "rzp_payment_id": rzp_payment_id,
+        "order_number": order_doc["order_number"], "paid_at": now_iso()}})
+    await _send_order_emails(order_doc)
+    return order_doc["order_number"]
+
+
+@api.post("/admin/payment-links")
+async def admin_create_payment_link(payload: PaymentLinkCreate, request: Request, admin: dict = Depends(get_current_admin)):
+    client = _razorpay_client()
+    if not client:
+        raise HTTPException(status_code=503, detail="Razorpay is not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.")
+    subtotal = round(float(payload.subtotal or 0), 2)
+    shipping = round(float(payload.shipping or 0), 2)
+    total = round(subtotal + shipping, 2)
+    if total <= 0:
+        raise HTTPException(status_code=400, detail="Total must be greater than zero.")
+    mobile = (payload.customer_mobile or "").strip()
+    email = (payload.customer_email or "").strip()
+    if not payload.customer_name.strip() or not mobile:
+        raise HTTPException(status_code=400, detail="Customer name and mobile are required.")
+    link_id = f"AMYAPL-{secrets.token_hex(5).upper()}"
+    days = max(1, min(int(payload.expiry_days or 7), 30))
+    expire_by = int((datetime.now(timezone.utc) + timedelta(days=days)).timestamp())
+    customer = {"name": payload.customer_name.strip(), "contact": mobile}
+    if email:
+        customer["email"] = email
+    description = (payload.note or f"AMYA order for {payload.customer_name.strip()}")[:255]
+    try:
+        pl = client.payment_link.create({
+            "amount": int(round(total * 100)),
+            "currency": "INR",
+            "accept_partial": False,
+            "reference_id": link_id,
+            "description": description,
+            "customer": customer,
+            "notify": {"sms": bool(mobile), "email": bool(email)},
+            "reminder_enable": True,
+            "notes": {"amya_link_id": link_id, "subtotal": str(subtotal), "shipping": str(shipping)},
+            "callback_url": f"{_site_origin(request)}/api/payments/payment-link/callback",
+            "callback_method": "get",
+            "expire_by": expire_by,
+        })
+    except Exception as e:
+        logging.exception("payment_link.create failed")
+        raise HTTPException(status_code=502, detail=f"Could not create payment link: {e}")
+    doc = {
+        "link_id": link_id,
+        "rzp_payment_link_id": pl.get("id"),
+        "short_url": pl.get("short_url"),
+        "customer": {"name": payload.customer_name.strip(), "mobile": mobile, "email": email or None},
+        "delivery_address": (payload.delivery_address or "").strip() or None,
+        "country": (payload.country or "IN").upper(),
+        "subtotal": subtotal, "shipping": shipping, "total": total,
+        "note": (payload.note or "").strip() or None,
+        "status": pl.get("status", "created"),
+        "rzp_payment_id": None, "order_number": None,
+        "created_at": now_iso(), "created_by": admin.get("email"),
+        "expire_by": expire_by, "site_origin": _site_origin(request),
+    }
+    await db.payment_links.insert_one(dict(doc))
+    return _public_payment_link(doc)
+
+
+@api.get("/admin/payment-links")
+async def admin_list_payment_links(admin: dict = Depends(get_current_admin)):
+    docs = await db.payment_links.find().sort("created_at", -1).to_list(500)
+    return [_public_payment_link(d) for d in docs]
+
+
+@api.post("/admin/payment-links/{link_id}/refresh")
+async def admin_refresh_payment_link(link_id: str, admin: dict = Depends(get_current_admin)):
+    client = _razorpay_client()
+    if not client:
+        raise HTTPException(status_code=503, detail="Razorpay is not configured.")
+    link = await db.payment_links.find_one({"link_id": link_id})
+    if not link:
+        raise HTTPException(status_code=404, detail="Payment link not found")
+    try:
+        pl = client.payment_link.fetch(link["rzp_payment_link_id"])
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Could not fetch status: {e}")
+    status = pl.get("status", link.get("status"))
+    payments = pl.get("payments") or []
+    rzp_payment_id = payments[0].get("payment_id") if payments else None
+    await db.payment_links.update_one({"link_id": link_id}, {"$set": {"status": status}})
+    if status == "paid":
+        fresh = await db.payment_links.find_one({"link_id": link_id})
+        await _mark_link_paid(fresh, rzp_payment_id or "paid")
+    out = await db.payment_links.find_one({"link_id": link_id})
+    return _public_payment_link(out)
+
+
+@api.post("/admin/payment-links/{link_id}/cancel")
+async def admin_cancel_payment_link(link_id: str, admin: dict = Depends(get_current_admin)):
+    client = _razorpay_client()
+    link = await db.payment_links.find_one({"link_id": link_id})
+    if not link:
+        raise HTTPException(status_code=404, detail="Payment link not found")
+    if link.get("status") == "paid":
+        raise HTTPException(status_code=400, detail="This link is already paid and cannot be cancelled.")
+    if client and link.get("rzp_payment_link_id"):
+        try:
+            client.payment_link.cancel(link["rzp_payment_link_id"])
+        except Exception as e:
+            raise HTTPException(status_code=502, detail=f"Could not cancel: {e}")
+    await db.payment_links.update_one({"link_id": link_id}, {"$set": {"status": "cancelled"}})
+    out = await db.payment_links.find_one({"link_id": link_id})
+    return _public_payment_link(out)
+
+
+@api.get("/payments/payment-link/callback")
+async def payment_link_callback(request: Request):
+    qp = dict(request.query_params)
+    origin = _site_origin(request)
+    done = f"{origin}/payment-link/done"
+    client = _razorpay_client()
+    if not client:
+        return RedirectResponse(url=f"{done}?status=failed", status_code=303)
+    try:
+        client.utility.verify_payment_link_signature({
+            "payment_link_id": qp.get("razorpay_payment_link_id", ""),
+            "payment_link_reference_id": qp.get("razorpay_payment_link_reference_id", ""),
+            "payment_link_status": qp.get("razorpay_payment_link_status", ""),
+            "razorpay_payment_id": qp.get("razorpay_payment_id", ""),
+            "razorpay_signature": qp.get("razorpay_signature", ""),
+        })
+    except Exception:
+        return RedirectResponse(url=f"{done}?status=failed", status_code=303)
+    link = await db.payment_links.find_one({"rzp_payment_link_id": qp.get("razorpay_payment_link_id")})
+    if not link:
+        link = await db.payment_links.find_one({"link_id": qp.get("razorpay_payment_link_reference_id")})
+    ref = ""
+    if link and qp.get("razorpay_payment_link_status") == "paid":
+        order_number = await _mark_link_paid(link, qp.get("razorpay_payment_id") or "paid")
+        ref = order_number or link.get("link_id")
+    return RedirectResponse(url=f"{done}?status=paid&ref={ref}", status_code=303)
 
 
 # -------------------- Admin: orders --------------------

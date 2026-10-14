@@ -1,10 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Plus, Trash2, Pencil, LogOut, Check, X } from "lucide-react";
+import { Plus, Trash2, Pencil, LogOut, Check, X, Copy, RefreshCw, Ban, MessageCircle, Link2 } from "lucide-react";
 import { api, formatApiError } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useConfig } from "@/context/ConfigContext";
+import { countryByCode } from "@/lib/intl";
+import { COUNTRIES } from "@/lib/intl";
 import Logo from "@/components/Logo";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -111,6 +113,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="bookings" data-testid="tab-bookings">Bookings {pendingBookings > 0 && <Badge className="ml-2 bg-terracotta">{pendingBookings}</Badge>}</TabsTrigger>
             <TabsTrigger value="enquiries" data-testid="tab-enquiries">Enquiries {newEnquiries > 0 && <Badge className="ml-2 bg-terracotta">{newEnquiries}</Badge>}</TabsTrigger>
             <TabsTrigger value="orders" data-testid="tab-orders">Orders {newOrders > 0 && <Badge className="ml-2 bg-terracotta">{newOrders}</Badge>}</TabsTrigger>
+            <TabsTrigger value="payment-links" data-testid="tab-payment-links">Payment Links</TabsTrigger>
             <TabsTrigger value="batches" data-testid="tab-batches">Batches</TabsTrigger>
             <TabsTrigger value="settings" data-testid="tab-settings">Settings</TabsTrigger>
           </TabsList>
@@ -201,6 +204,10 @@ export default function AdminDashboard() {
             <AdminOrders orders={orders} reload={loadAll} />
           </TabsContent>
 
+          <TabsContent value="payment-links" className="mt-8">
+            <PaymentLinks />
+          </TabsContent>
+
           {/* SETTINGS */}
           <TabsContent value="settings" className="mt-8">
             {settings && <SettingsPanel settings={settings} setSettings={setSettings} onSave={saveSettings} />}
@@ -216,6 +223,138 @@ export default function AdminDashboard() {
 function StatusPill({ status }) {
   const map = { pending: "bg-ink/10 text-ink", confirmed: "bg-terracotta text-ivory", rejected: "bg-ink/20 text-ink", new: "bg-terracotta text-ivory", "in-progress": "bg-ink/10 text-ink", closed: "bg-ink/20 text-ink" };
   return <span className={`px-3 py-1 text-[10px] uppercase tracking-[0.15em] ${map[status] || "bg-ink/10"}`}>{status}</span>;
+}
+
+function LinkStatusPill({ status }) {
+  const map = { created: "bg-amber-100 text-amber-800", paid: "bg-terracotta text-ivory", cancelled: "bg-ink/15 text-ink", expired: "bg-ink/15 text-ink" };
+  return <span className={`px-2.5 py-1 text-[10px] uppercase tracking-[0.15em] rounded-full ${map[status] || "bg-ink/10 text-ink"}`} data-testid="pl-status">{status}</span>;
+}
+
+function PaymentLinks() {
+  const EMPTY_F = { customer_name: "", customer_mobile: "", customer_email: "", delivery_address: "", country: "IN", subtotal: "", shipping: "", note: "", expiry_days: 7 };
+  const [links, setLinks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState("");
+  const [f, setF] = useState(EMPTY_F);
+  const set = (k) => (e) => setF((prev) => ({ ...prev, [k]: e.target.value }));
+  const inr = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+
+  const load = useCallback(async () => {
+    try { const { data } = await api.get("/admin/payment-links"); setLinks(data); }
+    catch { toast.error("Failed to load payment links"); }
+    finally { setLoading(false); }
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  const total = (Number(f.subtotal) || 0) + (Number(f.shipping) || 0);
+
+  const create = async () => {
+    if (!f.customer_name.trim() || !f.customer_mobile.trim()) { toast.error("Customer name and mobile are required."); return; }
+    if (total <= 0) { toast.error("Enter a subtotal and/or shipping so the total is greater than zero."); return; }
+    setBusy("create");
+    try {
+      const { data } = await api.post("/admin/payment-links", {
+        customer_name: f.customer_name.trim(), customer_mobile: f.customer_mobile.trim(),
+        customer_email: f.customer_email.trim() || undefined, delivery_address: f.delivery_address.trim() || undefined,
+        country: f.country, subtotal: Number(f.subtotal) || 0, shipping: Number(f.shipping) || 0,
+        note: f.note.trim() || undefined, expiry_days: Number(f.expiry_days) || 7,
+      });
+      toast.success("Payment link created — SMS/email sent if contact provided");
+      setF(EMPTY_F);
+      setLinks((prev) => [data, ...prev]);
+    } catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Could not create link"); }
+    finally { setBusy(""); }
+  };
+
+  const refresh = async (id) => {
+    setBusy(id);
+    try { const { data } = await api.post(`/admin/payment-links/${id}/refresh`); setLinks((p) => p.map((l) => l.link_id === id ? data : l)); toast.success(`Status: ${data.status}`); }
+    catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Could not refresh"); }
+    finally { setBusy(""); }
+  };
+  const cancelLink = async (id) => {
+    if (!window.confirm("Cancel this payment link? The customer will no longer be able to pay with it.")) return;
+    setBusy(id);
+    try { const { data } = await api.post(`/admin/payment-links/${id}/cancel`); setLinks((p) => p.map((l) => l.link_id === id ? data : l)); toast.success("Link cancelled"); }
+    catch (e) { toast.error(formatApiError(e?.response?.data?.detail) || "Could not cancel"); }
+    finally { setBusy(""); }
+  };
+
+  const copy = (url) => { navigator.clipboard?.writeText(url); toast.success("Link copied"); };
+  const waHref = (l) => {
+    const dial = (countryByCode(l.country).dial || "+91").replace(/\D/g, "");
+    const digits = (l.customer?.mobile || "").replace(/\D/g, "");
+    const num = digits.startsWith(dial) ? digits : dial + digits;
+    const msg = `Hello ${l.customer?.name || ""}, here is your secure AMYA payment link for ${inr(l.total)} (items ${inr(l.subtotal)} + shipping ${inr(l.shipping)}):\n${l.short_url}\n\nThis is a one-time secure Razorpay link. Your order is confirmed only once payment is completed.`;
+    return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+  };
+
+  return (
+    <div className="max-w-4xl" data-testid="payment-links-panel">
+      <SectionTitle>Payment links</SectionTitle>
+      <p className="font-sans text-sm text-ink-soft -mt-3 mb-5 max-w-2xl">
+        After agreeing a shipping quote on WhatsApp, create a one-time Razorpay link so the customer can pay without re-entering anything. When paid, a confirmed order is created automatically in the Orders tab.
+      </p>
+
+      {/* Create form */}
+      <div className="bg-white border border-ink/10 p-5 grid sm:grid-cols-2 gap-4" data-testid="pl-create-form">
+        <L label="Customer name *"><Input data-testid="pl-name" value={f.customer_name} onChange={set("customer_name")} /></L>
+        <L label="Mobile number *"><Input data-testid="pl-mobile" value={f.customer_mobile} onChange={set("customer_mobile")} placeholder="e.g. 9675334567" /></L>
+        <L label="Email (optional)"><Input data-testid="pl-email" type="email" value={f.customer_email} onChange={set("customer_email")} /></L>
+        <L label="Country">
+          <select data-testid="pl-country" value={f.country} onChange={set("country")} className="w-full h-10 px-3 border border-input bg-ivory text-sm">
+            {COUNTRIES.map((o) => <option key={o.code} value={o.code}>{o.name}</option>)}
+          </select>
+        </L>
+        <div className="sm:col-span-2"><L label="Delivery address (optional — shown on invoice)"><Textarea data-testid="pl-address" value={f.delivery_address} onChange={set("delivery_address")} rows={2} /></L></div>
+        <L label="Product subtotal (₹) *"><Input data-testid="pl-subtotal" type="number" value={f.subtotal} onChange={set("subtotal")} /></L>
+        <L label="Agreed shipping (₹)"><Input data-testid="pl-shipping" type="number" value={f.shipping} onChange={set("shipping")} /></L>
+        <div className="sm:col-span-2"><L label="Note (optional — appears in the link description)"><Input data-testid="pl-note" value={f.note} onChange={set("note")} /></L></div>
+        <L label="Link expiry (days)"><Input data-testid="pl-expiry" type="number" value={f.expiry_days} onChange={set("expiry_days")} /></L>
+        <div className="flex items-end">
+          <div className="font-sans text-sm text-ink">Total payable: <span className="font-serif text-xl text-terracotta" data-testid="pl-total">{inr(total)}</span></div>
+        </div>
+        <div className="sm:col-span-2">
+          <button onClick={create} disabled={busy === "create"} data-testid="pl-create" className={`${btn} bg-terracotta text-ivory hover:bg-terracotta-deep rounded-full disabled:opacity-50`}>
+            <Link2 size={14} /> {busy === "create" ? "Creating…" : "Create payment link"}
+          </button>
+        </div>
+      </div>
+
+      {/* List */}
+      <div className="mt-8 space-y-3">
+        {loading ? <p className="font-sans text-ink-soft">Loading…</p> :
+          links.length === 0 ? <p className="font-sans text-ink-soft" data-testid="pl-empty">No payment links yet.</p> :
+          links.map((l) => (
+            <div key={l.link_id} data-testid={`pl-row-${l.link_id}`} className="bg-white border border-ink/10 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-serif text-lg text-ink">{l.customer?.name} · {inr(l.total)}</p>
+                  <p className="font-sans text-xs text-ink-soft mt-0.5">{countryByCode(l.country).name} · {l.customer?.mobile}{l.customer?.email ? ` · ${l.customer.email}` : ""} · items {inr(l.subtotal)} + ship {inr(l.shipping)}</p>
+                  {l.order_number && <p className="font-sans text-xs text-terracotta mt-0.5">Paid → order {l.order_number}</p>}
+                </div>
+                <LinkStatusPill status={l.status} />
+              </div>
+              {l.short_url && (
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <a href={l.short_url} target="_blank" rel="noreferrer" className="font-sans text-xs text-ink underline break-all max-w-full" data-testid={`pl-url-${l.link_id}`}>{l.short_url}</a>
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {l.short_url && <button onClick={() => copy(l.short_url)} data-testid={`pl-copy-${l.link_id}`} className={`${btn} border border-ink/20 rounded-full`}><Copy size={13} /> Copy link</button>}
+                {l.short_url && l.status !== "cancelled" && (
+                  <a href={waHref(l)} target="_blank" rel="noreferrer" data-testid={`pl-wa-${l.link_id}`} className={`${btn} border border-terracotta text-terracotta hover:bg-terracotta hover:text-ivory rounded-full`}><MessageCircle size={13} /> Send on WhatsApp</a>
+                )}
+                <button onClick={() => refresh(l.link_id)} disabled={busy === l.link_id} data-testid={`pl-refresh-${l.link_id}`} className={`${btn} border border-ink/20 rounded-full disabled:opacity-50`}><RefreshCw size={13} /> Refresh status</button>
+                {l.status !== "paid" && l.status !== "cancelled" && (
+                  <button onClick={() => cancelLink(l.link_id)} disabled={busy === l.link_id} data-testid={`pl-cancel-${l.link_id}`} className={`${btn} border border-ink/20 hover:bg-ink hover:text-ivory rounded-full disabled:opacity-50`}><Ban size={13} /> Cancel</button>
+                )}
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
+  );
 }
 
 function AccountSecurity() {
