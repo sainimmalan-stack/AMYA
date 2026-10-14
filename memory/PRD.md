@@ -738,3 +738,15 @@ Edited ONLY /app/frontend/src/pages/Checkout.jsx (no other sections/branding/bac
 - Backend server.py: OrderCreate gains country/postcode; india_shipping() computes delivery_charge into total; create_order rejects non-IN (400 international) and India quote-required PINs (400) — online charging restricted to eligible India destinations only. Razorpay INR unchanged; never auto-PAID.
 - Verified (curl + mobile UI): IN Hyd 500081 total ₹600 online-eligible; IN AP 520001 ₹680; IN 110001 -> 400 quote; US -> 400 international + UI shows ₹2,900 est ($30.42) + enquiry; FX date shown; adaptive dial/labels. NOT exhaustively tested per-EU-country/every UK-AU weight tier (logic consistent). Live in PREVIEW — redeploy to publish.
 - STILL AWAITING user confirmation: exact Hyderabad/AP/TS PIN lists (currently prefix rule), US 10kg rate confirmation, UK 20kg+ (₹600 vs ₹520), AU metro postcode eligibility, EU rates, Razorpay international enablement.
+
+## Changelog — 2026-07-14 (International ZIP/PIN validation — verified; redeploy required)
+- INVESTIGATED reported bug: live amyafoods.in rejected valid US ZIP (e.g. 11697) demanding a 6-digit PIN.
+- ROOT CAUSE: the international checkout (country selector + country-aware postal validation) is correctly implemented in the codebase but was NEVER DEPLOYED. The LIVE site runs stale code that applies India's 6-digit PIN rule to every country. No code bug in current preview.
+- VERIFIED on preview (actual tests, mobile 390 + desktop 1440):
+  - US 11697 -> accepted, label "ZIP CODE", no 6-digit error; US 10001-1234 -> accepted; US 1234 -> rejected.
+  - India 500081 -> accepted (online pay eligible, Hyderabad ₹100); India 50008 -> rejected (400 quote).
+  - UK "SW1A 1AA" -> label "Postcode", accepted; AU 2000 -> label "Postcode", accepted.
+  - COD blocked (frontend + backend HTTP 400). International (US/UK/AU/EU) -> online payment blocked, "Shipping quote required" + WhatsApp enquiry.
+  - Order Summary renders FIRST (above the form). Our Story real Amulya & Leela kitchen photo at the very top (/products/our-story-kitchen.jpg, y≈65) — NOT replaced with AI imagery.
+  - No horizontal overflow at 390 / 1440. Backend regression: test_admin_auth + test_admin_deletion = 12 passed, 2 skipped.
+- ACTION REQUIRED: REDEPLOY so the live site serves the already-correct international checkout. No code change needed.
