@@ -8,6 +8,7 @@ export default function Footer() {
   const { config } = useConfig();
   const phone = config?.business?.phone || "9675334567";
   const wa = config?.business?.whatsapp || "919675334567";
+  const fssai = config?.settings?.fssai_number || "23626448000230";
 
   return (
     <footer className="bg-terracotta text-ivory relative overflow-hidden">
@@ -47,7 +48,10 @@ export default function Footer() {
         </div>
 
         <div className="mt-14 pt-8 border-t border-ivory/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-sans text-[11px] text-ivory/60">© {new Date().getFullYear()} AMYA Artisanal Foods · amyafoods.in</p>
+          <div className="flex flex-col items-center sm:items-start gap-1">
+            <p className="font-sans text-[11px] text-ivory/60">© {new Date().getFullYear()} AMYA Artisanal Foods · amyafoods.in</p>
+            <p className="font-sans text-[11px] text-ivory/60" data-testid="footer-fssai">FSSAI Registration No.: {fssai}</p>
+          </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 font-sans text-[11px] text-ivory/70">
             <Link to="/policies/terms" className="hover:text-ivory">Terms</Link>
             <Link to="/policies/privacy" className="hover:text-ivory">Privacy</Link>

@@ -299,7 +299,7 @@ class Settings(BaseModel):
     # Invoice / business identity (admin-editable; blank => shown as placeholder, never invented)
     legal_name: str = ""
     business_address: str = ""
-    fssai_number: str = ""
+    fssai_number: str = "23626448000230"
     support_email: str = ""
     support_phone: str = ""
     business_notify_email: str = ""
